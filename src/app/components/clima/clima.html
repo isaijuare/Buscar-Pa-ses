@@ -1,0 +1,26 @@
+<div class="pantalla-detalle">
+  @if (cargando()) {
+    <p>Cargando clima...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (datos()) {
+    <h2>Clima — {{ nombrePais() }}</h2>
+
+    <p class="temperatura-actual">
+      {{ temperaturaActual() }}{{ unidad() }}
+    </p>
+
+    <h3>Próximas horas</h3>
+    <ul class="lista-datos">
+      @for (item of proximasHoras(); track item.hora) {
+        <li>
+          <strong>{{ item.hora }}:</strong> {{ item.temperatura }}{{ unidad() }}
+        </li>
+      }
+    </ul>
+  }
+</div>

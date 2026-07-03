@@ -1,0 +1,19 @@
+<div class="pantalla">
+  <app-search-bar (buscar)="onBuscar($event)"></app-search-bar>
+
+  @if (cargando()) {
+    <p>Buscando...</p>
+  }
+
+  <div class="tarjetas">
+    @for (pais of paises(); track pais.code) {
+      <app-country-card
+        [pais]="pais"
+        (verDemografia)="onVerDemografia($event)"
+        (verClima)="onVerClima($event)"
+      ></app-country-card>
+    } @empty {
+      <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
+    }
+  </div>
+</div>

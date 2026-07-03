@@ -1,0 +1,36 @@
+.pantalla-detalle {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 20px;
+}
+
+.encabezado {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.bandera {
+  width: 80px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.oficial {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.lista-datos {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+}
+
+.lista-datos li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.error {
+  color: #c0392b;
+}

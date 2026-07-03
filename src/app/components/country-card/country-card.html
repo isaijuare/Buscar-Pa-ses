@@ -1,0 +1,12 @@
+<div class="tarjeta-pais">
+  @if (pais().flagUrl) {
+    <img [src]="pais().flagUrl" [alt]="pais().name" class="bandera" />
+  }
+ 
+  <h3>{{ pais().name }}</h3>
+ 
+  <div class="botones">
+    <button (click)="onVerDemografia()">Ver datos demográficos</button>
+    <button (click)="onVerClima()">Ver clima</button>
+  </div>
+</div>

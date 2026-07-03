@@ -1,0 +1,19 @@
+.pantalla {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.tarjetas {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.sin-resultados {
+  color: #888;
+  margin-top: 16px;
+  text-align: center;
+}

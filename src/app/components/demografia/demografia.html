@@ -1,0 +1,66 @@
+<div class="pantalla-detalle">
+  @if (cargando()) {
+    <p>Cargando datos demográficos...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (datos()) {
+    <div class="encabezado">
+      @if (datos()?.flag?.url_svg) {
+        <img [src]="datos()!.flag.url_svg" [alt]="datos()!.names.common" class="bandera" />
+      }
+      <h2>{{ datos()!.names.common }}</h2>
+      <p class="oficial">{{ datos()!.names.official }}</p>
+    </div>
+
+    <ul class="lista-datos">
+      <li>
+        <strong>Capital:</strong>
+        {{ datos()!.capitals?.[0]?.name ?? 'No disponible' }}
+      </li>
+
+      <li>
+        <strong>Población:</strong>
+        {{ datos()!.population | number }}
+      </li>
+
+      <li>
+        <strong>Región:</strong>
+        {{ datos()!.region }}
+        @if (datos()!.subregion) {
+          ({{ datos()!.subregion }})
+        }
+      </li>
+
+      <li>
+        <strong>Área:</strong>
+        @if (datos()!.area) {
+          {{ datos()!.area!.kilometers | number }} km²
+        } @else {
+          No disponible
+        }
+      </li>
+
+      <li>
+        <strong>Idiomas:</strong>
+        @if (datos()!.languages?.length) {
+          {{ getNombresIdiomas() }}
+        } @else {
+          No disponible
+        }
+      </li>
+
+      <li>
+        <strong>Moneda:</strong>
+        @if (datos()!.currencies?.length) {
+          {{ getNombresMonedas() }}
+        } @else {
+          No disponible
+        }
+      </li>
+    </ul>
+  }
+</div>
