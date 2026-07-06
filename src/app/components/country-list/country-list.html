@@ -1,5 +1,8 @@
 <div class="pantalla">
-  <app-search-bar (buscar)="onBuscar($event)"></app-search-bar>
+  <app-search-bar
+    [valorInicial]="textoBusqueda()"
+    (buscar)="onBuscar($event)"
+  ></app-search-bar>
 
   @if (cargando()) {
     <p>Buscando...</p>

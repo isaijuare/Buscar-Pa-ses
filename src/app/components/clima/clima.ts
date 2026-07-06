@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from '../../services/country';
 import { WeatherApiResponse } from '../../models/country';
 
@@ -11,6 +11,7 @@ import { WeatherApiResponse } from '../../models/country';
 })
 export class ClimaComponent {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private countryService = inject(CountryService);
 
   nombrePais = signal<string | null>(null);
@@ -18,11 +19,9 @@ export class ClimaComponent {
   cargando = signal(false);
   error = signal<string | null>(null);
 
- 
   temperaturaActual = computed(() => this.datos()?.hourly.temperature_2m[0] ?? null);
   unidad = computed(() => this.datos()?.hourly_units.temperature_2m ?? '');
 
-  
   proximasHoras = computed(() => {
     const d = this.datos();
     if (!d) return [];
@@ -44,6 +43,11 @@ export class ClimaComponent {
         this.error.set('Faltan coordenadas para consultar el clima.');
       }
     });
+  }
+
+  /** Regresa a la pantalla de búsqueda sin salir de la pantalla principal */
+  volver(): void {
+    this.router.navigate(['/']);
   }
 
   private cargarClima(lat: number, lon: number): void {

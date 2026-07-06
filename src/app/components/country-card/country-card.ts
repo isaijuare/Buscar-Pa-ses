@@ -11,7 +11,6 @@ export class CountryCardComponent {
   
   pais = input.required<Country>();
  
- 
   verDemografia = output<Country>();
   verClima = output<Country>();
  

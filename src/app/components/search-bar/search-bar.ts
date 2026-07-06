@@ -1,4 +1,4 @@
-import { Component, output, OnDestroy } from '@angular/core';
+import { Component, effect, input, output, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -13,17 +13,20 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class SearchBarComponent implements OnDestroy {
   texto = '';
 
-  
+    // para regresar a la pantalla de la tarjeta principal)
+  valorInicial = input<string>('');
+
   buscar = output<string>();
 
   private input$ = new Subject<string>();
 
   constructor() {
+        effect(() => {
+      this.texto = this.valorInicial();
+    });
+
     this.input$
-      .pipe(
-        debounceTime(300),        
-        distinctUntilChanged()    
-      )
+      .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((valor) => this.buscar.emit(valor));
   }
 

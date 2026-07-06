@@ -1,4 +1,8 @@
 <div class="pantalla-detalle">
+  <button class="btn-volver" (click)="volver()">
+    ← Volver a la búsqueda
+  </button>
+
   @if (cargando()) {
     <p>Cargando clima...</p>
   }
@@ -8,19 +12,23 @@
   }
 
   @if (datos()) {
-    <h2>Clima — {{ nombrePais() }}</h2>
+    <div class="tarjeta-clima">
+      <h2>{{ nombrePais() }}</h2>
 
-    <p class="temperatura-actual">
-      {{ temperaturaActual() }}{{ unidad() }}
-    </p>
+      <div class="temperatura-destacada">
+        <span class="numero">{{ temperaturaActual() }}</span>
+        <span class="unidad">{{ unidad() }}</span>
+      </div>
+      <p class="subtitulo">Ahora mismo</p>
 
-    <h3>Próximas horas</h3>
-    <ul class="lista-datos">
-      @for (item of proximasHoras(); track item.hora) {
-        <li>
-          <strong>{{ item.hora }}:</strong> {{ item.temperatura }}{{ unidad() }}
-        </li>
-      }
-    </ul>
+      <div class="lista-horas">
+        @for (item of proximasHoras(); track item.hora) {
+          <div class="hora-item">
+            <span class="hora">{{ item.hora.slice(-5) }}</span>
+            <span class="temp">{{ item.temperatura }}{{ unidad() }}</span>
+          </div>
+        }
+      </div>
+    </div>
   }
 </div>

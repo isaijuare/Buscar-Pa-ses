@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from '../../services/country';
 import { CountryApiResponse } from '../../models/country';
 
@@ -13,6 +13,7 @@ import { CountryApiResponse } from '../../models/country';
 })
 export class DemografiaComponent {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private countryService = inject(CountryService);
 
   codigoPais = signal<string | null>(null);
@@ -31,6 +32,11 @@ export class DemografiaComponent {
         this.error.set('No se especificó ningún país.');
       }
     });
+  }
+
+  /** Regresa a la pantalla de búsqueda sin salir de la pantalla principal, como en el clima */
+  volver(): void {
+    this.router.navigate(['/']);
   }
 
   getNombresIdiomas(): string {
@@ -60,4 +66,4 @@ export class DemografiaComponent {
       }
     });
   }
-} 
+}

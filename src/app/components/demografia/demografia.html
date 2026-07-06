@@ -1,4 +1,8 @@
 <div class="pantalla-detalle">
+  <button class="btn-volver" (click)="volver()">
+    ← Volver a la búsqueda
+  </button>
+
   @if (cargando()) {
     <p>Cargando datos demográficos...</p>
   }
@@ -8,59 +12,71 @@
   }
 
   @if (datos()) {
-    <div class="encabezado">
-      @if (datos()?.flag?.url_svg) {
-        <img [src]="datos()!.flag.url_svg" [alt]="datos()!.names.common" class="bandera" />
-      }
-      <h2>{{ datos()!.names.common }}</h2>
-      <p class="oficial">{{ datos()!.names.official }}</p>
+    <div class="tarjeta-demografia">
+      <div class="encabezado">
+        @if (datos()?.flag?.url_svg) {
+          <img [src]="datos()!.flag.url_svg" [alt]="datos()!.names.common" class="bandera" />
+        }
+        <div>
+          <h2>{{ datos()!.names.common }}</h2>
+          <p class="oficial">{{ datos()!.names.official }}</p>
+        </div>
+      </div>
+
+      <div class="grid-datos">
+        <div class="dato">
+          <span class="etiqueta">Capital</span>
+          <span class="valor">{{ datos()!.capitals?.[0]?.name ?? 'No disponible' }}</span>
+        </div>
+
+        <div class="dato">
+          <span class="etiqueta">Población</span>
+          <span class="valor">{{ datos()!.population | number }}</span>
+        </div>
+
+        <div class="dato">
+          <span class="etiqueta">Región</span>
+          <span class="valor">
+            {{ datos()!.region }}
+            @if (datos()!.subregion) {
+              ({{ datos()!.subregion }})
+            }
+          </span>
+        </div>
+
+        <div class="dato">
+          <span class="etiqueta">Área</span>
+          <span class="valor">
+            @if (datos()!.area) {
+              {{ datos()!.area!.kilometers | number }} km²
+            } @else {
+              No disponible
+            }
+          </span>
+        </div>
+
+        <div class="dato dato-ancho">
+          <span class="etiqueta">Idiomas</span>
+          <span class="valor">
+            @if (datos()!.languages?.length) {
+              {{ getNombresIdiomas() }}
+            } @else {
+              No disponible
+            }
+          </span>
+        </div>
+
+        <div class="dato dato-ancho">
+          <span class="etiqueta">Moneda</span>
+          <span class="valor">
+            @if (datos()!.currencies?.length) {
+              {{ getNombresMonedas() }}
+            } @else {
+              No disponible
+            }
+          </span>
+        </div>
+      </div>
     </div>
-
-    <ul class="lista-datos">
-      <li>
-        <strong>Capital:</strong>
-        {{ datos()!.capitals?.[0]?.name ?? 'No disponible' }}
-      </li>
-
-      <li>
-        <strong>Población:</strong>
-        {{ datos()!.population | number }}
-      </li>
-
-      <li>
-        <strong>Región:</strong>
-        {{ datos()!.region }}
-        @if (datos()!.subregion) {
-          ({{ datos()!.subregion }})
-        }
-      </li>
-
-      <li>
-        <strong>Área:</strong>
-        @if (datos()!.area) {
-          {{ datos()!.area!.kilometers | number }} km²
-        } @else {
-          No disponible
-        }
-      </li>
-
-      <li>
-        <strong>Idiomas:</strong>
-        @if (datos()!.languages?.length) {
-          {{ getNombresIdiomas() }}
-        } @else {
-          No disponible
-        }
-      </li>
-
-      <li>
-        <strong>Moneda:</strong>
-        @if (datos()!.currencies?.length) {
-          {{ getNombresMonedas() }}
-        } @else {
-          No disponible
-        }
-      </li>
-    </ul>
   }
 </div>

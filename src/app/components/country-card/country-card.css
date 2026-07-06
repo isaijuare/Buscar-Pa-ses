@@ -1,5 +1,5 @@
 .tarjeta-pais {
-  border: 1px solid #ddd;
+  border: 1px solid #1900f887;
   border-radius: 12px;
   padding: 16px;
   width: 220px;
@@ -26,11 +26,11 @@
   padding: 8px;
   border: none;
   border-radius: 6px;
-  background-color: #4a90d9;
+  background-color: #18d1a9;
   color: white;
   cursor: pointer;
 }
 
 .botones button:hover {
-  background-color: #3a78bd;
+  background-color: #18d1a9;
 }

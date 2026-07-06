@@ -1,15 +1,16 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, forkJoin, map, shareReplay } from 'rxjs';
 import {
   Country,
   CountryApiResponse,
   WeatherApiResponse,
-  mapApiToCountry
+  mapApiToCountry,
+  normalizarTexto
 } from '../models/country';
 import { environment } from '../../environments/environment';
 
-// La API envuelve las listas así: { data: { objects: [...] } }
+
 interface ListaApiResponse<T> {
   data: {
     objects: T[];
@@ -27,29 +28,57 @@ export class CountryService {
     Authorization: `Bearer ${environment.restCountriesApiKey}`
   });
 
-  /** Busca países por nombre (para el autocompletar) */
-  buscarPaises(query: string): Observable<Country[]> {
-    const textoBuscado = query.trim().toLowerCase();
+  //trae toda la lista de una sola vez
+  private todosLosPaises$?: Observable<Country[]>;
+  textoBusqueda = signal('');
+  resultadosBusqueda = signal<Country[]>([]);
 
-    return this.http
-      .get<ListaApiResponse<CountryApiResponse>>(
-        `${this.baseUrl}?q=${query}&pretty=1`,
-        { headers: this.headers }
-      )
-      .pipe(
-        map((respuesta) => respuesta.data.objects.map(mapApiToCountry)),
-        // La API hace fuzzy-matching (tolera errores de tipeo), así que
-        // filtramos aquí para quedarnos solo con coincidencias reales:
-        // el nombre del país debe EMPEZAR con lo que el usuario escribió.
-        map((paises) =>
-          paises.filter((pais) =>
-            pais.name.toLowerCase().startsWith(textoBuscado)
-          )
+   private obtenerTodosLosPaises(): Observable<Country[]> {
+    if (!this.todosLosPaises$) {
+      const offsets = [0, 100, 200];    
+      
+      const peticiones = offsets.map((offset) =>
+        this.http.get<ListaApiResponse<CountryApiResponse>>(
+          `${this.baseUrl}?limit=100&offset=${offset}&pretty=1`,
+          { headers: this.headers }
         )
       );
+
+      this.todosLosPaises$ = forkJoin(peticiones).pipe(
+        map((respuestas) => {
+          const todos = respuestas.flatMap((r) => r.data.objects);
+          return todos.map(mapApiToCountry);
+        }),
+        shareReplay(1) // guarda el resultado anterior en memoria
+      );
+    }
+
+    return this.todosLosPaises$;
   }
 
-  /** Trae un país por su código alpha_2 (ej: 'CA', 'HN') */
+  
+  buscarPaises(query: string): Observable<Country[]> {
+    const texto = normalizarTexto(query);
+
+    if (!texto) {
+      return this.obtenerTodosLosPaises().pipe(map(() => []));
+    }
+
+    return this.obtenerTodosLosPaises().pipe(
+      map((paises) =>
+        paises.filter((pais) => {
+          const nombreIngles = normalizarTexto(pais.name);
+          const nombreEspanol = pais.nameEs ? normalizarTexto(pais.nameEs) : '';
+
+          return (
+            nombreIngles.startsWith(texto) || nombreEspanol.startsWith(texto)
+          );
+        })
+      )
+    );
+  }
+
+  //** Trae un país por código
   obtenerPorCodigo(codigoPais: string): Observable<Country> {
     return this.http
       .get<ListaApiResponse<CountryApiResponse>>(
@@ -59,7 +88,7 @@ export class CountryService {
       .pipe(map((respuesta) => mapApiToCountry(respuesta.data.objects[0])));
   }
 
-  /** Datos demográficos: reutiliza el mismo endpoint por código */
+  //** Datos demográficos: reutiliza el mismo endpoint por código */
   obtenerDatosDemograficos(codigoPais: string): Observable<CountryApiResponse> {
     return this.http
       .get<ListaApiResponse<CountryApiResponse>>(
@@ -69,10 +98,6 @@ export class CountryService {
       .pipe(map((respuesta) => respuesta.data.objects[0]));
   }
 
-  /**
-   * Clima (Open-Meteo): NO usa código de país, usa lat/lon de la capital.
-   * No requiere API key.
-   */
   obtenerClima(lat: number, lon: number): Observable<WeatherApiResponse> {
     const params = `latitude=${lat}&longitude=${lon}&hourly=temperature_2m`;
     return this.http.get<WeatherApiResponse>(`${this.climaBaseUrl}?${params}`);

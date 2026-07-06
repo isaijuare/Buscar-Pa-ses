@@ -1,9 +1,11 @@
-
+// Estructura Actualizada para que se muestren todos los paises y banderas
 export interface CountryApiResponse {
   names: {
     common: string;
     official: string;
     native?: Record<string, { common: string; official: string }>;
+    // Traducciones a otros idiomas para que se pueda buscar por nombre en español, ing
+    translations?: Record<string, { common: string; official: string }>;
   };
   codes: {
     alpha_2: string;
@@ -31,25 +33,26 @@ export interface CountryApiResponse {
   timezones?: string[];
 }
 
-// Modelo "limpio" que realmente usan tus componentes
+//el pais se busca en español y se muestra en inglés
 export interface Country {
   code: string;
-  name: string;
+  name: string;      
+  nameEs?: string;    
   flagUrl?: string;
   capital?: string;
   population?: number;
   region?: string;
-  lat?: number;   // 👈 necesarias para pedir el clima
+  lat?: number;
   lon?: number;
 }
 
-/** Convierte la respuesta cruda de la API a tu modelo interno */
 export function mapApiToCountry(api: CountryApiResponse): Country {
   const capital = api.capitals?.[0];
 
   return {
     code: api.codes.alpha_2,
     name: api.names.common,
+    nameEs: api.names.translations?.['spa']?.common,
     flagUrl: api.flag.url_svg,
     capital: capital?.name,
     population: api.population,
@@ -59,7 +62,15 @@ export function mapApiToCountry(api: CountryApiResponse): Country {
   };
 }
 
-// ----- Modelo de la API de clima (Open-Meteo) -----
+//los encuentra sin importar como se escriba (acentos, mayúsculas, minúsculas, espacios)
+export function normalizarTexto(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
+
 export interface WeatherApiResponse {
   latitude: number;
   longitude: number;
@@ -69,6 +80,6 @@ export interface WeatherApiResponse {
     temperature_2m: number[];
   };
   hourly_units: {
-    temperature_2m: string; // ej: "°C"
+    temperature_2m: string;
   };
 }
