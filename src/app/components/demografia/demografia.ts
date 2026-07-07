@@ -1,6 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { CountryService } from '../../services/country';
 import { CountryApiResponse } from '../../models/country';
 
@@ -12,31 +11,31 @@ import { CountryApiResponse } from '../../models/country';
   styleUrl: './demografia.css'
 })
 export class DemografiaComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private countryService = inject(CountryService);
 
-  codigoPais = signal<string | null>(null);
+  // Ya no viene de la URL: quien use este componente (el modal)
+  // le pasa el código del país directamente.
+  codigoPais = input<string | null>(null);
+
+  // Avisa al padre que debe cerrarse (el padre decide cómo: oculta el modal, etc.)
+  cerrar = output<void>();
+
   datos = signal<CountryApiResponse | null>(null);
   cargando = signal(false);
   error = signal<string | null>(null);
 
   constructor() {
-    this.route.queryParamMap.subscribe((params) => {
-      const pais = params.get('pais');
-      this.codigoPais.set(pais);
-
-      if (pais) {
-        this.cargarDatos(pais);
-      } else {
-        this.error.set('No se especificó ningún país.');
+    // Cada vez que codigoPais cambie (nuevo país seleccionado), recargamos.
+    effect(() => {
+      const codigo = this.codigoPais();
+      if (codigo) {
+        this.cargarDatos(codigo);
       }
     });
   }
 
-  /** Regresa a la pantalla de búsqueda sin salir de la pantalla principal, como en el clima */
-  volver(): void {
-    this.router.navigate(['/']);
+  onCerrar(): void {
+    this.cerrar.emit();
   }
 
   getNombresIdiomas(): string {

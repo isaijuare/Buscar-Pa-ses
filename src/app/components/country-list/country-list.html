@@ -19,4 +19,11 @@
       <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
     }
   </div>
+
+  <app-pais-detalle-modal
+    [abierto]="modalAbierto()"
+    [tipo]="modalTipo()"
+    [pais]="paisSeleccionado()"
+    (cerrar)="cerrarModal()"
+  ></app-pais-detalle-modal>
 </div>

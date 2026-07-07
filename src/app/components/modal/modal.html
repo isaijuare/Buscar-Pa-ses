@@ -1,0 +1,23 @@
+@if (abierto()) {
+  <div class="overlay" (click)="onCerrar()">
+    <div class="contenedor-modal" (click)="$event.stopPropagation()">
+
+      @if (tipo() === 'demografia') {
+        <app-demografia
+          [codigoPais]="pais()?.code ?? null"
+          (cerrar)="onCerrar()"
+        ></app-demografia>
+      }
+
+      @if (tipo() === 'clima') {
+        <app-clima
+          [lat]="pais()?.lat ?? null"
+          [lon]="pais()?.lon ?? null"
+          [nombrePais]="pais()?.name ?? null"
+          (cerrar)="onCerrar()"
+        ></app-clima>
+      }
+
+    </div>
+  </div>
+}

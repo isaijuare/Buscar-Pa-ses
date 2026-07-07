@@ -1,25 +1,32 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar';
 import { CountryCardComponent } from '../country-card/country-card';
+import {
+  PaisDetalleModalComponent,
+  TipoModal
+} from '../modal/modal';
 import { CountryService } from '../../services/country';
 import { Country } from '../../models/country';
 
 @Component({
   selector: 'app-country-list',
   standalone: true,
-  imports: [SearchBarComponent, CountryCardComponent],
+  imports: [SearchBarComponent, CountryCardComponent, PaisDetalleModalComponent],
   templateUrl: './country-list.html',
   styleUrl: './country-list.css'
 })
 export class CountryListComponent {
   private countryService = inject(CountryService);
-  private router = inject(Router);
 
   textoBusqueda = this.countryService.textoBusqueda;
   paises = this.countryService.resultadosBusqueda;
 
   cargando = signal(false);
+
+  // Estado del modal: qué país y qué tipo de info mostrar
+  modalAbierto = signal(false);
+  modalTipo = signal<TipoModal>(null);
+  paisSeleccionado = signal<Country | null>(null);
 
   onBuscar(query: string): void {
     this.countryService.textoBusqueda.set(query);
@@ -40,12 +47,18 @@ export class CountryListComponent {
   }
 
   onVerDemografia(pais: Country): void {
-    this.router.navigate(['/demografia'], { queryParams: { pais: pais.code } });
+    this.paisSeleccionado.set(pais);
+    this.modalTipo.set('demografia');
+    this.modalAbierto.set(true);
   }
 
   onVerClima(pais: Country): void {
-    this.router.navigate(['/clima'], {
-      queryParams: { lat: pais.lat, lon: pais.lon, nombre: pais.name }
-    });
+    this.paisSeleccionado.set(pais);
+    this.modalTipo.set('clima');
+    this.modalAbierto.set(true);
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto.set(false);
   }
 }

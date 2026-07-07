@@ -1,5 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, effect, inject, input, output, signal, computed } from '@angular/core';
 import { CountryService } from '../../services/country';
 import { WeatherApiResponse } from '../../models/country';
 
@@ -10,11 +9,15 @@ import { WeatherApiResponse } from '../../models/country';
   styleUrl: './clima.css'
 })
 export class ClimaComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
   private countryService = inject(CountryService);
 
-  nombrePais = signal<string | null>(null);
+  // Ya no viene de la URL: el modal se lo pasa directo.
+  lat = input<number | null>(null);
+  lon = input<number | null>(null);
+  nombrePais = input<string | null>(null);
+
+  cerrar = output<void>();
+
   datos = signal<WeatherApiResponse | null>(null);
   cargando = signal(false);
   error = signal<string | null>(null);
@@ -32,22 +35,20 @@ export class ClimaComponent {
   });
 
   constructor() {
-    this.route.queryParamMap.subscribe((params) => {
-      const lat = params.get('lat');
-      const lon = params.get('lon');
-      this.nombrePais.set(params.get('nombre'));
+    effect(() => {
+      const lat = this.lat();
+      const lon = this.lon();
 
-      if (lat && lon) {
-        this.cargarClima(Number(lat), Number(lon));
+      if (lat != null && lon != null) {
+        this.cargarClima(lat, lon);
       } else {
         this.error.set('Faltan coordenadas para consultar el clima.');
       }
     });
   }
 
-  /** Regresa a la pantalla de búsqueda sin salir de la pantalla principal */
-  volver(): void {
-    this.router.navigate(['/']);
+  onCerrar(): void {
+    this.cerrar.emit();
   }
 
   private cargarClima(lat: number, lon: number): void {
