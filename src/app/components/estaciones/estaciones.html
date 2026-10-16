@@ -1,0 +1,64 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Estaciones del año</h3>
+
+  @let e = estado();
+  <div class="resumen">
+    <svg viewBox="-60 -60 120 120" class="rueda" role="img" [attr.aria-label]="e.actual.estacion + ', ' + e.porcentaje + '% transcurrido'">
+      <circle [attr.r]="radio" class="pista" />
+      @for (a of rueda().arcos; track $index) {
+        <circle
+          [attr.r]="radio"
+          pathLength="100"
+          class="arco"
+          [attr.stroke]="a.color"
+          [attr.stroke-dasharray]="a.dash"
+          [attr.stroke-dashoffset]="a.offset"
+        />
+      }
+      @for (m of rueda().meses; track $index) {
+        <text [attr.x]="m.x" [attr.y]="m.y" class="mes">{{ m.letra }}</text>
+      }
+      <circle [attr.cx]="rueda().hoy.x" [attr.cy]="rueda().hoy.y" r="6" class="hoy" />
+      <text y="-4" class="centro-icono">{{ e.icono }}</text>
+      <text y="14" class="centro-dias">{{ e.dias }} días</text>
+      <text y="23" class="centro-sub">para terminar</text>
+    </svg>
+
+    <div>
+      <p class="estacion" [style.color]="e.color">{{ e.actual.estacion }}</p>
+      <p class="detalle">Hemisferio {{ e.hemisferio }} · desde el {{ e.desde }}</p>
+      <div class="barra" aria-hidden="true">
+        <span [style.width.%]="e.porcentaje" [style.background]="e.color"></span>
+      </div>
+      <p class="detalle">{{ e.porcentaje }}% transcurrido · sigue {{ e.siguiente.estacion }}</p>
+    </div>
+  </div>
+
+  <dl class="sol">
+    <div><dt>Luz solar hoy</dt><dd>{{ sol().duracion }}</dd><dd class="sub">{{ sol().tendencia }}</dd></div>
+    <div><dt>Sol al mediodía</dt><dd>{{ sol().altura }}° de altura</dd></div>
+  </dl>
+
+  <ul class="eventos">
+    @for (ev of proximosEventos(); track ev.fecha) {
+      <li [style.border-color]="ev.color">
+        <span class="evento-icono" aria-hidden="true">{{ ev.icono }}</span>
+        <div>
+          <span class="evento-nombre">{{ ev.nombre }}</span>
+          <span class="evento-fecha">{{ ev.fecha }} · {{ ev.hora }}</span>
+          <span class="evento-estacion">
+            Empieza {{ ev.estacion.toLowerCase() }} · {{ ev.esEquinoccio ? 'día y noche casi iguales' : (ev.estacion === 'Verano' ? 'día más largo' : 'noche más larga') }}
+          </span>
+        </div>
+        <span class="evento-falta">{{ ev.falta }}</span>
+      </li>
+    }
+  </ul>
+
+  @if (e.tropical) {
+    <p class="nota">
+      Estás en la zona tropical: los cambios de temperatura entre estaciones son leves y el año se
+      vive más como época seca y época lluviosa.
+    </p>
+  }
+</article>

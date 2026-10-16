@@ -1,0 +1,79 @@
+<aside class="tarjeta-noche barra" aria-label="Lugares turísticos cercanos">
+  <header class="cabecera">
+    <span class="titulo-seccion">Lugares turísticos</span>
+    @if (zona(); as z) {
+      @if (z.esPais) {
+        <div class="zona-pais">
+          @if (z.banderaUrl) {
+            <img [src]="z.banderaUrl" alt="" class="bandera" />
+          }
+          <p class="zona">A {{ radioKm }} km de <strong>{{ z.nombre }}</strong></p>
+        </div>
+        <button type="button" class="btn-volver" (click)="volverACercaDeTi()">📍 Volver a cerca de ti</button>
+      } @else {
+        <p class="zona">A {{ radioKm }} km de {{ z.nombre }}</p>
+      }
+    } @else {
+      <p class="zona">Buscando tu ubicación…</p>
+    }
+
+    @if (categorias().length > 1) {
+      <div class="filtros" role="group" aria-label="Filtrar por categoría">
+        <button type="button" [class.activo]="filtro() === null" (click)="elegirFiltro(null)">
+          Todos · {{ lugares().length }}
+        </button>
+        @for (c of categorias(); track c.id) {
+          <button type="button" [class.activo]="filtro() === c.id" (click)="elegirFiltro(c.id)">
+            {{ c.icono }} {{ c.nombre }} · {{ c.cantidad }}
+          </button>
+        }
+      </div>
+    }
+  </header>
+
+  @if (cargando() || !zona()) {
+    <ul class="lista">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <li class="lugar esqueleto"><div class="foto"></div><div class="linea"></div><div class="linea corta"></div></li>
+      }
+    </ul>
+  } @else if (error()) {
+    <p class="mensaje error">{{ error() }}</p>
+  } @else if (!lugares().length) {
+    <p class="mensaje">No encontramos lugares turísticos registrados en esta zona.</p>
+  } @else {
+    <ul class="lista">
+      @for (l of visibles(); track l.id) {
+        <li class="lugar">
+          <div class="foto">
+            @if (l.imagen) {
+              <img [src]="l.imagen" [alt]="l.nombre" loading="lazy" />
+            } @else {
+              <span class="sin-foto" aria-hidden="true">{{ infoCategoria[l.categoria].icono }}</span>
+            }
+            <span class="distancia">{{ formatoDistancia(l.distanciaKm) }}</span>
+          </div>
+
+          <div class="info">
+            <h4>{{ l.nombre }}</h4>
+            <p class="etiquetas">
+              <span>{{ infoCategoria[l.categoria].icono }} {{ infoCategoria[l.categoria].nombre }}</span>
+              @if (l.patrimonio) {
+                <span class="patrimonio">★ Patrimonio</span>
+              }
+            </p>
+            @if (l.descripcion) {
+              <p class="descripcion">{{ l.descripcion }}</p>
+            }
+            <div class="enlaces">
+              <a [href]="l.urlWikipedia" target="_blank" rel="noopener">Wikipedia ↗</a>
+              <a [href]="l.urlMapa" target="_blank" rel="noopener">Ver en mapa ↗</a>
+            </div>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+
+  <p class="fuente">Datos de Wikipedia y Wikidata</p>
+</aside>

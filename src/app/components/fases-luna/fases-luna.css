@@ -1,0 +1,102 @@
+:host {
+  display: block;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.actual {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.nombre-fase {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.detalle {
+  margin: 2px 0;
+  font-size: 0.85rem;
+  color: #a9c4ee;
+}
+
+.detalle.visible {
+  color: #ffe9a8;
+}
+
+.horario {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.horario dt {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a9c4ee;
+}
+
+.horario dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.proximas {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.proximas li {
+  display: grid;
+  grid-template-columns: 26px 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.proximas app-dibujo-luna {
+  grid-row: 1 / 3;
+}
+
+.fase-nombre {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.fase-fecha {
+  grid-column: 2;
+  font-size: 0.78rem;
+  color: #a9c4ee;
+}
+
+.fase-falta {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  font-size: 0.75rem;
+  color: #ffe9a8;
+  white-space: nowrap;
+}
+
+/* Tarjeta angosta: la Luna va arriba del texto */
+@container (max-width: 340px) {
+  .actual {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .horario {
+    grid-template-columns: 1fr 1fr;
+  }
+}

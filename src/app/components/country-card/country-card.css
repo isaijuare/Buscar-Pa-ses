@@ -3,6 +3,8 @@
   border-radius: 12px;
   padding: 16px;
   width: 220px;
+  max-width: 100%;
+  box-sizing: border-box;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
@@ -33,6 +35,20 @@
 
 .botones button:hover {
   background-color: #18d1a9;
+}
+
+/* Mismo tono que la barra de lugares turísticos, para relacionarlos */
+.botones button:last-child {
+  background-color: #1d3566;
+}
+
+.botones button:last-child:hover:not(:disabled) {
+  background-color: #2a4a86;
+}
+
+.botones button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 :host > div, .tarjeta {

@@ -13,13 +13,18 @@ export class CountryCardComponent {
  
   verDemografia = output<Country>();
   verClima = output<Country>();
- 
+  verLugares = output<Country>();
+
   onVerDemografia(): void {
     this.verDemografia.emit(this.pais());
   }
  
   onVerClima(): void {
     this.verClima.emit(this.pais());
+  }
+
+  onVerLugares(): void {
+    this.verLugares.emit(this.pais());
   }
 }
  

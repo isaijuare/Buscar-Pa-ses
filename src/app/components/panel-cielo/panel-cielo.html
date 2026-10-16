@@ -1,0 +1,37 @@
+<section class="panel-cielo" aria-label="Clima, Luna y estaciones de tu ubicación">
+  <header class="cabecera">
+    <div>
+      <span class="titulo-seccion">Tu cielo ahora</span>
+      <h2>📍 {{ ubicacion()?.nombre ?? 'Buscando tu ubicación…' }}</h2>
+      @if (ubicacion(); as u) {
+        <span class="fuente">
+          @switch (u.fuente) {
+            @case ('gps') { Ubicación exacta }
+            @case ('ip') { Ubicación aproximada por tu conexión }
+            @default { No pudimos detectar tu ubicación; se muestra una de ejemplo }
+          }
+        </span>
+      }
+    </div>
+
+    @if (ubicacion() && ubicacion()!.fuente !== 'gps') {
+      <button type="button" class="btn-gps" (click)="usarGps()" [disabled]="buscandoGps()">
+        {{ buscandoGps() ? 'Ubicando…' : '🎯 Usar mi ubicación exacta' }}
+      </button>
+    }
+  </header>
+
+  @if (avisoGps()) {
+    <p class="aviso">{{ avisoGps() }}</p>
+  }
+
+  @if (ubicacion(); as u) {
+    <app-tiempo-actual [ubicacion]="u" />
+    <div class="columnas">
+      <app-fases-luna [ubicacion]="u" [ahora]="ahora()" />
+      <app-estaciones [ubicacion]="u" [ahora]="ahora()" />
+    </div>
+  } @else {
+    <div class="tarjeta-noche cargando">Preparando el clima, la Luna y las estaciones…</div>
+  }
+</section>

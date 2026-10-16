@@ -1,9 +1,15 @@
+.buscador {
+  max-width: 340px;
+  margin: 0 auto;
+}
+
 .buscador input {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 1rem;
+  box-sizing: border-box;
+  padding: 7px 14px;
+  font-size: 0.9rem;
   border: 1px solid #12e8ef;
-  border-radius: 8px;
+  border-radius: 999px;
   outline: none;
 }
 

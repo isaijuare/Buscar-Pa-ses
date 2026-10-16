@@ -8,5 +8,12 @@
   <div class="botones">
     <button (click)="onVerDemografia()">Ver datos demográficos</button>
     <button (click)="onVerClima()">Ver clima</button>
+    <button
+      (click)="onVerLugares()"
+      [disabled]="pais().lat == null || pais().lon == null"
+      [title]="pais().capital ? 'Sitios turísticos alrededor de ' + pais().capital : 'Este país no tiene capital registrada'"
+    >
+      Lugares turísticos
+    </button>
   </div>
 </div>

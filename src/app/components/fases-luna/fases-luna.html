@@ -1,0 +1,43 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Fases de la Luna</h3>
+
+  @let l = luna();
+  <div class="actual">
+    <app-dibujo-luna
+      [iluminacion]="l.iluminacion"
+      [creciente]="l.creciente"
+      [hemisferioSur]="hemisferioSur()"
+      [tamano]="104"
+    />
+    <div>
+      <p class="nombre-fase">{{ l.nombre }}</p>
+      <p class="detalle">{{ (l.iluminacion * 100).toFixed(0) }}% iluminada</p>
+      <p class="detalle">{{ l.edadDias.toFixed(1) }} días desde la luna nueva</p>
+      <p class="detalle" [class.visible]="l.sobreHorizonte">
+        {{ l.sobreHorizonte ? '● Sobre el horizonte' : '○ Bajo el horizonte' }}
+      </p>
+    </div>
+  </div>
+
+  <dl class="horario">
+    <div><dt>Salida hoy</dt><dd>{{ horario().salida }}</dd></div>
+    <div><dt>Puesta hoy</dt><dd>{{ horario().puesta }}</dd></div>
+    <div><dt>Distancia</dt><dd>{{ (l.distanciaKm / 1000).toFixed(0) }} mil km</dd></div>
+  </dl>
+
+  <ul class="proximas">
+    @for (f of proximas(); track f.nombre) {
+      <li>
+        <app-dibujo-luna
+          [iluminacion]="f.iluminacion"
+          [creciente]="f.creciente"
+          [hemisferioSur]="hemisferioSur()"
+          [tamano]="26"
+        />
+        <span class="fase-nombre">{{ f.nombre }}</span>
+        <span class="fase-fecha">{{ f.fecha }} · {{ f.hora }}</span>
+        <span class="fase-falta">{{ f.falta }}</span>
+      </li>
+    }
+  </ul>
+</article>

@@ -2,6 +2,15 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.18.
 
+## Configuración (environments)
+
+Los archivos de environment no se suben al repositorio porque contienen la API key de restcountries. Antes de ejecutar el proyecto, créalos a partir de la plantilla y pon tu key:
+
+```bash
+cp src/environments/environment.example.ts src/environments/environment.ts
+cp src/environments/environment.example.ts src/environments/environment.development.ts
+```
+
 ## Development server
 
 To start a local development server, run:

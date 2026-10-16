@@ -1,24 +1,31 @@
 <div class="pantalla">
-  <app-search-bar
-    [valorInicial]="textoBusqueda()"
-    (buscar)="onBuscar($event)"
-  ></app-search-bar>
+  <div class="principal">
+    <app-search-bar
+      [valorInicial]="textoBusqueda()"
+      (buscar)="onBuscar($event)"
+    ></app-search-bar>
 
-  @if (cargando()) {
-    <p>Buscando...</p>
-  }
-
-  <div class="tarjetas">
-    @for (pais of paises(); track pais.code) {
-      <app-country-card
-        [pais]="pais"
-        (verDemografia)="onVerDemografia($event)"
-        (verClima)="onVerClima($event)"
-      ></app-country-card>
-    } @empty {
-      <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
+    @if (cargando()) {
+      <p>Buscando...</p>
     }
+
+    <div class="tarjetas">
+      @for (pais of paises(); track pais.code) {
+        <app-country-card
+          [pais]="pais"
+          (verDemografia)="onVerDemografia($event)"
+          (verClima)="onVerClima($event)"
+          (verLugares)="onVerLugares($event)"
+        ></app-country-card>
+      } @empty {
+        <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
+      }
+    </div>
+
+    <app-panel-cielo />
   </div>
+
+  <app-lugares-turisticos class="barra-lateral" />
 
   <app-pais-detalle-modal
     [abierto]="modalAbierto()"

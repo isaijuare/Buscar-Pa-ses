@@ -1,0 +1,47 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Clima ahora</h3>
+
+  @if (cargando() && !datos()) {
+    <p class="mensaje">Cargando clima…</p>
+  }
+
+  @if (error()) {
+    <p class="mensaje error">{{ error() }}</p>
+  }
+
+  @if (actual(); as a) {
+    <div class="principal">
+      <span class="icono-grande" aria-hidden="true">{{ a.icono }}</span>
+      <div>
+        <div class="temperatura">{{ a.temperatura }}°</div>
+        <div class="estado">{{ a.texto }}</div>
+        <div class="maxmin">↑ {{ a.maxima }}° &nbsp; ↓ {{ a.minima }}°</div>
+      </div>
+      <div class="sol">
+        <span>🌅 {{ a.amanecer }}</span>
+        <span>🌇 {{ a.atardecer }}</span>
+        <span class="hora-local">Hora local {{ a.horaLocal }}</span>
+      </div>
+    </div>
+
+    <dl class="datos">
+      <div><dt>Sensación</dt><dd>{{ a.sensacion }}°</dd></div>
+      <div><dt>Humedad</dt><dd>{{ a.humedad }}%</dd></div>
+      <div><dt>Viento</dt><dd>{{ a.viento }} km/h {{ a.direccion }}</dd></div>
+      <div><dt>Presión</dt><dd>{{ a.presion }} hPa</dd></div>
+      <div><dt>Índice UV</dt><dd>{{ a.uv }} · {{ a.nivelUv }}</dd></div>
+      <div><dt>Nubosidad</dt><dd>{{ a.nubosidad }}%</dd></div>
+    </dl>
+
+    <div class="horas">
+      @for (h of proximasHoras(); track $index) {
+        <div class="hora">
+          <span class="hora-texto">{{ h.hora }}</span>
+          <span class="hora-icono" aria-hidden="true">{{ h.icono }}</span>
+          <span class="hora-temp">{{ h.temperatura }}°</span>
+          <span class="hora-lluvia" [class.alta]="h.lluvia >= 50">💧{{ h.lluvia }}%</span>
+        </div>
+      }
+    </div>
+  }
+</article>
