@@ -26,8 +26,11 @@ export class SearchBarComponent implements OnDestroy {
     });
 
     this.input$
-      .pipe(debounceTime(300), distinctUntilChanged())
-      .subscribe((valor) => this.buscar.emit(valor));
+  .pipe(debounceTime(300), distinctUntilChanged())
+  .subscribe((valor) => {
+    console.log('Emitiendo búsqueda:', valor);
+    this.buscar.emit(valor);
+  });
   }
 
   onInput(): void {

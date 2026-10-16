@@ -1,1 +1,57 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4a90e2 0%, #87ceeb 60%, #e8f4fc 100%) fixed;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  width: 320px;
+  height: 120px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(18px);
+  z-index: -1;
+  animation: nube 40s linear infinite;
+}
+
+body::before { top: 15%; left: -350px; }
+
+body::after {
+  top: 55%;
+  left: -350px;
+  width: 420px;
+  height: 150px;
+  animation-duration: 65s;
+  animation-delay: -20s;
+}
+
+@keyframes nube {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(100vw + 700px)); }
+}
+
+
+.titulo-app {
+  text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 32px 16px 8px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.titulo-app::after {
+  content: '';
+  display: block;
+  width: 90px;
+  height: 2px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}

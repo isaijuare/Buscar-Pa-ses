@@ -34,3 +34,10 @@
 .botones button:hover {
   background-color: #18d1a9;
 }
+
+:host > div, .tarjeta {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  border-radius: 12px;
+  color: #222;
+}
