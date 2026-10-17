@@ -2,8 +2,9 @@ export interface Ubicacion {
   lat: number;
   lon: number;
   nombre: string;
-  // gps = ubicación exacta del navegador, ip = aproximada por la conexión
-  fuente: 'gps' | 'ip' | 'predeterminada';
+  // gps = ubicación exacta del navegador, ip = aproximada por la conexión,
+  // pais = capital de un país, mapa = punto elegido en el mapa
+  fuente: 'gps' | 'ip' | 'predeterminada' | 'pais' | 'mapa';
 }
 
 export interface GeocodificacionApiResponse {
@@ -43,5 +44,23 @@ export interface PronosticoApiResponse {
     sunrise: string[];
     sunset: string[];
     uv_index_max: number[];
+  };
+}
+
+export interface CalidadAireApiResponse {
+  current: {
+    time: string;
+    us_aqi: number | null;
+    pm2_5: number | null;
+    pm10: number | null;
+    ozone: number | null;
+    nitrogen_dioxide: number | null;
+    // Polen (granos/m³): null fuera de Europa
+    alder_pollen: number | null;
+    birch_pollen: number | null;
+    grass_pollen: number | null;
+    mugwort_pollen: number | null;
+    olive_pollen: number | null;
+    ragweed_pollen: number | null;
   };
 }

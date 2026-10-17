@@ -1,0 +1,88 @@
+<div class="viaje">
+  <article class="tarjeta-noche">
+    <h3 class="titulo-seccion">Hora local</h3>
+    @if (horaLocal(); as h) {
+      <p class="reloj">{{ h.hora }}</p>
+      <p class="fecha">{{ h.fecha }}</p>
+      <p class="detalle">{{ h.zona }} · {{ h.desfase }}</p>
+      <p class="diferencia">{{ h.diferencia }}</p>
+    } @else {
+      <p class="mensaje">Cargando…</p>
+    }
+  </article>
+
+  <article class="tarjeta-noche">
+    <h3 class="titulo-seccion">Conversor de moneda</h3>
+    @if (!monedasPais().length) {
+      <p class="mensaje">Este país no tiene moneda registrada.</p>
+    } @else if (errorCambio()) {
+      <p class="mensaje error">No se pudieron cargar los tipos de cambio.</p>
+    } @else {
+      <div class="conversor">
+        <label class="campo">
+          <span>Monto</span>
+          <input type="number" min="0" step="any" [ngModel]="monto()" (ngModelChange)="monto.set(+$event)" />
+        </label>
+        <label class="campo">
+          <span>De</span>
+          <select [ngModel]="origen()" (ngModelChange)="origen.set($event)">
+            @for (c of codigosDisponibles(); track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+        </label>
+        <label class="campo">
+          <span>A</span>
+          <select [ngModel]="destino()" (ngModelChange)="destino.set($event)">
+            @for (m of monedasPais(); track m.code) {
+              <option [value]="m.code">{{ m.code }} · {{ m.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      @if (conversion(); as c) {
+        <p class="resultado">{{ monto() }} {{ origen() }} = <strong>{{ c.resultado }} {{ destino() }}</strong></p>
+        <p class="detalle">1 {{ destino() }} = {{ c.inverso }} {{ origen() }} · actualizado el {{ c.actualizado }}</p>
+      } @else if (monedaSinDatos()) {
+        <p class="mensaje">No hay tipo de cambio disponible para {{ destino() }}.</p>
+      } @else {
+        <p class="mensaje">Cargando tipos de cambio…</p>
+      }
+    }
+  </article>
+
+  <article class="tarjeta-noche">
+    <h3 class="titulo-seccion">Próximos feriados</h3>
+    @if (errorFeriados()) {
+      <p class="mensaje">No hay datos de feriados para este país.</p>
+    } @else if (proximosFeriados(); as lista) {
+      @if (lista.length) {
+        <ul class="feriados">
+          @for (f of lista; track f.clave) {
+            <li>
+              <div>
+                <span class="nombre">{{ f.nombre }}</span>
+                <span class="detalle">{{ f.fecha }}{{ f.traduccion ? ' · ' + f.traduccion : '' }}</span>
+              </div>
+              <span class="falta">{{ f.falta }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="mensaje">No hay feriados nacionales registrados en los próximos meses.</p>
+      }
+    } @else {
+      <p class="mensaje">Cargando…</p>
+    }
+  </article>
+
+  <article class="tarjeta-noche">
+    <h3 class="titulo-seccion">Datos prácticos</h3>
+    <dl class="practicos">
+      @for (d of practicos(); track d.etiqueta) {
+        <div><dt>{{ d.etiqueta }}</dt><dd>{{ d.valor }}</dd></div>
+      }
+    </dl>
+  </article>
+</div>

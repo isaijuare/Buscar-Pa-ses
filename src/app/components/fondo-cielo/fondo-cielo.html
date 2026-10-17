@@ -1,0 +1,83 @@
+@if (montado()) {
+  <div
+    class="fondo"
+    aria-hidden="true"
+    [style.--cielo-arriba]="colores().arriba"
+    [style.--cielo-medio]="colores().medio"
+    [style.--cielo-horizonte]="colores().horizonte"
+  >
+    <div class="estrellas" [style.opacity]="opacidadEstrellas()">
+      @for (e of estrellas; track e.id) {
+        <span
+          class="estrella"
+          [style.left.%]="e.x"
+          [style.top.%]="e.y"
+          [style.width.px]="e.tam"
+          [style.height.px]="e.tam"
+          [style.--brillo]="e.brillo"
+          [style.animation-delay.s]="e.retraso"
+          [style.animation-duration.s]="e.duracion"
+        ></span>
+      }
+    </div>
+
+    <div
+      class="resplandor"
+      [style.opacity]="resplandor().opacidad"
+      [style.--x.%]="resplandor().x"
+      [style.--y.px]="resplandor().y"
+    ></div>
+
+    @if (posSol(); as s) {
+      <div
+        class="sol"
+        [style.left.%]="s.x"
+        [style.top.px]="s.y"
+        [style.opacity]="s.opacidad"
+        [style.--calido]="s.calido"
+      ></div>
+    }
+
+    @if (posLuna(); as l) {
+      <div
+        class="luna"
+        [style.left.%]="l.x"
+        [style.top.px]="l.y"
+        [style.opacity]="l.opacidad"
+        [style.--sombra-luna]="l.sombra"
+      >
+        <app-dibujo-luna [iluminacion]="l.iluminacion" [creciente]="l.creciente" [hemisferioSur]="l.sur" [tamano]="64" />
+      </div>
+    }
+
+    @for (n of nubes(); track n.id) {
+      <div
+        class="nube"
+        [style.top.%]="n.top"
+        [style.--escala]="n.escala"
+        [style.--color-nube]="n.color"
+        [style.animation-duration.s]="n.duracion"
+        [style.animation-delay.s]="n.retraso"
+      ></div>
+    }
+
+    <div class="velo" [style.opacity]="veloNublado()"></div>
+
+    <!-- Montañas lejanas: dan profundidad y toman el color del horizonte -->
+    <svg class="montanas" viewBox="0 0 1440 160" preserveAspectRatio="none">
+      <path
+        [attr.fill]="colores().montana"
+        fill-opacity="0.55"
+        d="M0 120 L120 86 L230 112 L360 70 L470 104 L600 78 L720 110 L860 64 L980 100 L1100 80 L1230 108 L1340 84 L1440 100 L1440 160 L0 160 Z"
+      />
+      <path
+        [attr.fill]="colores().montana"
+        d="M0 140 L150 116 L300 138 L450 110 L620 136 L780 118 L930 140 L1080 114 L1250 136 L1440 120 L1440 160 L0 160 Z"
+      />
+    </svg>
+  </div>
+
+  @if (etiqueta(); as t) {
+    <p class="etiqueta" aria-live="off">{{ t }}</p>
+  }
+}

@@ -3,32 +3,12 @@
     ✕ Cerrar
   </button>
 
-  @if (cargando()) {
-    <p>Cargando clima...</p>
-  }
-
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
-
-  @if (datos()) {
-    <div class="tarjeta-clima">
-      <h2>{{ nombrePais() }}</h2>
-
-      <div class="temperatura-destacada">
-        <span class="numero">{{ temperaturaActual() }}</span>
-        <span class="unidad">{{ unidad() }}</span>
-      </div>
-      <p class="subtitulo">Ahora mismo</p>
-
-      <div class="lista-horas">
-        @for (item of proximasHoras(); track item.hora) {
-          <div class="hora-item">
-            <span class="hora">{{ item.hora.slice(-5) }}</span>
-            <span class="temp">{{ item.temperatura }}{{ unidad() }}</span>
-          </div>
-        }
-      </div>
-    </div>
+  @if (ubicacion(); as u) {
+    @if (nombrePais()) {
+      <h2 class="titulo">{{ nombrePais() }}</h2>
+    }
+    <app-tiempo-actual [ubicacion]="u" />
+  } @else {
+    <p class="error">Faltan coordenadas para consultar el clima.</p>
   }
 </div>

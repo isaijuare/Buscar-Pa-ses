@@ -1,7 +1,6 @@
-// Plantilla: copiar como environment.ts y environment.development.ts y poner la API key real.
-// Esos dos archivos están en .gitignore para que la key no se suba al repositorio.
+// Plantilla: copiar como environment.ts y environment.development.ts.
+// No pongas API keys aquí: todo lo de este archivo llega al navegador.
+// La key de restcountries va en el archivo .env del servidor (ver .env.example).
 export const environment = {
-  production: false,
-  restCountriesApiUrl: 'https://api.restcountries.com/countries/v5',
-  restCountriesApiKey: 'TU_API_KEY'
+  production: false
 };

@@ -1,2 +1,30 @@
-<h1 class="titulo-app">Buscador de Países</h1>
-<router-outlet />
+<app-fondo-cielo />
+
+<header class="encabezado">
+  <h1 class="titulo-app"><a routerLink="/">Buscador de Países</a></h1>
+
+  <nav class="navegacion" aria-label="Secciones">
+    <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+    <a routerLink="/comparar" routerLinkActive="activo">Comparar</a>
+    <a routerLink="/quiz" routerLinkActive="activo">Quiz</a>
+    <button
+      type="button"
+      class="btn-tema"
+      (click)="tema.alternar()"
+      [attr.aria-label]="'Tema: ' + textoTema().texto + '. Cambiar a ' + textoTema().siguiente"
+      [title]="'Cambiar a ' + textoTema().siguiente"
+    >
+      {{ textoTema().icono }} {{ textoTema().texto }}
+    </button>
+  </nav>
+</header>
+
+<div class="pantalla" [class.sin-barra]="!mostrarBarra()">
+  <main class="principal">
+    <router-outlet />
+  </main>
+
+  @if (mostrarBarra()) {
+    <app-lugares-turisticos class="barra-lateral" />
+  }
+</div>

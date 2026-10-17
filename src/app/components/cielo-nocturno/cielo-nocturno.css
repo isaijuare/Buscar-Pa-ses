@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+section + section {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.subtitulo {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lista li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.lista li.no-visible {
+  opacity: 0.65;
+}
+
+.simbolo {
+  font-size: 1.1rem;
+  text-align: center;
+  color: #ffe9a8;
+}
+
+.lista li > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.nombre {
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.detalle {
+  font-size: 0.74rem;
+  color: #a9c4ee;
+  line-height: 1.35;
+}
+
+.etiqueta {
+  font-size: 0.72rem;
+  color: #ffe9a8;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mensaje,
+.nota {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #a9c4ee;
+}
+
+.nota {
+  margin-top: 8px;
+}
+
+/* Tarjeta angosta: la etiqueta pasa debajo del texto */
+@container (max-width: 380px) {
+  .lista li {
+    grid-template-columns: 22px minmax(0, 1fr);
+  }
+
+  .etiqueta {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+:host {
+  container-type: inline-size;
+}

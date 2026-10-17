@@ -1,0 +1,152 @@
+.comparador {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo {
+  margin: 0 0 14px;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.selectores {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: end;
+  gap: 12px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a9c4ee;
+}
+
+.campo input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.btn-intercambiar {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.mensaje {
+  margin-top: 16px;
+  color: #a9c4ee;
+  text-align: center;
+}
+
+.tabla-contenedor {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 10px 8px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla thead th {
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+.tabla tbody th {
+  width: 26%;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a9c4ee;
+}
+
+.pais {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.pais:hover {
+  text-decoration: underline;
+}
+
+.pais img {
+  width: 36px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.barra {
+  display: block;
+  height: 6px;
+  margin-top: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.barra span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.relleno-a {
+  background: #ffd166;
+}
+
+.relleno-b {
+  background: #8fd3ff;
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (max-width: 520px) {
+  .selectores {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-intercambiar {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+}

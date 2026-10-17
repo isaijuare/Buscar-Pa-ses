@@ -20,6 +20,10 @@ export class UbicacionService {
 
   // Ubicación compartida por el panel del cielo y la barra de lugares turísticos
   actual = signal<Ubicacion | null>(null);
+  // La ubicación real del usuario (GPS o IP), para volver a ella después de explorar el mapa
+  propia = signal<Ubicacion | null>(null);
+  /** Lugar cuyo cielo muestra el fondo (p. ej. la capital en la ficha de un país); null = `actual` */
+  fondo = signal<Ubicacion | null>(null);
   buscandoGps = signal(false);
   avisoGps = signal<string | null>(null);
 
@@ -32,7 +36,7 @@ export class UbicacionService {
 
     // Respaldo: si en 8 s no hay ninguna ubicación, la página no se queda vacía
     setTimeout(() => {
-      if (!this.actual()) this.actual.set(UBICACION_PREDETERMINADA);
+      if (!this.actual()) this.establecerPropia(UBICACION_PREDETERMINADA);
     }, 8000);
 
     // Si ya dio permiso antes se usa el GPS; si no, la ubicación aproximada sin preguntar
@@ -49,7 +53,7 @@ export class UbicacionService {
 
     this.obtenerPorGps().subscribe({
       next: (ubicacion) => {
-        this.actual.set(ubicacion);
+        this.establecerPropia(ubicacion);
         this.buscandoGps.set(false);
       },
       error: () => {
@@ -61,7 +65,40 @@ export class UbicacionService {
   }
 
   private cargarPorIp(): void {
-    this.obtenerPorIp().subscribe((ubicacion) => this.actual.set(ubicacion));
+    this.obtenerPorIp().subscribe((ubicacion) => this.establecerPropia(ubicacion));
+  }
+
+  private establecerPropia(ubicacion: Ubicacion): void {
+    this.propia.set(ubicacion);
+    this.actual.set(ubicacion);
+  }
+
+  /** Usa un punto elegido en el mapa: el panel y los lugares se recalculan para esa zona. */
+  elegirPunto(lat: number, lon: number): void {
+    this.actual.set({ lat, lon, nombre: 'Punto del mapa', fuente: 'mapa' });
+    this.nombreDe(lat, lon).subscribe((nombre) => {
+      // Solo si el usuario no eligió otro punto mientras tanto
+      const actual = this.actual();
+      if (actual?.fuente === 'mapa' && actual.lat === lat && actual.lon === lon) {
+        this.actual.set({ ...actual, nombre });
+      }
+    });
+  }
+
+  volverAMiUbicacion(): void {
+    const propia = this.propia();
+    if (propia) this.actual.set(propia);
+  }
+
+  /** Nombre de la ciudad y el país de unas coordenadas. */
+  nombreDe(lat: number, lon: number): Observable<string> {
+    return this.http
+      .get<GeocodificacionApiResponse>(`${this.geoUrl}?latitude=${lat}&longitude=${lon}&localityLanguage=es`)
+      .pipe(
+        map((r) => this.armarNombre(r)),
+        timeout(6000),
+        catchError(() => of(`${lat.toFixed(2)}°, ${lon.toFixed(2)}°`))
+      );
   }
 
   /** Ubicación aproximada por IP: no pide permiso al usuario. */

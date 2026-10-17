@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.csr.html",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/**/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "paises",
+      "urls": ["/api/paises", "/api/paises/**"],
+      "cacheConfig": { "strategy": "performance", "maxSize": 300, "maxAge": "1d" }
+    },
+    {
+      "name": "banderas",
+      "urls": ["https://flags.restcountries.com/**"],
+      "cacheConfig": { "strategy": "performance", "maxSize": 300, "maxAge": "30d" }
+    },
+    {
+      "name": "clima",
+      "urls": ["https://api.open-meteo.com/**", "https://air-quality-api.open-meteo.com/**"],
+      "cacheConfig": { "strategy": "freshness", "timeout": "5s", "maxSize": 40, "maxAge": "6h" }
+    },
+    {
+      "name": "lugares",
+      "urls": ["https://*.wikipedia.org/**", "https://www.wikidata.org/**", "https://upload.wikimedia.org/**", "https://commons.wikimedia.org/**"],
+      "cacheConfig": { "strategy": "freshness", "timeout": "6s", "maxSize": 200, "maxAge": "7d" }
+    },
+    {
+      "name": "mapa",
+      "urls": ["https://tile.openstreetmap.org/**"],
+      "cacheConfig": { "strategy": "performance", "maxSize": 400, "maxAge": "7d" }
+    },
+    {
+      "name": "viaje-y-cielo",
+      "urls": ["https://open.er-api.com/**", "https://date.nager.at/**", "https://celestrak.org/**", "https://api.wheretheiss.at/**", "https://api.bigdatacloud.net/**"],
+      "cacheConfig": { "strategy": "freshness", "timeout": "5s", "maxSize": 50, "maxAge": "1d" }
+    }
+  ]
+}

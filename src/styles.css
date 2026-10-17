@@ -1,37 +1,63 @@
+/* Tema claro (por defecto). El tema oscuro redefine estas variables más abajo. */
+:root {
+  color-scheme: light;
+  /* Solo se ve un instante, antes de que se dibuje el cielo real (fondo-cielo) */
+  --fondo-pagina: linear-gradient(180deg, #2a72d4 0%, #78b6ec 60%, #cfe8fb 100%);
+  --borde-nav: rgba(255, 255, 255, 0.55);
+  --fondo-nav: rgba(20, 38, 74, 0.3);
+  --fondo-nav-hover: rgba(20, 38, 74, 0.5);
+  --fondo-tarjeta-pais: rgba(255, 255, 255, 0.88);
+  --texto-tarjeta-pais: #222;
+  --borde-tarjeta-pais: #1900f887;
+  --texto-suave: #556;
+  --fondo-buscador: #fff;
+  --texto-buscador: #222;
+  --fondo-demografia: #9dd2e7;
+  --texto-demografia: #222;
+  --texto-demografia-suave: #0b0202;
+}
+
+:root[data-tema='oscuro'] {
+  color-scheme: dark;
+  --fondo-pagina: linear-gradient(180deg, #050a1c 0%, #0b1631 55%, #14244a 100%);
+  --borde-nav: rgba(255, 255, 255, 0.25);
+  --fondo-nav: rgba(255, 255, 255, 0.06);
+  --fondo-nav-hover: rgba(255, 255, 255, 0.14);
+  --fondo-tarjeta-pais: rgba(22, 36, 68, 0.92);
+  --texto-tarjeta-pais: #eef4ff;
+  --borde-tarjeta-pais: rgba(255, 255, 255, 0.14);
+  --texto-suave: #a9c4ee;
+  --fondo-buscador: #16243f;
+  --texto-buscador: #eef4ff;
+  --fondo-demografia: #16243f;
+  --texto-demografia: #eef4ff;
+  --texto-demografia-suave: #a9c4ee;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(180deg, #d22c1933 0%, #459ec1 60%, #44aef44d 100%) fixed;
+  background: var(--fondo-pagina) fixed;
   overflow-x: hidden;
 }
 
-body::before,
-body::after {
-  content: '';
-  position: fixed;
-  width: 320px;
-  height: 120px;
-  border-radius: 100px;
-  background: rgba(255, 255, 255, 0.55);
-  filter: blur(18px);
-  z-index: -1;
-  animation: nube 40s linear infinite;
+/* Colores del cielo dinámico: registrados para que los cambios se animen de forma suave */
+@property --cielo-arriba {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #2a72d4;
 }
 
-body::before { top: 15%; left: -350px; }
-
-body::after {
-  top: 55%;
-  left: -350px;
-  width: 420px;
-  height: 150px;
-  animation-duration: 65s;
-  animation-delay: -20s;
+@property --cielo-medio {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #78b6ec;
 }
 
-@keyframes nube {
-  from { transform: translateX(0); }
-  to   { transform: translateX(calc(100vw + 700px)); }
+@property --cielo-horizonte {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #cfe8fb;
 }
 
 
@@ -58,13 +84,14 @@ body::after {
 
 /* Tarjetas oscuras del panel de clima, Luna y estaciones */
 .tarjeta-noche {
-  background: linear-gradient(160deg, rgba(18, 34, 68, 0.94), rgba(34, 66, 118, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* Vidrio esmerilado: deja ver a través el Sol, la Luna y los colores del cielo de fondo */
+  background: linear-gradient(160deg, rgba(18, 34, 68, 0.84), rgba(34, 66, 118, 0.76));
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   padding: 18px;
   color: #eef4ff;
   box-shadow: 0 8px 24px rgba(10, 25, 60, 0.25);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px) saturate(1.2);
 }
 
 .titulo-seccion {

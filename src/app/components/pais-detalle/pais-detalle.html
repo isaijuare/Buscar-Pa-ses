@@ -1,0 +1,81 @@
+<a routerLink="/" class="volver">← Volver al buscador</a>
+
+@if (cargando()) {
+  <div class="tarjeta-noche mensaje-carga">Cargando país…</div>
+} @else if (error()) {
+  <div class="tarjeta-noche mensaje-carga">
+    <p>{{ error() }}</p>
+    <a routerLink="/" class="enlace">Ir al buscador</a>
+  </div>
+} @else if (pais(); as p) {
+  <article class="ficha tarjeta-noche">
+    <header class="cabecera">
+      <img [src]="p.flag.url_svg" [alt]="'Bandera de ' + nombre()" class="bandera" />
+      <div class="titulos">
+        <h2>{{ nombre() }}</h2>
+        <p class="oficial">
+          {{ p.names.translations?.['spa']?.official ?? p.names.official }}
+          @if (p.names.common !== nombre()) {
+            · {{ p.names.common }}
+          }
+        </p>
+      </div>
+      <div class="acciones">
+        <button
+          type="button"
+          class="btn-accion"
+          [class.activo]="esFavorito()"
+          (click)="alternarFavorito()"
+          [attr.aria-pressed]="esFavorito()"
+        >
+          {{ esFavorito() ? '★ En favoritos' : '☆ Agregar a favoritos' }}
+        </button>
+        <a class="btn-accion" routerLink="/comparar" [queryParams]="{ a: p.codes.alpha_2.toLowerCase() }">⇄ Comparar</a>
+      </div>
+    </header>
+
+    <dl class="datos">
+      @for (d of datos(); track d.etiqueta) {
+        <div><dt>{{ d.etiqueta }}</dt><dd>{{ d.valor }}</dd></div>
+      }
+    </dl>
+
+    @if (vecinos().length) {
+      <div class="vecinos">
+        <span class="titulo-seccion">Países vecinos</span>
+        <div class="chips">
+          @for (v of vecinos(); track v.codigo) {
+            <a class="chip" [routerLink]="['/pais', v.codigo]">
+              <img [src]="v.bandera" alt="" />
+              {{ v.nombre }}
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </article>
+
+  <h2 class="titulo-bloque">Para viajar</h2>
+  @defer (on viewport) {
+    @if (capital(); as c) {
+      <app-datos-viaje [pais]="p" [lat]="c.lat" [lon]="c.lon" />
+    }
+  } @placeholder {
+    <div class="tarjeta-noche mensaje-carga">Hora local, moneda y feriados…</div>
+  }
+
+  @defer (on viewport) {
+    @if (ubicacionPanel(); as u) {
+      @if (eligioPunto()) {
+        <button type="button" class="btn-capital" (click)="volverACapital()">↩ Volver a {{ capital()?.nombre }}</button>
+      }
+      <app-panel-cielo
+        [ubicacionFija]="u"
+        [titulo]="eligioPunto() ? 'El cielo en el punto elegido' : 'El cielo en la capital'"
+        (puntoElegido)="onPuntoElegido($event)"
+      />
+    }
+  } @placeholder {
+    <div class="tarjeta-noche mensaje-carga">Clima, mapa, Luna y cielo nocturno…</div>
+  }
+}

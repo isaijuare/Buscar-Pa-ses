@@ -1,8 +1,6 @@
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, computed, effect, inject, signal, untracked } from '@angular/core';
 import { LugaresService, RADIO_BUSQUEDA_KM } from '../../services/lugares';
-import { UbicacionService } from '../../services/ubicacion';
-import { CategoriaLugar, INFO_CATEGORIA, LugarTuristico, ZonaLugares } from '../../models/lugares';
+import { CategoriaLugar, INFO_CATEGORIA } from '../../models/lugares';
 
 @Component({
   selector: 'app-lugares-turisticos',
@@ -12,26 +10,17 @@ import { CategoriaLugar, INFO_CATEGORIA, LugarTuristico, ZonaLugares } from '../
 })
 export class LugaresTuristicosComponent {
   private lugaresService = inject(LugaresService);
+  private elemento = inject(ElementRef<HTMLElement>);
 
   readonly radioKm = RADIO_BUSQUEDA_KM;
   readonly infoCategoria = INFO_CATEGORIA;
 
-  private ubicacion = inject(UbicacionService).actual;
-
-  // Capital del país elegido o, si no hay ninguno, la ubicación del usuario
-  zona = computed<ZonaLugares | null>(() => {
-    const pais = this.lugaresService.zonaPais();
-    if (pais) return pais;
-    const u = this.ubicacion();
-    return u ? { lat: u.lat, lon: u.lon, nombre: u.nombre, esPais: false } : null;
-  });
-
-  lugares = signal<LugarTuristico[]>([]);
-  cargando = signal(false);
-  error = signal<string | null>(null);
+  // El estado vive en el servicio: el mapa muestra los mismos lugares como marcadores
+  zona = this.lugaresService.zona;
+  lugares = this.lugaresService.lugares;
+  cargando = this.lugaresService.cargando;
+  error = this.lugaresService.error;
   filtro = signal<CategoriaLugar | null>(null);
-
-  private peticion?: Subscription;
 
   // Solo se muestran los filtros de las categorías que tienen resultados
   categorias = computed(() => {
@@ -46,11 +35,19 @@ export class LugaresTuristicosComponent {
   });
 
   constructor() {
+    // Al cambiar de zona se quita el filtro de categoría
     effect(() => {
-      const z = this.zona();
-      if (z) this.cargar(z.lat, z.lon);
+      this.zona();
+      untracked(() => this.filtro.set(null));
     });
-    inject(DestroyRef).onDestroy(() => this.peticion?.unsubscribe());
+
+    // En pantallas angostas la barra está debajo de todo: se lleva al usuario hasta ella
+    effect(() => {
+      if (this.lugaresService.pedidoDesplazamiento() === 0) return;
+      if (window.matchMedia('(max-width: 1000px)').matches) {
+        this.elemento.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   }
 
   volverACercaDeTi(): void {
@@ -63,23 +60,5 @@ export class LugaresTuristicosComponent {
 
   formatoDistancia(km: number): string {
     return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
-  }
-
-  private cargar(lat: number, lon: number): void {
-    this.peticion?.unsubscribe();
-    this.cargando.set(true);
-    this.error.set(null);
-    this.filtro.set(null);
-
-    this.peticion = this.lugaresService.buscarCerca(lat, lon).subscribe({
-      next: (lugares) => {
-        this.lugares.set(lugares);
-        this.cargando.set(false);
-      },
-      error: () => {
-        this.error.set('No se pudieron cargar los lugares turísticos.');
-        this.cargando.set(false);
-      }
-    });
   }
 }

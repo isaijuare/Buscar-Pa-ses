@@ -1,105 +1,65 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, forkJoin, map, shareReplay } from 'rxjs';
-import {
-  Country,
-  CountryApiResponse,
-  WeatherApiResponse,
-  mapApiToCountry,
-  normalizarTexto
-} from '../models/country';
-import { environment } from '../../environments/environment';
-
-
-interface ListaApiResponse<T> {
-  data: {
-    objects: T[];
-  };
-}
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, shareReplay } from 'rxjs';
+import { Country, CountryApiResponse, mapApiToCountry, normalizarTexto } from '../models/country';
 
 @Injectable({ providedIn: 'root' })
 export class CountryService {
   private http = inject(HttpClient);
 
-  private baseUrl = environment.restCountriesApiUrl;
-  private climaBaseUrl = 'https://api.open-meteo.com/v1/forecast';
-
-  private headers = new HttpHeaders({
-    Authorization: `Bearer ${environment.restCountriesApiKey}`
-  });
+  // Nuestro servidor hace de intermediario con restcountries (la API key nunca llega al navegador)
+  private baseUrl = '/api/paises';
 
   //trae toda la lista de una sola vez
-  private todosLosPaises$?: Observable<Country[]>;
+  private todosLosPaises$?: Observable<CountryApiResponse[]>;
   textoBusqueda = signal('');
   resultadosBusqueda = signal<Country[]>([]);
 
-   private obtenerTodosLosPaises(): Observable<Country[]> {
-    if (!this.todosLosPaises$) {
-      const offsets = [0, 100, 200];    
-      
-      const peticiones = offsets.map((offset) =>
-        this.http.get<ListaApiResponse<CountryApiResponse>>(
-          `${this.baseUrl}?limit=100&offset=${offset}&pretty=1`,
-          { headers: this.headers }
-        )
-      );
-
-      this.todosLosPaises$ = forkJoin(peticiones).pipe(
-        map((respuestas) => {
-          const todos = respuestas.flatMap((r) => r.data.objects);
-          return todos.map(mapApiToCountry);
-        }),
-        shareReplay(1) // guarda el resultado anterior en memoria
-      );
-    }
-
+  /** Todos los países con sus datos completos (se descarga una vez y queda en memoria). */
+  obtenerTodos(): Observable<CountryApiResponse[]> {
+    this.todosLosPaises$ ??= this.http.get<CountryApiResponse[]>(this.baseUrl).pipe(
+      shareReplay(1) // guarda el resultado anterior en memoria
+    );
     return this.todosLosPaises$;
   }
 
-  
+  /**
+   * Busca por nombre en español o inglés, en cualquier parte del nombre, o por código (jp, usa).
+   * Orden: primero los que empiezan con el texto, luego los que tienen una palabra que empieza
+   * con el texto y al final los que lo contienen en cualquier parte.
+   */
   buscarPaises(query: string): Observable<Country[]> {
     const texto = normalizarTexto(query);
 
-    if (!texto) {
-      return this.obtenerTodosLosPaises().pipe(map(() => []));
-    }
+    return this.obtenerTodos().pipe(
+      map((paises) => {
+        if (!texto) return [];
 
-    return this.obtenerTodosLosPaises().pipe(
-      map((paises) =>
-        paises.filter((pais) => {
-          const nombreIngles = normalizarTexto(pais.name);
-          const nombreEspanol = pais.nameEs ? normalizarTexto(pais.nameEs) : '';
-
-          return (
-            nombreIngles.startsWith(texto) || nombreEspanol.startsWith(texto)
-          );
-        })
-      )
+        return paises
+          .map((pais) => ({ pais, puntaje: this.puntajeCoincidencia(pais, texto) }))
+          .filter((r) => r.puntaje !== null)
+          .sort((a, b) => a.puntaje! - b.puntaje! || b.pais.population - a.pais.population)
+          .map((r) => mapApiToCountry(r.pais));
+      })
     );
   }
 
-  //** Trae un país por código
-  obtenerPorCodigo(codigoPais: string): Observable<Country> {
-    return this.http
-      .get<ListaApiResponse<CountryApiResponse>>(
-        `${this.baseUrl}/codes.alpha_2/${codigoPais.toLowerCase()}?pretty=1`,
-        { headers: this.headers }
-      )
-      .pipe(map((respuesta) => mapApiToCountry(respuesta.data.objects[0])));
+  //** Trae un país por código (alpha_2 o alpha_3)
+  obtenerPorCodigo(codigoPais: string): Observable<CountryApiResponse> {
+    return this.http.get<CountryApiResponse>(`${this.baseUrl}/${codigoPais.toLowerCase()}`);
   }
 
-  //** Datos demográficos: reutiliza el mismo endpoint por código */
-  obtenerDatosDemograficos(codigoPais: string): Observable<CountryApiResponse> {
-    return this.http
-      .get<ListaApiResponse<CountryApiResponse>>(
-        `${this.baseUrl}/codes.alpha_2/${codigoPais.toLowerCase()}?pretty=1`,
-        { headers: this.headers }
-      )
-      .pipe(map((respuesta) => respuesta.data.objects[0]));
-  }
+  // Menor puntaje = mejor coincidencia; null = no coincide
+  private puntajeCoincidencia(pais: CountryApiResponse, texto: string): number | null {
+    if (pais.codes.alpha_2.toLowerCase() === texto || pais.codes.alpha_3.toLowerCase() === texto) return 0;
 
-  obtenerClima(lat: number, lon: number): Observable<WeatherApiResponse> {
-    const params = `latitude=${lat}&longitude=${lon}&hourly=temperature_2m`;
-    return this.http.get<WeatherApiResponse>(`${this.climaBaseUrl}?${params}`);
+    const nombres = [pais.names.common, pais.names.translations?.['spa']?.common]
+      .filter((n): n is string => Boolean(n))
+      .map(normalizarTexto);
+
+    if (nombres.some((n) => n.startsWith(texto))) return 1;
+    if (nombres.some((n) => n.split(/[\s\-(),]+/).some((palabra) => palabra.startsWith(texto)))) return 2;
+    if (nombres.some((n) => n.includes(texto))) return 3;
+    return null;
   }
 }

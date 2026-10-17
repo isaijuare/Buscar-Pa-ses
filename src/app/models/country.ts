@@ -1,22 +1,18 @@
-// Estructura Actualizada para que se muestren todos los paises y banderas
+// Datos de cada país tal como los entrega nuestro servidor (/api/paises).
+// El servidor recorta la respuesta de restcountries a estos campos para que pese menos.
 export interface CountryApiResponse {
   names: {
     common: string;
     official: string;
-    native?: Record<string, { common: string; official: string }>;
-    // Traducciones a otros idiomas para que se pueda buscar por nombre en español, ing
+    // Solo se conserva la traducción al español, para buscar y mostrar en español
     translations?: Record<string, { common: string; official: string }>;
   };
   codes: {
     alpha_2: string;
     alpha_3: string;
-    ccn3: string;
-    fifa?: string;
-    cioc?: string;
   };
   capitals?: {
     name: string;
-    primary: boolean;
     coordinates: { lat: number; lng: number };
   }[];
   flag: {
@@ -26,18 +22,27 @@ export interface CountryApiResponse {
   };
   region: string;
   subregion?: string;
+  continents?: string[];
   area?: { kilometers: number; miles: number };
   population: number;
-  languages?: { name: string; bcp47: string }[];
+  languages?: { name: string; native_name?: string; bcp47: string }[];
   currencies?: { code: string; name: string; symbol: string }[];
   timezones?: string[];
+  /** Códigos alpha_3 de los países vecinos */
+  borders?: string[];
+  calling_codes?: string[];
+  tlds?: string[];
+  landlocked?: boolean;
+  driving_side?: string;
+  /** Centro geográfico del país */
+  coordinates?: { lat: number; lng: number };
 }
 
 //el pais se busca en español y se muestra en inglés
 export interface Country {
   code: string;
-  name: string;      
-  nameEs?: string;    
+  name: string;
+  nameEs?: string;
   flagUrl?: string;
   capital?: string;
   population?: number;
@@ -62,24 +67,16 @@ export function mapApiToCountry(api: CountryApiResponse): Country {
   };
 }
 
+/** Nombre en español si existe; si no, el nombre común en inglés. */
+export function nombreEnEspanol(api: CountryApiResponse): string {
+  return api.names.translations?.['spa']?.common ?? api.names.common;
+}
+
 //los encuentra sin importar como se escriba (acentos, mayúsculas, minúsculas, espacios)
 export function normalizarTexto(texto: string): string {
   return texto
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .trim();
-}
-
-export interface WeatherApiResponse {
-  latitude: number;
-  longitude: number;
-  timezone: string;
-  hourly: {
-    time: string[];
-    temperature_2m: number[];
-  };
-  hourly_units: {
-    temperature_2m: string;
-  };
 }

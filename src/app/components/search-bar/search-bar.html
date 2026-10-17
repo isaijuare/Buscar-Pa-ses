@@ -1,7 +1,8 @@
 <div class="buscador">
   <input
     type="text"
-    placeholder="Buscar país..."
+    placeholder="Buscar país (nombre o código: jp, usa)…"
+    aria-label="Buscar país"
     [(ngModel)]="texto"
     (input)="onInput()"
   />

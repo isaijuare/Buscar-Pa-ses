@@ -1,0 +1,144 @@
+.viaje {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 16px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.reloj {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.fecha {
+  margin: 6px 0 0;
+}
+
+/* "sábado, 17 de octubre" → "Sábado, 17 de octubre" */
+.fecha::first-letter {
+  text-transform: uppercase;
+}
+
+.detalle {
+  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: #a9c4ee;
+}
+
+.diferencia {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 233, 168, 0.15);
+  color: #ffe9a8;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.conversor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a9c4ee;
+  min-width: 0;
+}
+
+.campo:first-child,
+.campo:last-child {
+  grid-column: 1 / -1;
+}
+
+.campo input,
+.campo select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.campo select option {
+  color: #14264a;
+}
+
+.resultado {
+  margin: 12px 0 0;
+  font-size: 1rem;
+}
+
+.resultado strong {
+  color: #ffe9a8;
+}
+
+.feriados {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feriados li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.feriados li > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nombre {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.falta {
+  font-size: 0.74rem;
+  color: #ffe9a8;
+  white-space: nowrap;
+}
+
+.practicos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0;
+}
+
+.practicos dt {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a9c4ee;
+}
+
+.practicos dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.mensaje {
+  font-size: 0.82rem;
+}

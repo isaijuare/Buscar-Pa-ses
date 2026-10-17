@@ -36,6 +36,8 @@ const RADIO_RUEDA = 40;
 export class EstacionesComponent {
   ubicacion = input.required<Ubicacion>();
   ahora = input.required<Date>();
+  /** Zona horaria IANA del lugar; sin ella se usa la del navegador */
+  zona = input<string | undefined>(undefined);
 
   readonly radio = RADIO_RUEDA;
 
@@ -47,7 +49,7 @@ export class EstacionesComponent {
       color: COLOR_ESTACION[e.actual.estacion],
       porcentaje: Math.round(e.progreso * 100),
       dias: Math.ceil(e.diasRestantes),
-      desde: formatoFechaLarga(e.actual.fecha)
+      desde: formatoFechaLarga(e.actual.fecha, this.zona())
     };
   });
 
@@ -66,8 +68,8 @@ export class EstacionesComponent {
         estacion: e.estacion,
         icono: ICONO_ESTACION[e.estacion],
         color: COLOR_ESTACION[e.estacion],
-        fecha: formatoFechaLarga(e.fecha),
-        hora: formatoHora(e.fecha),
+        fecha: formatoFechaLarga(e.fecha, this.zona()),
+        hora: formatoHora(e.fecha, this.zona()),
         falta: tiempoRelativo(e.fecha, ahora)
       }));
   });

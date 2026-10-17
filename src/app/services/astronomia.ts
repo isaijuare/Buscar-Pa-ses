@@ -3,7 +3,9 @@
 // Fases y estaciones: algoritmos de Jean Meeus, "Astronomical Algorithms" (cap. 27 y 49).
 // Posición de la Luna y del Sol: fórmulas simplificadas usadas por SunCalc.
 
-const { sin, cos, tan, asin, acos, atan2, PI, abs, sqrt, floor } = Math;
+import { inicioDelDia } from '../utils/zona-horaria';
+
+const { sin, cos, tan, asin, acos, atan2, PI, abs, sqrt, floor, log10 } = Math;
 const RAD = PI / 180;
 const DIA_MS = 86400000;
 const J1970 = 2440588;
@@ -254,10 +256,9 @@ export interface HorarioLuna {
   siempreAbajo: boolean;
 }
 
-/** Salida y puesta de la Luna durante el día local de `fecha` en la ubicación indicada. */
-export function horarioLuna(fecha: Date, lat: number, lon: number): HorarioLuna {
-  const inicio = new Date(fecha);
-  inicio.setHours(0, 0, 0, 0);
+/** Salida y puesta de la Luna durante el día de `fecha` en la zona horaria del lugar. */
+export function horarioLuna(fecha: Date, lat: number, lon: number, zona?: string): HorarioLuna {
+  const inicio = inicioDelDia(fecha, zona);
 
   const hc = 0.133 * RAD;
   let h0 = altitudLuna(inicio, lat, lon) - hc;
@@ -416,4 +417,356 @@ export function duracionDiaMinutos(fecha: Date, lat: number, lon: number): numbe
   if (cosH <= -1) return 1440;
   // El día dura el doble del ángulo horario (en fracciones de vuelta)
   return ((2 * acos(cosH)) / (2 * PI)) * 1440;
+}
+
+// ---------- Sol: hora dorada y hora azul ----------
+
+/** Altura (grados) y rumbo desde el norte (grados) del Sol en ese instante. */
+export function posicionSol(fecha: Date, lat: number, lon: number): { altitud: number; azimut: number } {
+  const d = diasDesdeJ2000(fecha);
+  const s = coordenadasSol(d);
+  const H = tiempoSidereo(d, RAD * -lon) - s.ra;
+  return {
+    altitud: altitud(H, RAD * lat, s.dec) / RAD,
+    azimut: rumboDesdeNorte(H, RAD * lat, s.dec)
+  };
+}
+
+/** Altura (grados) y rumbo desde el norte (grados) de la Luna en ese instante. */
+export function posicionLuna(fecha: Date, lat: number, lon: number): { altitud: number; azimut: number } {
+  const d = diasDesdeJ2000(fecha);
+  const c = coordenadasLuna(d);
+  const H = tiempoSidereo(d, RAD * -lon) - c.ra;
+  const h = altitud(H, RAD * lat, c.dec);
+  return { altitud: (h + refraccion(h)) / RAD, azimut: rumboDesdeNorte(H, RAD * lat, c.dec) };
+}
+
+/** Vector unitario hacia el Sol en coordenadas ecuatoriales (para saber si un satélite está iluminado). */
+export function direccionSol(fecha: Date): [number, number, number] {
+  const s = coordenadasSol(diasDesdeJ2000(fecha));
+  return [cos(s.dec) * cos(s.ra), cos(s.dec) * sin(s.ra), sin(s.dec)];
+}
+
+function rumboDesdeNorte(H: number, phi: number, dec: number): number {
+  // SunCalc mide desde el sur; se pasa a la convención de brújula (0° = norte, 90° = este)
+  const desdeSur = atan2(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi));
+  return (((desdeSur / RAD + 180) % 360) + 360) % 360;
+}
+
+export interface TiemposSol {
+  mediodia: Date;
+  amanecer?: Date;
+  atardecer?: Date;
+  /** Hora azul: el Sol entre −6° y −4° bajo el horizonte */
+  azulManana?: [Date, Date];
+  /** Hora dorada: el Sol entre −4° y 6° sobre el horizonte */
+  doradaManana?: [Date, Date];
+  doradaTarde?: [Date, Date];
+  azulTarde?: [Date, Date];
+}
+
+/** Horarios del Sol para el día de `fecha` en la zona horaria del lugar. */
+export function tiemposSol(fecha: Date, lat: number, lon: number, zona?: string): TiemposSol {
+  const mediodiaLocal = new Date(inicioDelDia(fecha, zona).valueOf() + DIA_MS / 2);
+  const J0 = 0.0009;
+  const lw = RAD * -lon;
+  const phi = RAD * lat;
+  const d = diasDesdeJ2000(mediodiaLocal);
+  const n = Math.round(d - J0 - lw / (2 * PI));
+  const ds = J0 + lw / (2 * PI) + n;
+  const M = anomaliaSolar(ds);
+  const L = longitudEclipticaSol(M);
+  const dec = declinacion(L, 0);
+  const transito = J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
+
+  // Instantes en que el Sol pasa por una altura dada (subiendo y bajando); undefined si no llega
+  const cruce = (alturaGrados: number): [Date, Date] | undefined => {
+    const cosH = (sin(alturaGrados * RAD) - sin(phi) * sin(dec)) / (cos(phi) * cos(dec));
+    if (cosH < -1 || cosH > 1) return undefined;
+    const w = acos(cosH);
+    const puesta = J2000 + (J0 + (w + lw) / (2 * PI) + n) + 0.0053 * sin(M) - 0.0069 * sin(2 * L);
+    const salida = transito - (puesta - transito);
+    return [desdeJuliano(salida), desdeJuliano(puesta)];
+  };
+
+  const horizonte = cruce(-0.833);
+  const menos6 = cruce(-6);
+  const menos4 = cruce(-4);
+  const mas6 = cruce(6);
+
+  return {
+    mediodia: desdeJuliano(transito),
+    amanecer: horizonte?.[0],
+    atardecer: horizonte?.[1],
+    azulManana: menos6 && menos4 ? [menos6[0], menos4[0]] : undefined,
+    doradaManana: menos4 && mas6 ? [menos4[0], mas6[0]] : undefined,
+    doradaTarde: menos4 && mas6 ? [mas6[1], menos4[1]] : undefined,
+    azulTarde: menos6 && menos4 ? [menos4[1], menos6[1]] : undefined
+  };
+}
+
+// ---------- Planetas ----------
+// Elementos orbitales aproximados de JPL (E. M. Standish), válidos de 1800 a 2050:
+// [a (UA), e, I, L, longitud del perihelio, longitud del nodo] y su variación por siglo.
+
+export type NombrePlaneta = 'Mercurio' | 'Venus' | 'Marte' | 'Júpiter' | 'Saturno';
+
+const ELEMENTOS: Record<NombrePlaneta | 'Tierra', [number[], number[]]> = {
+  Mercurio: [
+    [0.38709927, 0.20563593, 7.00497902, 252.2503235, 77.45779628, 48.33076593],
+    [0.00000037, 0.00001906, -0.00594749, 149472.67411175, 0.16047689, -0.12534081]
+  ],
+  Venus: [
+    [0.72333566, 0.00677672, 3.39467605, 181.9790995, 131.60246718, 76.67984255],
+    [0.0000039, -0.00004107, -0.0007889, 58517.81538729, 0.00268329, -0.27769418]
+  ],
+  Tierra: [
+    [1.00000261, 0.01671123, -0.00001531, 100.46457166, 102.93768193, 0],
+    [0.00000562, -0.00004392, -0.01294668, 35999.37244981, 0.32327364, 0]
+  ],
+  Marte: [
+    [1.52371034, 0.0933941, 1.84969142, -4.55343205, -23.94362959, 49.55953891],
+    [0.00001847, 0.00007882, -0.00813131, 19140.30268499, 0.44441088, -0.29257343]
+  ],
+  Júpiter: [
+    [5.202887, 0.04838624, 1.30439695, 34.39644051, 14.72847983, 100.47390909],
+    [-0.00011607, -0.00013253, -0.00183714, 3034.74612775, 0.21252668, 0.20469106]
+  ],
+  Saturno: [
+    [9.53667594, 0.05386179, 2.48599187, 49.95424423, 92.59887831, 113.66242448],
+    [-0.0012506, -0.00050991, 0.00193609, 1222.49362201, -0.41897216, -0.28867794]
+  ]
+};
+
+// Magnitud absoluta y corrección por ángulo de fase (fórmulas simplificadas)
+const BRILLO: Record<NombrePlaneta, (fase: number) => number> = {
+  Mercurio: (i) => -0.42 + 0.038 * i - 0.000273 * i * i + 0.000002 * i ** 3,
+  Venus: (i) => -4.4 + 0.0009 * i + 0.000239 * i * i - 0.00000065 * i ** 3,
+  Marte: (i) => -1.52 + 0.016 * i,
+  Júpiter: (i) => -9.4 + 0.005 * i,
+  Saturno: () => -8.88
+};
+
+function posicionHeliocentrica(nombre: NombrePlaneta | 'Tierra', siglos: number): [number, number, number] {
+  const [base, tasa] = ELEMENTOS[nombre];
+  const [a, e, I, L, perihelio, nodo] = base.map((v, i) => v + tasa[i] * siglos);
+  const argPerihelio = RAD * (perihelio - nodo);
+  const Om = RAD * nodo;
+  const inc = RAD * I;
+  const M = RAD * ((((L - perihelio) % 360) + 540) % 360 - 180);
+
+  // Ecuación de Kepler por Newton-Raphson
+  let E = M + e * sin(M);
+  for (let k = 0; k < 8; k++) E -= (E - e * sin(E) - M) / (1 - e * cos(E));
+
+  const xp = a * (cos(E) - e);
+  const yp = a * sqrt(1 - e * e) * sin(E);
+  const cw = cos(argPerihelio);
+  const sw = sin(argPerihelio);
+  const cO = cos(Om);
+  const sO = sin(Om);
+  const ci = cos(inc);
+  const si = sin(inc);
+  return [
+    (cw * cO - sw * sO * ci) * xp + (-sw * cO - cw * sO * ci) * yp,
+    (cw * sO + sw * cO * ci) * xp + (-sw * sO + cw * cO * ci) * yp,
+    sw * si * xp + cw * si * yp
+  ];
+}
+
+function posicionPlaneta(nombre: NombrePlaneta, fecha: Date, lat: number, lon: number) {
+  const d = diasDesdeJ2000(fecha);
+  const siglos = d / 36525;
+  const p = posicionHeliocentrica(nombre, siglos);
+  const t = posicionHeliocentrica('Tierra', siglos);
+  const x = p[0] - t[0];
+  const y = p[1] - t[1];
+  const z = p[2] - t[2];
+
+  // De coordenadas eclípticas a ecuatoriales
+  const eps = RAD * 23.43928;
+  const ye = y * cos(eps) - z * sin(eps);
+  const ze = y * sin(eps) + z * cos(eps);
+  const ra = atan2(ye, x);
+  const dec = atan2(ze, sqrt(x * x + ye * ye));
+
+  const H = tiempoSidereo(d, RAD * -lon) - ra;
+  const h = altitud(H, RAD * lat, dec);
+
+  const r = sqrt(p[0] ** 2 + p[1] ** 2 + p[2] ** 2);
+  const delta = sqrt(x * x + y * y + z * z);
+  const R = sqrt(t[0] ** 2 + t[1] ** 2 + t[2] ** 2);
+  const fase = acos(Math.max(-1, Math.min(1, (r * r + delta * delta - R * R) / (2 * r * delta)))) / RAD;
+
+  return {
+    altitud: (h + refraccion(h)) / RAD,
+    azimut: rumboDesdeNorte(H, RAD * lat, dec),
+    magnitud: BRILLO[nombre](fase) + 5 * log10(r * delta)
+  };
+}
+
+export interface PlanetaVisible {
+  nombre: NombrePlaneta;
+  /** Mejor momento para verlo (cuando está más alto con el cielo oscuro) */
+  mejorHora: Date;
+  alturaMaxima: number;
+  rumbo: string;
+  desde: Date;
+  hasta: Date;
+  magnitud: number;
+}
+
+const RUMBOS = ['norte', 'noreste', 'este', 'sureste', 'sur', 'suroeste', 'oeste', 'noroeste'];
+export const textoRumbo = (azimut: number) => RUMBOS[Math.round(azimut / 45) % 8];
+
+/**
+ * Planetas visibles a simple vista esta noche (cielo oscuro y más de 8° sobre el horizonte).
+ * Recorre la noche en curso o la próxima, cada 10 minutos.
+ */
+export function planetasVisibles(ahora: Date, lat: number, lon: number): PlanetaVisible[] {
+  const paso = 10 * 60000;
+  const fin = ahora.valueOf() + 26 * 3600000;
+  const nombres: NombrePlaneta[] = ['Mercurio', 'Venus', 'Marte', 'Júpiter', 'Saturno'];
+  const mejores = new Map<NombrePlaneta, PlanetaVisible>();
+
+  let huboNoche = false;
+  for (let t = ahora.valueOf(); t <= fin; t += paso) {
+    const instante = new Date(t);
+    if (posicionSol(instante, lat, lon).altitud >= -6) {
+      // Terminó la noche: no se sigue hasta la siguiente
+      if (huboNoche) break;
+      continue;
+    }
+    huboNoche = true;
+
+    for (const nombre of nombres) {
+      const pos = posicionPlaneta(nombre, instante, lat, lon);
+      if (pos.altitud < 8) continue;
+      const previo = mejores.get(nombre);
+      if (!previo) {
+        mejores.set(nombre, {
+          nombre,
+          mejorHora: instante,
+          alturaMaxima: pos.altitud,
+          rumbo: textoRumbo(pos.azimut),
+          desde: instante,
+          hasta: instante,
+          magnitud: pos.magnitud
+        });
+        continue;
+      }
+      previo.hasta = instante;
+      if (pos.altitud > previo.alturaMaxima) {
+        previo.mejorHora = instante;
+        previo.alturaMaxima = pos.altitud;
+        previo.rumbo = textoRumbo(pos.azimut);
+        previo.magnitud = pos.magnitud;
+      }
+    }
+  }
+  return [...mejores.values()].sort((a, b) => a.magnitud - b.magnitud);
+}
+
+// ---------- Eclipses (Meeus, cap. 54) ----------
+
+export type TipoEclipse =
+  | 'solar-total'
+  | 'solar-anular'
+  | 'solar-hibrido'
+  | 'solar-parcial'
+  | 'lunar-total'
+  | 'lunar-parcial'
+  | 'lunar-penumbral';
+
+export interface Eclipse {
+  tipo: TipoEclipse;
+  fecha: Date;
+  magnitud: number;
+  /** Lunares: si la Luna está sobre el horizonte del lugar. Solares: si el Sol lo está. */
+  astroSobreHorizonte: boolean;
+}
+
+export const NOMBRE_ECLIPSE: Record<TipoEclipse, string> = {
+  'solar-total': 'Eclipse solar total',
+  'solar-anular': 'Eclipse solar anular',
+  'solar-hibrido': 'Eclipse solar híbrido',
+  'solar-parcial': 'Eclipse solar parcial',
+  'lunar-total': 'Eclipse lunar total',
+  'lunar-parcial': 'Eclipse lunar parcial',
+  'lunar-penumbral': 'Eclipse lunar penumbral'
+};
+
+function analizarEclipse(k: number, lat: number, lon: number): Eclipse | null {
+  const T = k / 1236.85;
+  const F = RAD * (160.7108 + 390.67050284 * k - 0.0016118 * T ** 2 - 0.00000227 * T ** 3 + 0.000000011 * T ** 4);
+  // Lejos del nodo lunar no hay eclipse
+  if (abs(sin(F)) > 0.36) return null;
+
+  const E = 1 - 0.002516 * T - 0.0000074 * T ** 2;
+  const M = RAD * (2.5534 + 29.1053567 * k - 0.0000014 * T ** 2 - 0.00000011 * T ** 3);
+  const Mp = RAD * (201.5643 + 385.81693528 * k + 0.0107582 * T ** 2 + 0.00001238 * T ** 3 - 0.000000058 * T ** 4);
+  const O = RAD * (124.7746 - 1.56375588 * k + 0.0020672 * T ** 2 + 0.00000215 * T ** 3);
+  const F1 = F - RAD * 0.02665 * sin(O);
+
+  const P =
+    0.207 * E * sin(M) +
+    0.0024 * E * sin(2 * M) -
+    0.0392 * sin(Mp) +
+    0.0116 * sin(2 * Mp) -
+    0.0073 * E * sin(Mp + M) +
+    0.0067 * E * sin(Mp - M) +
+    0.0118 * sin(2 * F1);
+  const Q =
+    5.2207 -
+    0.0048 * E * cos(M) +
+    0.002 * E * cos(2 * M) -
+    0.3299 * cos(Mp) -
+    0.006 * E * cos(Mp + M) +
+    0.0041 * E * cos(Mp - M);
+  const W = abs(cos(F1));
+  const gamma = (P * cos(F1) + Q * sin(F1)) * (1 - 0.0048 * W);
+  const u = 0.0059 + 0.0046 * E * cos(M) - 0.0182 * cos(Mp) + 0.0004 * cos(2 * Mp) - 0.0005 * cos(M + Mp);
+  const g = abs(gamma);
+  const fecha = fechaFase(k);
+
+  if (Number.isInteger(k)) {
+    if (g > 1.5433 + u) return null;
+    let tipo: TipoEclipse;
+    let magnitud = 1;
+    if (g < 0.9972) {
+      if (u < 0) tipo = 'solar-total';
+      else if (u > 0.0047) tipo = 'solar-anular';
+      else tipo = u < 0.00464 * sqrt(1 - gamma * gamma) ? 'solar-hibrido' : 'solar-anular';
+    } else {
+      tipo = 'solar-parcial';
+      magnitud = (1.5433 + u - g) / (0.5461 + 2 * u);
+    }
+    return { tipo, fecha, magnitud, astroSobreHorizonte: posicionSol(fecha, lat, lon).altitud > 0 };
+  }
+
+  const penumbral = (1.5573 + u - g) / 0.545;
+  const umbral = (1.0128 - u - g) / 0.545;
+  let tipo: TipoEclipse;
+  if (umbral >= 1) tipo = 'lunar-total';
+  else if (umbral > 0) tipo = 'lunar-parcial';
+  else if (penumbral > 0) tipo = 'lunar-penumbral';
+  else return null;
+  return {
+    tipo,
+    fecha,
+    magnitud: umbral > 0 ? umbral : penumbral,
+    astroSobreHorizonte: altitudLuna(fecha, lat, lon) > 0
+  };
+}
+
+/** Próximos eclipses de Sol y de Luna a partir de `desde`. */
+export function proximosEclipses(desde: Date, cantidad: number, lat: number, lon: number): Eclipse[] {
+  const resultado: Eclipse[] = [];
+  let k = floor((diasDesdeJ2000(desde) / 365.25) * 12.3685) - 1;
+  // Como máximo unos 5 años de lunaciones
+  for (let i = 0; i < 140 && resultado.length < cantidad; i++, k += 0.5) {
+    const eclipse = analizarEclipse(k, lat, lon);
+    if (eclipse && eclipse.fecha > desde) resultado.push(eclipse);
+  }
+  return resultado;
 }

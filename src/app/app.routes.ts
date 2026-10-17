@@ -1,16 +1,25 @@
 import { Routes } from '@angular/router';
-import { ClimaComponent } from './components/clima/clima';
-import { DemografiaComponent } from './components/demografia/demografia';
 import { CountryListComponent } from './components/country-list/country-list';
 
+// Demografía, clima y la tarjeta de país se muestran dentro de la pantalla principal
+// (modal y tarjetas), no como páginas propias: necesitan datos que les pasa el padre.
 export const routes: Routes = [
-
-  { path: '', component: CountryListComponent },
-  { path: 'demografia', component: DemografiaComponent },
-  { path: 'clima', component: ClimaComponent },
-
-{ path: 'search', loadComponent: () => import('./components/search-bar/search-bar').then(m => m.SearchBarComponent)},
-
-{ path: 'country-card', loadComponent: () => import('./components/country-card/country-card').then(m => m.CountryCardComponent)}
-
+  { path: '', component: CountryListComponent, title: 'Buscador de Países' },
+  {
+    path: 'pais/:codigo',
+    loadComponent: () => import('./components/pais-detalle/pais-detalle').then((m) => m.PaisDetalleComponent)
+  },
+  {
+    path: 'comparar',
+    loadComponent: () => import('./components/comparador/comparador').then((m) => m.ComparadorComponent),
+    title: 'Comparar países · Buscador de Países',
+    data: { barraLateral: false }
+  },
+  {
+    path: 'quiz',
+    loadComponent: () => import('./components/quiz/quiz').then((m) => m.QuizComponent),
+    title: 'Quiz de banderas y capitales · Buscador de Países',
+    data: { barraLateral: false }
+  },
+  { path: '**', redirectTo: '' }
 ];

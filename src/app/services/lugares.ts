@@ -1,8 +1,10 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, PLATFORM_ID, computed, effect, inject, signal, untracked } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable, Subscription, forkJoin, map, of, switchMap } from 'rxjs';
 import { CategoriaLugar, LugarTuristico, ZonaLugares } from '../models/lugares';
 import { Country } from '../models/country';
+import { UbicacionService } from './ubicacion';
 
 interface PaginaGeosearch {
   pageid: number;
@@ -64,24 +66,76 @@ const MINIMO_RESULTADOS = 6;
 @Injectable({ providedIn: 'root' })
 export class LugaresService {
   private http = inject(HttpClient);
+  private ubicacion = inject(UbicacionService).actual;
+  private enNavegador = isPlatformBrowser(inject(PLATFORM_ID));
 
-  // Si se eligió un país desde su tarjeta, la barra muestra los sitios de su capital
-  zonaPais = signal<ZonaLugares | null>(null);
+  // Zona elegida a mano (capital de un país o punto del mapa); si es null, se usa la del usuario
+  zonaElegida = signal<ZonaLugares | null>(null);
 
-  mostrarPais(pais: Country): void {
+  zona = computed<ZonaLugares | null>(() => {
+    const elegida = this.zonaElegida();
+    if (elegida) return elegida;
+    const u = this.ubicacion();
+    return u ? { lat: u.lat, lon: u.lon, nombre: u.nombre, esPais: false } : null;
+  });
+
+  // Estado compartido: lo muestran la barra lateral y los marcadores del mapa
+  lugares = signal<LugarTuristico[]>([]);
+  cargando = signal(false);
+  error = signal<string | null>(null);
+
+  /** Aumenta cada vez que se pide llevar la vista hasta la barra (en pantallas angostas). */
+  pedidoDesplazamiento = signal(0);
+
+  private peticion?: Subscription;
+
+  constructor() {
+    effect(() => {
+      const z = this.zona();
+      // En el servidor no se buscan lugares: la barra se completa en el navegador
+      if (z && this.enNavegador) untracked(() => this.cargar(z.lat, z.lon));
+    });
+  }
+
+  /** Muestra los sitios alrededor de la capital del país. */
+  mostrarPais(pais: Country, desplazar = false): void {
     if (pais.lat == null || pais.lon == null) return;
     const nombrePais = pais.nameEs ?? pais.name;
-    this.zonaPais.set({
+    this.zonaElegida.set({
       lat: pais.lat,
       lon: pais.lon,
       nombre: pais.capital ? `${pais.capital}, ${nombrePais}` : nombrePais,
       esPais: true,
       banderaUrl: pais.flagUrl
     });
+    if (desplazar) this.pedidoDesplazamiento.update((n) => n + 1);
+  }
+
+  elegirZona(zona: ZonaLugares | null): void {
+    this.zonaElegida.set(zona);
   }
 
   volverACercaDeTi(): void {
-    this.zonaPais.set(null);
+    this.zonaElegida.set(null);
+  }
+
+  private cargar(lat: number, lon: number): void {
+    // Si cambia la zona antes de que responda, se descarta la búsqueda anterior
+    this.peticion?.unsubscribe();
+    this.cargando.set(true);
+    this.error.set(null);
+
+    this.peticion = this.buscarCerca(lat, lon).subscribe({
+      next: (lugares) => {
+        this.lugares.set(lugares);
+        this.cargando.set(false);
+      },
+      error: () => {
+        this.lugares.set([]);
+        this.error.set('No se pudieron cargar los lugares turísticos.');
+        this.cargando.set(false);
+      }
+    });
   }
 
   buscarCerca(lat: number, lon: number): Observable<LugarTuristico[]> {

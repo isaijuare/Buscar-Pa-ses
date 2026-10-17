@@ -22,6 +22,8 @@ const DIBUJO_FASE: Record<TipoFase, { iluminacion: number; creciente: boolean }>
 export class FasesLunaComponent {
   ubicacion = input.required<Ubicacion>();
   ahora = input.required<Date>();
+  /** Zona horaria IANA del lugar; sin ella se usa la del navegador */
+  zona = input<string | undefined>(undefined);
 
   hemisferioSur = computed(() => this.ubicacion().lat < 0);
 
@@ -32,21 +34,23 @@ export class FasesLunaComponent {
 
   horario = computed(() => {
     const { lat, lon } = this.ubicacion();
-    const h = horarioLuna(this.ahora(), lat, lon);
-    const texto = (fecha?: Date) => (fecha ? formatoHora(fecha) : '—');
+    const zona = this.zona();
+    const h = horarioLuna(this.ahora(), lat, lon, zona);
+    const texto = (fecha?: Date) => (fecha ? formatoHora(fecha, zona) : '—');
     return {
       salida: h.siempreArriba ? 'Visible todo el día' : texto(h.salida),
       puesta: h.siempreAbajo ? 'No sale hoy' : texto(h.puesta)
     };
   });
 
-  proximas = computed(() =>
-    this.luna().proximas.map((fase) => ({
+  proximas = computed(() => {
+    const zona = this.zona();
+    return this.luna().proximas.map((fase) => ({
       ...DIBUJO_FASE[fase.tipo],
       nombre: NOMBRE_FASE[fase.tipo],
-      fecha: formatoFechaCorta(fase.fecha),
-      hora: formatoHora(fase.fecha),
+      fecha: formatoFechaCorta(fase.fecha, zona),
+      hora: formatoHora(fase.fecha, zona),
       falta: tiempoRelativo(fase.fecha, this.ahora())
-    }))
-  );
+    }));
+  });
 }

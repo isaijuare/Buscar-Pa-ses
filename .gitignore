@@ -46,3 +46,6 @@ Thumbs.db
 # Environments (contienen API keys): copiar environment.example.ts y completar la key
 /src/environments/environment.ts
 /src/environments/environment.development.ts
+
+# Variables de entorno del servidor (API keys)
+.env

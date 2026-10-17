@@ -1,15 +1,22 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { PronosticoApiResponse } from '../models/cielo';
+import { Observable, map, shareReplay } from 'rxjs';
+import { CalidadAireApiResponse, PronosticoApiResponse } from '../models/cielo';
 
 @Injectable({ providedIn: 'root' })
 export class TiempoService {
   private http = inject(HttpClient);
   private baseUrl = 'https://api.open-meteo.com/v1/forecast';
 
+  // El fondo del cielo y la tarjeta del clima piden lo mismo: se comparte durante 10 minutos
+  private pronosticos = new Map<string, { datos$: Observable<PronosticoApiResponse>; vence: number }>();
+
   /** Clima actual, por hora y diario. Las horas vienen en la zona horaria del lugar. */
   obtenerPronostico(lat: number, lon: number): Observable<PronosticoApiResponse> {
+    const clave = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+    const guardado = this.pronosticos.get(clave);
+    if (guardado && guardado.vence > Date.now()) return guardado.datos$;
+
     const params = new URLSearchParams({
       latitude: String(lat),
       longitude: String(lon),
@@ -21,7 +28,42 @@ export class TiempoService {
       timezone: 'auto',
       forecast_days: '2'
     });
-    return this.http.get<PronosticoApiResponse>(`${this.baseUrl}?${params}`);
+    const datos$ = this.http.get<PronosticoApiResponse>(`${this.baseUrl}?${params}`).pipe(shareReplay(1));
+    this.pronosticos.set(clave, { datos$, vence: Date.now() + 10 * 60000 });
+    return datos$;
+  }
+
+  private zonas = new Map<string, Observable<string>>();
+
+  /** Zona horaria IANA del lugar (p. ej. "Asia/Tokyo"), con horario de verano incluido. */
+  obtenerZonaHoraria(lat: number, lon: number): Observable<string> {
+    const clave = `${lat.toFixed(2)},${lon.toFixed(2)}`;
+    let zona$ = this.zonas.get(clave);
+    if (!zona$) {
+      zona$ = this.http
+        .get<{ timezone: string }>(
+          `${this.baseUrl}?latitude=${lat}&longitude=${lon}&timezone=auto&forecast_days=1&current=is_day`
+        )
+        .pipe(
+          map((r) => r.timezone),
+          shareReplay(1)
+        );
+      this.zonas.set(clave, zona$);
+    }
+    return zona$;
+  }
+
+  /** Calidad del aire actual. El polen solo está disponible en Europa. */
+  obtenerCalidadAire(lat: number, lon: number): Observable<CalidadAireApiResponse> {
+    const params = new URLSearchParams({
+      latitude: String(lat),
+      longitude: String(lon),
+      current:
+        'us_aqi,pm2_5,pm10,ozone,nitrogen_dioxide,' +
+        'alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen',
+      timezone: 'auto'
+    });
+    return this.http.get<CalidadAireApiResponse>(`https://air-quality-api.open-meteo.com/v1/air-quality?${params}`);
   }
 }
 

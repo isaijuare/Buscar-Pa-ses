@@ -1,36 +1,65 @@
-<section class="panel-cielo" aria-label="Clima, Luna y estaciones de tu ubicación">
+<section class="panel-cielo" aria-label="Clima, Sol, Luna, estaciones y cielo nocturno">
   <header class="cabecera">
     <div>
-      <span class="titulo-seccion">Tu cielo ahora</span>
+      <span class="titulo-seccion">{{ titulo() }}</span>
       <h2>📍 {{ ubicacion()?.nombre ?? 'Buscando tu ubicación…' }}</h2>
       @if (ubicacion(); as u) {
         <span class="fuente">
           @switch (u.fuente) {
             @case ('gps') { Ubicación exacta }
             @case ('ip') { Ubicación aproximada por tu conexión }
+            @case ('mapa') { Punto elegido en el mapa }
+            @case ('pais') { Capital del país }
             @default { No pudimos detectar tu ubicación; se muestra una de ejemplo }
+          }
+          @if (textoZona()) {
+            · {{ textoZona() }}
           }
         </span>
       }
     </div>
 
-    @if (ubicacion() && ubicacion()!.fuente !== 'gps') {
-      <button type="button" class="btn-gps" (click)="usarGps()" [disabled]="buscandoGps()">
-        {{ buscandoGps() ? 'Ubicando…' : '🎯 Usar mi ubicación exacta' }}
-      </button>
+    @if (!esFija()) {
+      <div class="acciones">
+        @if (ubicacion()?.fuente === 'mapa') {
+          <button type="button" class="btn-gps" (click)="volverAMiUbicacion()">↩ Volver a mi ubicación</button>
+        }
+        @if (ubicacion() && ubicacion()!.fuente !== 'gps') {
+          <button type="button" class="btn-gps" (click)="usarGps()" [disabled]="buscandoGps()">
+            {{ buscandoGps() ? 'Ubicando…' : '🎯 Usar mi ubicación exacta' }}
+          </button>
+        }
+      </div>
     }
   </header>
 
-  @if (avisoGps()) {
+  @if (avisoGps() && !esFija()) {
     <p class="aviso">{{ avisoGps() }}</p>
   }
 
   @if (ubicacion(); as u) {
+    <article class="tarjeta-noche tarjeta-mapa">
+      <h3 class="titulo-seccion">Explora el mapa</h3>
+      <p class="pista">Toca cualquier punto para ver su clima, su cielo y sus lugares turísticos. Los puntos amarillos son los lugares de la barra.</p>
+      <app-mapa
+        [centro]="u"
+        [tituloCentro]="u.nombre"
+        [marcadores]="marcadores()"
+        [etiqueta]="'Mapa alrededor de ' + u.nombre"
+        (puntoElegido)="puntoElegido.emit($event)"
+      />
+    </article>
+
     <app-tiempo-actual [ubicacion]="u" />
+
     <div class="columnas">
-      <app-fases-luna [ubicacion]="u" [ahora]="ahora()" />
-      <app-estaciones [ubicacion]="u" [ahora]="ahora()" />
+      <app-fases-luna [ubicacion]="u" [ahora]="ahora()" [zona]="zona()" />
+      <app-estaciones [ubicacion]="u" [ahora]="ahora()" [zona]="zona()" />
+      <app-horas-sol [ubicacion]="u" [ahora]="ahora()" [zona]="zona()" />
+      <app-calidad-aire [ubicacion]="u" />
     </div>
+
+    <app-cielo-nocturno [ubicacion]="u" [ahora]="ahora()" [zona]="zona()" />
   } @else {
     <div class="tarjeta-noche cargando">Preparando el clima, la Luna y las estaciones…</div>
   }

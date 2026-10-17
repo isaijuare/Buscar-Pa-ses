@@ -1,36 +1,85 @@
-<div class="pantalla">
-  <div class="principal">
-    <app-search-bar
-      [valorInicial]="textoBusqueda()"
-      (buscar)="onBuscar($event)"
-    ></app-search-bar>
+<app-search-bar
+  [valorInicial]="textoBusqueda()"
+  (buscar)="onBuscar($event)"
+></app-search-bar>
 
-    @if (cargando()) {
-      <p>Buscando...</p>
+@if (cargando()) {
+  <p class="mensaje-busqueda">Buscando...</p>
+}
+
+@if (errorBusqueda()) {
+  <p class="mensaje-busqueda">{{ errorBusqueda() }}</p>
+}
+
+@if (textoBusqueda().trim() && !cargando() && !errorBusqueda() && !todosLosResultados().length) {
+  <p class="mensaje-busqueda">No encontramos países con «{{ textoBusqueda() }}».</p>
+}
+
+<div class="tarjetas">
+  @for (pais of paises(); track pais.code) {
+    <app-country-card
+      [pais]="pais"
+      (verDemografia)="onVerDemografia($event)"
+      (verClima)="onVerClima($event)"
+      (verLugares)="onVerLugares($event)"
+    ></app-country-card>
+  } @empty {
+    @if (!textoBusqueda().trim()) {
+      <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
+    }
+  }
+</div>
+
+@if (restantes() > 0) {
+  <button type="button" class="btn-mas" (click)="mostrarMas()">
+    Mostrar {{ restantes() < 6 ? restantes() : 6 }} más · hay {{ todosLosResultados().length }} resultados
+  </button>
+}
+
+@if (favoritosService.favoritos().length || favoritosService.recientes().length) {
+  <section class="guardados" aria-label="Tus países">
+    @if (favoritosService.favoritos().length) {
+      <div class="grupo">
+        <h2 class="titulo-grupo">★ Tus favoritos</h2>
+        <div class="chips">
+          @for (p of favoritosService.favoritos(); track p.code) {
+            <a class="chip" [routerLink]="['/pais', p.code.toLowerCase()]">
+              @if (p.banderaUrl) {
+                <img [src]="p.banderaUrl" alt="" />
+              }
+              {{ p.nombre }}
+            </a>
+          }
+        </div>
+      </div>
     }
 
-    <div class="tarjetas">
-      @for (pais of paises(); track pais.code) {
-        <app-country-card
-          [pais]="pais"
-          (verDemografia)="onVerDemografia($event)"
-          (verClima)="onVerClima($event)"
-          (verLugares)="onVerLugares($event)"
-        ></app-country-card>
-      } @empty {
-        <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
-      }
-    </div>
+    @if (favoritosService.recientes().length) {
+      <div class="grupo">
+        <h2 class="titulo-grupo">
+          Vistos recientemente
+          <button type="button" class="btn-borrar" (click)="favoritosService.borrarRecientes()">Borrar</button>
+        </h2>
+        <div class="chips">
+          @for (p of favoritosService.recientes(); track p.code) {
+            <a class="chip" [routerLink]="['/pais', p.code.toLowerCase()]">
+              @if (p.banderaUrl) {
+                <img [src]="p.banderaUrl" alt="" />
+              }
+              {{ p.nombre }}
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </section>
+}
 
-    <app-panel-cielo />
-  </div>
+<app-panel-cielo (puntoElegido)="onPuntoElegido($event)" />
 
-  <app-lugares-turisticos class="barra-lateral" />
-
-  <app-pais-detalle-modal
-    [abierto]="modalAbierto()"
-    [tipo]="modalTipo()"
-    [pais]="paisSeleccionado()"
-    (cerrar)="cerrarModal()"
-  ></app-pais-detalle-modal>
-</div>
+<app-pais-detalle-modal
+  [abierto]="modalAbierto()"
+  [tipo]="modalTipo()"
+  [pais]="paisSeleccionado()"
+  (cerrar)="cerrarModal()"
+></app-pais-detalle-modal>

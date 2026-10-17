@@ -1,0 +1,79 @@
+<section class="quiz">
+  <h2 class="titulo">Quiz de geografía</h2>
+
+  @if (error()) {
+    <p class="tarjeta-noche centrado">No se pudo cargar la lista de países.</p>
+  } @else if (!listo()) {
+    <p class="tarjeta-noche centrado">Cargando países…</p>
+  } @else if (!modo()) {
+    <div class="modos">
+      <button type="button" class="tarjeta-noche modo" (click)="empezar('bandera')">
+        <span class="icono" aria-hidden="true">🏳️</span>
+        <span class="nombre-modo">Adivina el país por su bandera</span>
+        <span class="record">Récord: {{ record().bandera }}/{{ total }}</span>
+      </button>
+      <button type="button" class="tarjeta-noche modo" (click)="empezar('capital')">
+        <span class="icono" aria-hidden="true">🏛️</span>
+        <span class="nombre-modo">Adivina la capital del país</span>
+        <span class="record">Récord: {{ record().capital }}/{{ total }}</span>
+      </button>
+    </div>
+  } @else if (terminado()) {
+    <div class="tarjeta-noche resultado">
+      <p class="puntaje">{{ aciertos() }}/{{ total }}</p>
+      <p>{{ mensajeFinal() }}</p>
+      @if (nuevoRecord()) {
+        <p class="nuevo-record">★ ¡Nuevo récord!</p>
+      }
+      <div class="botones">
+        <button type="button" class="btn-principal" (click)="empezar(modo()!)">Jugar de nuevo</button>
+        <button type="button" class="btn-secundario" (click)="volverAlMenu()">Cambiar de modo</button>
+      </div>
+    </div>
+  } @else if (actual(); as p) {
+    <div class="tarjeta-noche pregunta">
+      <div class="estado">
+        <span>Pregunta {{ indice() + 1 }} de {{ total }}</span>
+        <span>Aciertos: {{ aciertos() }}</span>
+      </div>
+      <div class="barra" aria-hidden="true"><span [style.width.%]="progreso()"></span></div>
+
+      @if (modo() === 'bandera') {
+        <img [src]="p.pais.flag.url_svg" alt="Bandera a adivinar" class="bandera-quiz" />
+        <p class="enunciado">¿De qué país es esta bandera?</p>
+      } @else {
+        <img [src]="p.pais.flag.url_svg" alt="" class="bandera-chica" />
+        <p class="enunciado">¿Cuál es la capital de <strong>{{ nombre(p.pais) }}</strong>?</p>
+      }
+
+      <div class="opciones">
+        @for (o of p.opciones; track $index) {
+          <button
+            type="button"
+            class="opcion"
+            [class.correcta]="respuesta() !== null && o === p.correcta"
+            [class.incorrecta]="respuesta() === o && o !== p.correcta"
+            [disabled]="respuesta() !== null"
+            (click)="responder(o)"
+          >
+            {{ o }}
+          </button>
+        }
+      </div>
+
+      @if (respuesta() !== null) {
+        <div class="retro" aria-live="polite">
+          @if (respuesta() === p.correcta) {
+            <p class="bien">✓ ¡Correcto!</p>
+          } @else {
+            <p class="mal">✗ Era {{ p.correcta }}</p>
+          }
+          <a [routerLink]="['/pais', p.pais.codes.alpha_2.toLowerCase()]" class="aprender">Ver ficha de {{ nombre(p.pais) }} →</a>
+          <button type="button" class="btn-principal" (click)="siguiente()">
+            {{ indice() + 1 === total ? 'Ver resultado' : 'Siguiente' }}
+          </button>
+        </div>
+      }
+    </div>
+  }
+</section>

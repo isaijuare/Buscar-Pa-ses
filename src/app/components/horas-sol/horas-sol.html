@@ -1,0 +1,26 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Sol y fotografía</h3>
+
+  @let d = datos();
+  @if (d.momento) {
+    <p class="momento">{{ d.momento }}</p>
+  }
+
+  <dl class="resumen">
+    <div><dt>Amanecer</dt><dd>🌅 {{ d.amanecer }}</dd></div>
+    <div><dt>Mediodía solar</dt><dd>☀️ {{ d.mediodia }}</dd></div>
+    <div><dt>Atardecer</dt><dd>🌇 {{ d.atardecer }}</dd></div>
+  </dl>
+
+  <ul class="tramos">
+    <li class="azul"><span>Hora azul (mañana)</span><span>{{ d.azulManana }}</span></li>
+    <li class="dorada"><span>Hora dorada (mañana)</span><span>{{ d.doradaManana }}</span></li>
+    <li class="dorada"><span>Hora dorada (tarde)</span><span>{{ d.doradaTarde }}</span></li>
+    <li class="azul"><span>Hora azul (tarde)</span><span>{{ d.azulTarde }}</span></li>
+  </ul>
+
+  <p class="nota">
+    El Sol está ahora a {{ d.alturaSol }}° {{ d.alturaSol >= 0 ? 'sobre' : 'bajo' }} el horizonte. La hora dorada da luz
+    cálida y sombras suaves; la azul, un cielo azul intenso justo antes del amanecer y después del atardecer.
+  </p>
+</article>

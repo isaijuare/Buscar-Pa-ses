@@ -1,15 +1,38 @@
-# Prueba
+# Buscador de Países
+
+Busca países y consulta, para tu ubicación o la de cualquier capital:
+
+- **Ficha por país** (`/pais/jp`): datos generales, países vecinos, hora local, conversor de moneda, feriados y datos prácticos. Se renderiza en el servidor, así que el enlace se puede compartir.
+- **Clima** actual y por hora, **calidad del aire** y polen (solo en Europa).
+- **Luna**: fase, salida y puesta, y próximas fases. **Estaciones**, equinoccios y solsticios.
+- **Cielo nocturno**: planetas visibles, pasos de la Estación Espacial Internacional y próximos eclipses. **Hora dorada y hora azul**.
+- **Mapa interactivo**: al tocar un punto, todo se recalcula para esa zona.
+- **Lugares turísticos** cercanos (Wikipedia y Wikidata).
+- **Comparador** de dos países (`/comparar?a=jp&b=hn`), **quiz** de banderas y capitales, **favoritos** e historial.
+- Tema claro y oscuro, e instalable como **PWA** (funciona sin conexión con los datos ya consultados).
+
+Los cálculos astronómicos (fases lunares, eclipses, estaciones y planetas) se hacen en el navegador con los algoritmos de Jean Meeus y los elementos orbitales de JPL; no dependen de ninguna API.
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.18.
 
-## Configuración (environments)
+## Configuración
 
-Los archivos de environment no se suben al repositorio porque contienen la API key de restcountries. Antes de ejecutar el proyecto, créalos a partir de la plantilla y pon tu key:
+La API key de restcountries **solo vive en el servidor**: el navegador consulta `/api/paises` y el servidor (`src/server.ts`) hace de intermediario. Antes de ejecutar el proyecto:
 
 ```bash
+# 1. Variables del servidor: pon tu API key en .env (no se sube a git)
+cp .env.example .env
+
+# 2. Environments de Angular (no llevan secretos)
 cp src/environments/environment.example.ts src/environments/environment.ts
 cp src/environments/environment.example.ts src/environments/environment.development.ts
 ```
+
+Al publicar en un dominio propio, agrégalo en `NG_ALLOWED_HOSTS` dentro de `.env` (por ejemplo, `NG_ALLOWED_HOSTS=mi-dominio.com`). Sin eso, Angular no renderiza en el servidor para ese dominio (protección contra SSRF).
+
+Para producción: `npm run build` y luego `npm run serve:ssr:prueba` (puerto 4000, o el de la variable `PORT`). El service worker de la PWA solo se activa en producción.
+
+Las demás APIs son gratuitas y no necesitan key: Open-Meteo (clima y aire), BigDataCloud (ubicación), Wikipedia/Wikidata (lugares), OpenStreetMap (mapa), open.er-api.com (monedas), Nager.Date (feriados) y wheretheiss.at o CelesTrak (órbita de la Estación Espacial).
 
 ## Development server
 

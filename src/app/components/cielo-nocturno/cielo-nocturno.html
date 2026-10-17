@@ -1,0 +1,66 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Esta noche en el cielo</h3>
+
+  <section>
+    <h4 class="subtitulo">🪐 Planetas visibles</h4>
+    @if (planetas().length) {
+      <ul class="lista">
+        @for (p of planetas(); track p.nombre) {
+          <li>
+            <span class="simbolo" aria-hidden="true">{{ p.icono }}</span>
+            <div>
+              <span class="nombre">{{ p.nombre }}</span>
+              <span class="detalle">De {{ p.desde }} a {{ p.hasta }} · mejor a las {{ p.mejorHora }}, a {{ p.altura }}° hacia el {{ p.rumbo }}</span>
+            </div>
+            <span class="etiqueta">{{ p.brillo }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="mensaje">Ningún planeta brillante quedará bien alto con el cielo oscuro esta noche.</p>
+    }
+  </section>
+
+  <section>
+    <h4 class="subtitulo">🛰️ Estación Espacial Internacional</h4>
+    @if (errorEstacion()) {
+      <p class="mensaje">No se pudieron calcular los pasos de la estación.</p>
+    } @else if (pasosEstacion(); as pasos) {
+      @if (pasos.length) {
+        <ul class="lista">
+          @for (p of pasos; track p.clave) {
+            <li>
+              <span class="simbolo" aria-hidden="true">✦</span>
+              <div>
+                <span class="nombre">{{ p.fecha }} · {{ p.hora }}</span>
+                <span class="detalle">{{ p.minutos }} min · hasta {{ p.altura }}° de altura · del {{ p.desde }} al {{ p.hacia }}</span>
+              </div>
+              <span class="etiqueta">{{ p.falta }}</span>
+            </li>
+          }
+        </ul>
+        <p class="nota">Se ve como un punto brillante que cruza el cielo sin parpadear.</p>
+      } @else {
+        <p class="mensaje">No habrá pasos visibles desde aquí en los próximos 7 días.</p>
+      }
+    } @else {
+      <p class="mensaje">Calculando la órbita…</p>
+    }
+  </section>
+
+  <section>
+    <h4 class="subtitulo">🌒 Próximos eclipses</h4>
+    <ul class="lista">
+      @for (e of eclipses(); track e.clave) {
+        <li [class.no-visible]="!e.visible">
+          <span class="simbolo" aria-hidden="true">{{ e.icono }}</span>
+          <div>
+            <span class="nombre">{{ e.nombre }}</span>
+            <span class="detalle">{{ e.fecha }} · {{ e.hora }} · {{ e.visibilidad }}</span>
+          </div>
+          <span class="etiqueta">{{ e.falta }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+</article>

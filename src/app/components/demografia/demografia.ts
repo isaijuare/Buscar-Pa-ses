@@ -54,7 +54,7 @@ export class DemografiaComponent {
     this.cargando.set(true);
     this.error.set(null);
 
-    this.countryService.obtenerDatosDemograficos(codigoPais).subscribe({
+    this.countryService.obtenerPorCodigo(codigoPais).subscribe({
       next: (respuesta) => {
         this.datos.set(respuesta);
         this.cargando.set(false);

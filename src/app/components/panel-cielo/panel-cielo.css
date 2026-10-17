@@ -71,3 +71,23 @@
   text-align: center;
   color: #a9c4ee;
 }
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tarjeta-mapa {
+  padding-bottom: 14px;
+}
+
+.tarjeta-mapa .titulo-seccion {
+  margin-bottom: 4px;
+}
+
+.pista {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  color: #a9c4ee;
+}

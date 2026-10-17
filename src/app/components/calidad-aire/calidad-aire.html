@@ -1,0 +1,39 @@
+<article class="tarjeta-noche">
+  <h3 class="titulo-seccion">Calidad del aire</h3>
+
+  @if (error()) {
+    <p class="mensaje error">No se pudo cargar la calidad del aire.</p>
+  } @else if (resumen(); as r) {
+    <div class="indice">
+      <span class="numero" [style.color]="r.color">{{ r.indice }}</span>
+      <div>
+        <p class="nivel" [style.color]="r.color">{{ r.nombre }}</p>
+        <p class="consejo">{{ r.consejo }}</p>
+      </div>
+    </div>
+
+    <div class="escala" aria-hidden="true">
+      <span class="marca" [style.left.%]="r.posicion"></span>
+    </div>
+    <p class="escala-texto"><span>0</span><span>Índice AQI (EE. UU.)</span><span>300+</span></p>
+
+    <dl class="contaminantes">
+      @for (c of r.contaminantes; track c.nombre) {
+        <div><dt>{{ c.nombre }}</dt><dd>{{ c.valor }} µg/m³</dd></div>
+      }
+    </dl>
+
+    <h4 class="subtitulo">Polen</h4>
+    @if (polen(); as p) {
+      <ul class="polen">
+        @for (x of p; track x.nombre) {
+          <li><span>{{ x.nombre }}</span><span>{{ x.nivel }} · {{ x.valor }} granos/m³</span></li>
+        }
+      </ul>
+    } @else {
+      <p class="mensaje">Los datos de polen solo están disponibles para Europa.</p>
+    }
+  } @else {
+    <p class="mensaje">Cargando…</p>
+  }
+</article>

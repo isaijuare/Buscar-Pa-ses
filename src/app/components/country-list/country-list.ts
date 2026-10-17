@@ -1,4 +1,5 @@
-import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar';
 import { CountryCardComponent } from '../country-card/country-card';
 import {
@@ -6,28 +7,37 @@ import {
   TipoModal
 } from '../modal/modal';
 import { PanelCieloComponent } from '../panel-cielo/panel-cielo';
-import { LugaresTuristicosComponent } from '../lugares-turisticos/lugares-turisticos';
 import { CountryService } from '../../services/country';
 import { LugaresService } from '../../services/lugares';
+import { UbicacionService } from '../../services/ubicacion';
+import { FavoritosService } from '../../services/favoritos';
 import { Country } from '../../models/country';
+
+// Cuántas tarjetas se muestran por tanda de resultados
+const TANDA = 3;
 
 @Component({
   selector: 'app-country-list',
   standalone: true,
-  imports: [SearchBarComponent, CountryCardComponent, PaisDetalleModalComponent, PanelCieloComponent, LugaresTuristicosComponent],
+  imports: [SearchBarComponent, CountryCardComponent, PaisDetalleModalComponent, PanelCieloComponent, RouterLink],
   templateUrl: './country-list.html',
   styleUrl: './country-list.css'
 })
 export class CountryListComponent {
   private countryService = inject(CountryService);
   private lugaresService = inject(LugaresService);
-
-  private barraLugares = viewChild(LugaresTuristicosComponent, { read: ElementRef });
+  private ubicacionService = inject(UbicacionService);
+  protected favoritosService = inject(FavoritosService);
 
   textoBusqueda = this.countryService.textoBusqueda;
-  paises = this.countryService.resultadosBusqueda;
+  todosLosResultados = this.countryService.resultadosBusqueda;
+  limite = signal(TANDA);
+
+  paises = computed(() => this.todosLosResultados().slice(0, this.limite()));
+  restantes = computed(() => this.todosLosResultados().length - this.paises().length);
 
   cargando = signal(false);
+  errorBusqueda = signal<string | null>(null);
 
   // Estado del modal: qué país y qué tipo de info mostrar
   modalAbierto = signal(false);
@@ -36,6 +46,8 @@ export class CountryListComponent {
 
   onBuscar(query: string): void {
     this.countryService.textoBusqueda.set(query);
+    this.limite.set(TANDA);
+    this.errorBusqueda.set(null);
 
     if (!query.trim()) {
       this.countryService.resultadosBusqueda.set([]);
@@ -45,11 +57,20 @@ export class CountryListComponent {
     this.cargando.set(true);
     this.countryService.buscarPaises(query).subscribe({
       next: (resultados) => {
-        this.countryService.resultadosBusqueda.set(resultados.slice(0, 3));
+        // Si el usuario siguió escribiendo, se ignora la respuesta vieja
+        if (query !== this.countryService.textoBusqueda()) return;
+        this.countryService.resultadosBusqueda.set(resultados);
         this.cargando.set(false);
       },
-      error: () => this.cargando.set(false)
+      error: () => {
+        this.cargando.set(false);
+        this.errorBusqueda.set('No se pudo cargar la lista de países. Intenta de nuevo en unos segundos.');
+      }
     });
+  }
+
+  mostrarMas(): void {
+    this.limite.update((n) => n + TANDA * 2);
   }
 
   onVerDemografia(pais: Country): void {
@@ -65,12 +86,13 @@ export class CountryListComponent {
   }
 
   onVerLugares(pais: Country): void {
-    this.lugaresService.mostrarPais(pais);
+    this.lugaresService.mostrarPais(pais, true);
+  }
 
-    // En pantallas angostas la barra está debajo de todo: se lleva al usuario hasta ella
-    if (window.matchMedia('(max-width: 1000px)').matches) {
-      this.barraLugares()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  // Clic en el mapa del panel: el clima, la Luna, las estaciones y los lugares pasan a ese punto
+  onPuntoElegido(punto: { lat: number; lon: number }): void {
+    this.lugaresService.volverACercaDeTi();
+    this.ubicacionService.elegirPunto(punto.lat, punto.lon);
   }
 
   cerrarModal(): void {

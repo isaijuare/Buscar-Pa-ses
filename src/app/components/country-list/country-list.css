@@ -1,24 +1,3 @@
-.pantalla {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px;
-  color: #fff;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  gap: 24px;
-  align-items: start;
-}
-
-.principal {
-  min-width: 0;
-}
-
-/* La barra acompaña al usuario mientras baja por la página */
-.barra-lateral {
-  position: sticky;
-  top: calc(16px + env(safe-area-inset-top, 0px));
-}
-
 .tarjetas {
   display: flex;
   gap: 16px;
@@ -34,14 +13,85 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-/* En pantallas angostas la barra pasa debajo del contenido */
-@media (max-width: 1000px) {
-  .pantalla {
-    grid-template-columns: minmax(0, 1fr);
-    max-width: 820px;
-  }
+.mensaje-busqueda {
+  margin: 16px 0 0;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
 
-  .barra-lateral {
-    position: static;
-  }
+.btn-mas {
+  display: block;
+  margin: 16px auto 0;
+  padding: 7px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: rgba(20, 38, 74, 0.55);
+  color: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn-mas:hover {
+  background: rgba(20, 38, 74, 0.8);
+}
+
+.guardados {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-top: 28px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo-grupo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.btn-borrar {
+  padding: 1px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font-size: 0.68rem;
+  letter-spacing: normal;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px 4px 6px;
+  border-radius: 999px;
+  background: rgba(20, 38, 74, 0.6);
+  color: #fff;
+  font-size: 0.82rem;
+  text-decoration: none;
+}
+
+.chip:hover {
+  background: rgba(20, 38, 74, 0.85);
+}
+
+.chip img {
+  width: 22px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
 }

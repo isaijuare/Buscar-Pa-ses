@@ -11,8 +11,12 @@
   border: 1px solid #12e8ef;
   border-radius: 999px;
   outline: none;
+  background: var(--fondo-buscador);
+  color: var(--texto-buscador);
 }
 
+/* Anillo visible al enfocar con teclado */
 .buscador input:focus {
   border-color: #4a90d9;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.35);
 }

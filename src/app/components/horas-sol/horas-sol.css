@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.momento {
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(255, 209, 102, 0.15);
+  color: #ffe9a8;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.resumen dt {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #a9c4ee;
+}
+
+.resumen dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.tramos {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tramos li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
+.tramos li span:last-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dorada {
+  background: linear-gradient(90deg, rgba(255, 170, 60, 0.28), rgba(255, 209, 102, 0.08));
+}
+
+.azul {
+  background: linear-gradient(90deg, rgba(70, 120, 255, 0.3), rgba(70, 120, 255, 0.08));
+}
+
+.nota {
+  margin: 12px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #a9c4ee;
+}

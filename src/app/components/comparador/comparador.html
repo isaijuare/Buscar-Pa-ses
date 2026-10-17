@@ -1,0 +1,81 @@
+<section class="comparador">
+  <h2 class="titulo">Comparar países</h2>
+
+  @if (error()) {
+    <p class="tarjeta-noche mensaje">No se pudo cargar la lista de países.</p>
+  } @else {
+    <div class="selectores tarjeta-noche">
+      <label class="campo">
+        <span>Primer país</span>
+        <input
+          list="lista-paises"
+          placeholder="Escribe un país…"
+          [ngModel]="textoA()"
+          (ngModelChange)="elegir('a', $event)"
+        />
+      </label>
+      <button type="button" class="btn-intercambiar" (click)="intercambiar()" aria-label="Intercambiar países" title="Intercambiar">⇄</button>
+      <label class="campo">
+        <span>Segundo país</span>
+        <input
+          list="lista-paises"
+          placeholder="Escribe un país…"
+          [ngModel]="textoB()"
+          (ngModelChange)="elegir('b', $event)"
+        />
+      </label>
+      <datalist id="lista-paises">
+        @for (o of opciones(); track o.codigo) {
+          <option [value]="o.nombre"></option>
+        }
+      </datalist>
+    </div>
+
+    @if (paisA() && paisB()) {
+      <div class="tarjeta-noche tabla-contenedor">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th scope="col"><span class="oculto">Dato</span></th>
+              <th scope="col">
+                <a [routerLink]="['/pais', paisA()!.codes.alpha_2.toLowerCase()]" class="pais">
+                  <img [src]="paisA()!.flag.url_svg" alt="" />
+                  {{ textoA() }}
+                </a>
+              </th>
+              <th scope="col">
+                <a [routerLink]="['/pais', paisB()!.codes.alpha_2.toLowerCase()]" class="pais">
+                  <img [src]="paisB()!.flag.url_svg" alt="" />
+                  {{ textoB() }}
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (f of filas(); track f.etiqueta) {
+              <tr>
+                <th scope="row">{{ f.etiqueta }}</th>
+                <td>
+                  {{ f.a }}
+                  @if (f.barras) {
+                    <span class="barra"><span [style.width.%]="f.barras[0] * 100" class="relleno-a"></span></span>
+                  }
+                </td>
+                <td>
+                  {{ f.b }}
+                  @if (f.barras) {
+                    <span class="barra"><span [style.width.%]="f.barras[1] * 100" class="relleno-b"></span></span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else if (todos().length) {
+      <p class="tarjeta-noche mensaje">Elige dos países para ver sus datos lado a lado.</p>
+    } @else {
+      <p class="tarjeta-noche mensaje">Cargando países…</p>
+    }
+  }
+</section>

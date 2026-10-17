@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.indice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.numero {
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.nivel {
+  margin: 0;
+  font-weight: 700;
+}
+
+.consejo {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: #cfe0fb;
+  line-height: 1.35;
+}
+
+.escala {
+  position: relative;
+  height: 8px;
+  margin-top: 16px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    #3ccf6e 0 16.6%,
+    #f5d43b 16.6% 33.3%,
+    #ff9b3d 33.3% 50%,
+    #ff5a5f 50% 66.6%,
+    #b05cd6 66.6% 100%
+  );
+}
+
+.marca {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 16px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 0 0 2px #14264a;
+}
+
+.escala-texto {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0 0;
+  font-size: 0.68rem;
+  color: #a9c4ee;
+}
+
+.contaminantes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.contaminantes dt {
+  font-size: 0.68rem;
+  color: #a9c4ee;
+}
+
+.contaminantes dd {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.subtitulo {
+  margin: 12px 0 6px;
+  font-size: 0.8rem;
+}
+
+.polen {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+.polen li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.polen li span:last-child {
+  color: #a9c4ee;
+}
+
+.mensaje {
+  font-size: 0.8rem;
+}
+
+@container (max-width: 340px) {
+  .contaminantes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+:host {
+  container-type: inline-size;
+}

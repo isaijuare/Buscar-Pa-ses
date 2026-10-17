@@ -1,0 +1,207 @@
+.quiz {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo {
+  margin: 0 0 14px;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+.centrado {
+  text-align: center;
+  color: #a9c4ee;
+}
+
+.modos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 16px;
+}
+
+.modo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 18px;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.modo:hover {
+  transform: translateY(-3px);
+}
+
+.icono {
+  font-size: 2.6rem;
+}
+
+.nombre-modo {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.record {
+  font-size: 0.8rem;
+  color: #ffe9a8;
+}
+
+.pregunta {
+  text-align: center;
+}
+
+.estado {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #a9c4ee;
+}
+
+.barra {
+  height: 6px;
+  margin: 8px 0 20px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.barra span {
+  display: block;
+  height: 100%;
+  background: #ffd166;
+  transition: width 0.3s ease;
+}
+
+.bandera-quiz {
+  width: min(280px, 100%);
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bandera-chica {
+  width: 72px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.enunciado {
+  margin: 14px 0 18px;
+  font-size: 1.1rem;
+}
+
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.opcion {
+  padding: 12px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.opcion:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.opcion:disabled {
+  cursor: default;
+}
+
+.opcion.correcta {
+  border-color: #3ccf6e;
+  background: rgba(60, 207, 110, 0.25);
+}
+
+.opcion.incorrecta {
+  border-color: #ff5a5f;
+  background: rgba(255, 90, 95, 0.25);
+}
+
+.retro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.retro p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.bien {
+  color: #3ccf6e;
+}
+
+.mal {
+  color: #ff8a8d;
+}
+
+.aprender {
+  font-size: 0.8rem;
+  color: #8fd3ff;
+}
+
+.btn-principal,
+.btn-secundario {
+  padding: 9px 22px;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-principal {
+  border: none;
+  background: #ffd166;
+  color: #14264a;
+}
+
+.btn-secundario {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: #fff;
+}
+
+.resultado {
+  text-align: center;
+}
+
+.puntaje {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffd166;
+}
+
+.nuevo-record {
+  color: #ffe9a8;
+  font-weight: 700;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (max-width: 420px) {
+  .opciones {
+    grid-template-columns: 1fr;
+  }
+}

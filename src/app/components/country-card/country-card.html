@@ -1,14 +1,31 @@
 <div class="tarjeta-pais">
+  <button
+    type="button"
+    class="btn-favorito"
+    [class.activo]="esFavorito()"
+    (click)="onAlternarFavorito()"
+    [attr.aria-pressed]="esFavorito()"
+    [attr.aria-label]="esFavorito() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+    [title]="esFavorito() ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+  >
+    {{ esFavorito() ? '★' : '☆' }}
+  </button>
+
   @if (pais().flagUrl) {
     <img [src]="pais().flagUrl" [alt]="pais().name" class="bandera" />
   }
- 
+
   <h3>{{ pais().name }}</h3>
- 
+  @if (pais().nameEs && pais().nameEs !== pais().name) {
+    <p class="nombre-es">{{ pais().nameEs }}</p>
+  }
+
   <div class="botones">
+    <a class="btn-ficha" [routerLink]="['/pais', pais().code.toLowerCase()]">Ver ficha completa →</a>
     <button (click)="onVerDemografia()">Ver datos demográficos</button>
     <button (click)="onVerClima()">Ver clima</button>
     <button
+      class="btn-lugares"
       (click)="onVerLugares()"
       [disabled]="pais().lat == null || pais().lon == null"
       [title]="pais().capital ? 'Sitios turísticos alrededor de ' + pais().capital : 'Este país no tiene capital registrada'"

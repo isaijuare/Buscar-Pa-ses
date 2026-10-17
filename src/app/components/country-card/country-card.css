@@ -1,5 +1,6 @@
 .tarjeta-pais {
-  border: 1px solid #1900f887;
+  position: relative;
+  border: 1px solid var(--borde-tarjeta-pais);
   border-radius: 12px;
   padding: 16px;
   width: 220px;
@@ -7,6 +8,29 @@
   box-sizing: border-box;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-favorito {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--texto-suave);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-favorito:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.btn-favorito.activo {
+  color: #e0a800;
 }
 
 .bandera {
@@ -17,32 +41,54 @@
   margin-bottom: 8px;
 }
 
+h3 {
+  margin: 0;
+}
+
+.nombre-es {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
 .botones {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
-.botones button {
+.botones button,
+.btn-ficha {
   padding: 8px;
   border: none;
   border-radius: 6px;
   background-color: #18d1a9;
   color: white;
+  font: inherit;
+  font-size: 0.85rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
-.botones button:hover {
-  background-color: #18d1a9;
+.btn-ficha {
+  background-color: #f2b705;
+  color: #14264a;
+  font-weight: 600;
+}
+
+.btn-ficha:hover {
+  background-color: #ffc928;
 }
 
 /* Mismo tono que la barra de lugares turísticos, para relacionarlos */
-.botones button:last-child {
+.botones .btn-lugares {
   background-color: #1d3566;
+  /* El borde lo distingue del fondo en el tema oscuro */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
 }
 
-.botones button:last-child:hover:not(:disabled) {
+.botones .btn-lugares:hover:not(:disabled) {
   background-color: #2a4a86;
 }
 
@@ -51,9 +97,9 @@
   cursor: not-allowed;
 }
 
-:host > div, .tarjeta {
-  background: rgba(255, 255, 255, 0.88);
+:host > div {
+  background: var(--fondo-tarjeta-pais);
   backdrop-filter: blur(6px);
   border-radius: 12px;
-  color: #222;
+  color: var(--texto-tarjeta-pais);
 }

@@ -1,16 +1,15 @@
-import { Component, effect, inject, input, output, signal, computed } from '@angular/core';
-import { CountryService } from '../../services/country';
-import { WeatherApiResponse } from '../../models/country';
+import { Component, computed, input, output } from '@angular/core';
+import { TiempoActualComponent } from '../tiempo-actual/tiempo-actual';
+import { Ubicacion } from '../../models/cielo';
 
 @Component({
   selector: 'app-clima',
   standalone: true,
+  imports: [TiempoActualComponent],
   templateUrl: './clima.html',
   styleUrl: './clima.css'
 })
 export class ClimaComponent {
-  private countryService = inject(CountryService);
-
   // Ya no viene de la URL: el modal se lo pasa directo.
   lat = input<number | null>(null);
   lon = input<number | null>(null);
@@ -18,52 +17,15 @@ export class ClimaComponent {
 
   cerrar = output<void>();
 
-  datos = signal<WeatherApiResponse | null>(null);
-  cargando = signal(false);
-  error = signal<string | null>(null);
-
-  temperaturaActual = computed(() => this.datos()?.hourly.temperature_2m[0] ?? null);
-  unidad = computed(() => this.datos()?.hourly_units.temperature_2m ?? '');
-
-  proximasHoras = computed(() => {
-    const d = this.datos();
-    if (!d) return [];
-    return d.hourly.time.slice(0, 6).map((hora, i) => ({
-      hora,
-      temperatura: d.hourly.temperature_2m[i]
-    }));
+  // Reutiliza la tarjeta del clima del panel: temperatura actual real y próximas horas
+  ubicacion = computed<Ubicacion | null>(() => {
+    const lat = this.lat();
+    const lon = this.lon();
+    if (lat == null || lon == null) return null;
+    return { lat, lon, nombre: this.nombrePais() ?? '', fuente: 'pais' };
   });
-
-  constructor() {
-    effect(() => {
-      const lat = this.lat();
-      const lon = this.lon();
-
-      if (lat != null && lon != null) {
-        this.cargarClima(lat, lon);
-      } else {
-        this.error.set('Faltan coordenadas para consultar el clima.');
-      }
-    });
-  }
 
   onCerrar(): void {
     this.cerrar.emit();
-  }
-
-  private cargarClima(lat: number, lon: number): void {
-    this.cargando.set(true);
-    this.error.set(null);
-
-    this.countryService.obtenerClima(lat, lon).subscribe({
-      next: (respuesta) => {
-        this.datos.set(respuesta);
-        this.cargando.set(false);
-      },
-      error: () => {
-        this.error.set('No se pudo cargar el clima.');
-        this.cargando.set(false);
-      }
-    });
   }
 }
