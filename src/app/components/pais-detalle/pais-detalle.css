@@ -163,3 +163,31 @@
   font-size: 0.82rem;
   cursor: pointer;
 }
+
+/* Placeholder mientras llega el país */
+.carga-pais {
+  margin-top: 16px;
+}
+
+.carga-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.carga-bandera {
+  flex: none;
+  width: 96px;
+  height: 64px;
+}
+
+.carga-titulos {
+  flex: 1;
+}
+
+.carga-datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+}

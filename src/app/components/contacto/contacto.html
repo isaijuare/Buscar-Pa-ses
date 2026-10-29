@@ -1,0 +1,59 @@
+<section class="contacto">
+  <header class="tarjeta-noche entrada">
+    <h2>Contacto</h2>
+    <p>¿Tienes una pregunta, una idea o encontraste un error? Escríbenos y te responderemos a tu correo.</p>
+  </header>
+
+  @if (enviado()) {
+    <div class="tarjeta-noche exito" role="status">
+      <span class="icono-exito" aria-hidden="true">🌤️</span>
+      <h3>¡Mensaje enviado!</h3>
+      <p>Gracias por escribirnos. Te responderemos a <strong>{{ email() }}</strong> lo antes posible.</p>
+      <button type="button" class="btn-secundario" (click)="escribirOtro()">Escribir otro mensaje</button>
+    </div>
+  } @else {
+    <form class="tarjeta-noche formulario" (ngSubmit)="enviar()" #formulario="ngForm">
+      <div class="fila">
+        <label>
+          <span>Nombre</span>
+          <input name="nombre" [(ngModel)]="nombre" required maxlength="80" autocomplete="name" />
+        </label>
+        <label>
+          <span>Correo</span>
+          <input name="email" type="email" [(ngModel)]="email" required email autocomplete="email" />
+        </label>
+      </div>
+
+      <label>
+        <span>Asunto</span>
+        <select name="asunto" [(ngModel)]="asunto" required>
+          <option value="" disabled>Elige un asunto</option>
+          @for (a of asuntos; track a) {
+            <option [value]="a">{{ a }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        <span>Mensaje</span>
+        <textarea
+          name="mensaje"
+          rows="6"
+          [(ngModel)]="mensaje"
+          required
+          minlength="10"
+          [maxlength]="largoMaximo"
+        ></textarea>
+        <small class="contador">{{ mensaje().length }} / {{ largoMaximo }}</small>
+      </label>
+
+      @if (error()) {
+        <p class="mensaje error" role="alert">{{ error() }}</p>
+      }
+
+      <button type="submit" class="btn-principal" [disabled]="formulario.invalid || enviando()">
+        {{ enviando() ? 'Enviando…' : 'Enviar mensaje' }}
+      </button>
+    </form>
+  }
+</section>

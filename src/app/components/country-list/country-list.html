@@ -3,9 +3,7 @@
   (buscar)="onBuscar($event)"
 ></app-search-bar>
 
-@if (cargando()) {
-  <p class="mensaje-busqueda">Buscando...</p>
-}
+<p class="solo-lector" aria-live="polite">{{ cargando() ? 'Buscando países…' : '' }}</p>
 
 @if (errorBusqueda()) {
   <p class="mensaje-busqueda">{{ errorBusqueda() }}</p>
@@ -15,7 +13,18 @@
   <p class="mensaje-busqueda">No encontramos países con «{{ textoBusqueda() }}».</p>
 }
 
-<div class="tarjetas">
+<div class="tarjetas" [attr.aria-busy]="cargando()">
+  @if (cargando()) {
+    @for (i of [1, 2, 3]; track i) {
+      <div class="tarjeta-carga" aria-hidden="true">
+        <span class="bloque-carga bandera-carga"></span>
+        <span class="bloque-carga" style="width: 70%"></span>
+        <span class="bloque-carga" style="width: 45%"></span>
+        <span class="bloque-carga boton-carga"></span>
+        <span class="bloque-carga boton-carga"></span>
+      </div>
+    }
+  } @else {
   @for (pais of paises(); track pais.code) {
     <app-country-card
       [pais]="pais"
@@ -27,6 +36,7 @@
     @if (!textoBusqueda().trim()) {
       <p class="sin-resultados">Escribe el nombre de un país para buscar.</p>
     }
+  }
   }
 </div>
 

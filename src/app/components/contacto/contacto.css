@@ -1,0 +1,145 @@
+.contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 720px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.entrada {
+  padding: 24px 28px;
+}
+
+.entrada h2 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+}
+
+.entrada p {
+  margin: 0;
+  color: var(--texto-2);
+  line-height: 1.55;
+}
+
+/* ---------- Formulario ---------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 28px;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--texto-2);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-fondo);
+}
+
+.contador {
+  align-self: flex-end;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-principal {
+  align-self: flex-start;
+  padding: 11px 22px;
+  border: none;
+  border-radius: 10px;
+  background: var(--acento);
+  color: var(--texto-acento);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: var(--acento-hover);
+}
+
+.btn-principal:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- Enviado ---------- */
+.exito {
+  padding: 32px;
+  text-align: center;
+}
+
+.icono-exito {
+  font-size: 3rem;
+}
+
+.exito h3 {
+  margin: 8px 0;
+  font-size: 1.25rem;
+}
+
+.exito p {
+  margin: 0 0 18px;
+  color: var(--texto-2);
+}
+
+.btn-secundario {
+  padding: 10px 18px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-3);
+  color: var(--texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.btn-secundario:hover {
+  background: var(--gris-700);
+}
+
+.btn-principal:focus-visible,
+.btn-secundario:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .btn-principal {
+    align-self: stretch;
+  }
+}

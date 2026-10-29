@@ -2,7 +2,12 @@
   <h3 class="titulo-seccion">Clima ahora</h3>
 
   @if (cargando() && !datos()) {
-    <p class="mensaje">Cargando clima…</p>
+    <div aria-busy="true">
+      <span class="solo-lector">Cargando clima…</span>
+      <span class="bloque-carga" style="height: 36px; width: 40%" aria-hidden="true"></span>
+      <span class="bloque-carga" style="width: 65%" aria-hidden="true"></span>
+      <span class="bloque-carga" style="width: 50%" aria-hidden="true"></span>
+    </div>
   }
 
   @if (error()) {

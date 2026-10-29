@@ -8,6 +8,9 @@ import express from 'express';
 import { join } from 'node:path';
 import type { CountryApiResponse } from './app/models/country';
 import { rutasAuth } from './servidor/auth';
+import { rutasUsuario } from './servidor/datos-usuario';
+import { rutasContacto } from './servidor/contacto';
+import { rutaContorno } from './servidor/contornos';
 
 // La API key vive solo en el servidor: se lee del archivo .env (o de las variables del sistema)
 try {
@@ -98,8 +101,11 @@ function recortarPais(p: PaisRestCountries): CountryApiResponse {
   };
 }
 
-// Registro e inicio de sesión (JWT)
-app.use('/api/auth', express.json(), rutasAuth);
+// Registro e inicio de sesión (JWT), y los datos de cada cuenta
+// La foto de perfil viaja en el cuerpo (data URL), por eso el límite es mayor que el de 100 KB por defecto
+app.use('/api/auth', express.json({ limit: '500kb' }), rutasAuth);
+app.use('/api/usuario', express.json({ limit: '100kb' }), rutasUsuario);
+app.use('/api/contacto', express.json({ limit: '20kb' }), rutasContacto);
 
 app.get('/api/paises', async (_req, res) => {
   try {
@@ -110,6 +116,14 @@ app.get('/api/paises', async (_req, res) => {
     res.status(502).json({ error: 'No se pudo obtener la lista de países.' });
   }
 });
+
+// Contorno del país para la página de mapas (OpenStreetMap, guardado en la base de datos)
+app.get(
+  '/api/paises/:codigo/contorno',
+  rutaContorno(async (codigo) =>
+    (await obtenerPaises()).find((p) => p.codes.alpha_2 === codigo || p.codes.alpha_3 === codigo)
+  )
+);
 
 app.get('/api/paises/:codigo', async (req, res) => {
   try {

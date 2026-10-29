@@ -1,0 +1,587 @@
+.minerales {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.volver {
+  align-self: flex-start;
+  color: var(--acento-hover);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.volver:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Explicación ---------- */
+.explicacion {
+  padding: 28px;
+}
+
+.etiqueta-seccion {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--acento-fondo);
+  color: var(--acento-hover);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.explicacion h2 {
+  margin: 0 0 10px;
+  font-size: 1.6rem;
+}
+
+.entrada {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--texto-2);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.entrada strong,
+.aparte strong {
+  color: var(--texto);
+}
+
+.condiciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 20px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.condiciones li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+  color: var(--texto-2);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.condiciones span {
+  font-size: 1.5rem;
+}
+
+.condiciones strong {
+  color: var(--texto);
+  font-size: 0.95rem;
+}
+
+.aparte {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.aparte h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: var(--acento);
+}
+
+.aparte p {
+  margin: 0;
+  color: var(--texto-2);
+  line-height: 1.55;
+}
+
+/* ---------- Escala de Mohs ---------- */
+.mohs {
+  padding: 22px 24px;
+}
+
+.mohs .mensaje {
+  margin-bottom: 14px;
+}
+
+.escalones {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.escalones li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* Cada escalón es más alto y más intenso que el anterior */
+.numero {
+  display: grid;
+  place-items: end center;
+  width: 100%;
+  height: calc(14px + var(--nivel) * 7px);
+  padding-bottom: 4px;
+  box-sizing: border-box;
+  border-radius: 6px 6px 2px 2px;
+  background: color-mix(in srgb, var(--acento) calc(var(--nivel) * 9%), var(--superficie-3));
+  color: var(--texto);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.referencia {
+  font-size: 0.72rem;
+  color: var(--texto-2);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.de-la-coleccion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.mini {
+  padding: 3px 4px;
+  border: 1px solid var(--tono);
+  border-radius: 6px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.68rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mini:hover {
+  background: var(--superficie-3);
+}
+
+/* ---------- Filtros ---------- */
+.filtros {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 18px;
+}
+
+.categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.categorias button {
+  padding: 7px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.categorias button.activa {
+  border-color: var(--acento);
+  background: var(--acento);
+  color: var(--texto-acento);
+  font-weight: 600;
+}
+
+.filtros input,
+.filtros select {
+  padding: 8px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.filtros input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.orden {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-2);
+  font-size: 0.85rem;
+}
+
+.conteo {
+  margin: -4px 0 0;
+  color: var(--texto-2);
+  font-size: 0.85rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Tarjetas ---------- */
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr));
+  gap: 14px;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  color: var(--texto);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-3px);
+  border-color: var(--tono);
+}
+
+.foto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--tono) 18%, var(--superficie-2));
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ilustración de una gema facetada (si no hay foto) */
+.gema {
+  width: 42%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tono) 60%, #fff), var(--tono) 50%, color-mix(in srgb, var(--tono) 60%, #000));
+  clip-path: polygon(50% 0, 100% 35%, 80% 100%, 20% 100%, 0 35%);
+}
+
+.categoria {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--gris-950);
+  color: var(--texto);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+  border-top: 3px solid var(--tono);
+}
+
+.nombre {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.formula {
+  color: var(--texto-2);
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+.dureza {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--texto-2);
+}
+
+.barra {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--superficie-3);
+  overflow: hidden;
+}
+
+.barra span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--tono);
+}
+
+.donde {
+  font-size: 0.8rem;
+  color: var(--texto-2);
+}
+
+.vacio {
+  grid-column: 1 / -1;
+  padding: 24px;
+  text-align: center;
+}
+
+.credito {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: 0.75rem;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Ficha (diálogo) ---------- */
+.ficha {
+  width: min(680px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: 18px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.ficha::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.ficha article {
+  position: relative;
+  padding: 24px 28px 28px;
+}
+
+.cerrar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--superficie-3);
+  color: var(--texto);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.cerrar:hover {
+  background: var(--gris-700);
+}
+
+.cabecera-ficha {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 8px;
+  padding-right: 40px;
+}
+
+.foto.grande {
+  flex: none;
+  width: 140px;
+  border-radius: 14px;
+  border: 2px solid var(--tono);
+}
+
+.categoria-texto {
+  color: var(--tono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ficha h2 {
+  margin: 2px 0;
+  font-size: 1.6rem;
+}
+
+.formula.grande {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.ficha h3 {
+  margin: 20px 0 8px;
+  color: var(--acento);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ficha p {
+  margin: 0;
+  color: var(--texto-2);
+  line-height: 1.6;
+}
+
+.propiedades {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.propiedades div {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--superficie-2);
+}
+
+.propiedades .ancho {
+  grid-column: 1 / -1;
+}
+
+.propiedades dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+
+.propiedades dd {
+  margin: 3px 0 0;
+  font-weight: 600;
+}
+
+.paises {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.paises a {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--acento-fondo);
+  color: var(--acento-hover);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.paises a:hover {
+  background: var(--acento);
+  color: var(--texto-acento);
+}
+
+.dato {
+  margin-top: 20px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--tono);
+  border-radius: 10px;
+  background: var(--superficie-2);
+}
+
+.dato strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.wikipedia {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--acento-hover);
+  font-size: 0.9rem;
+}
+
+/* ---------- Foco y movimiento ---------- */
+.tarjeta:focus-visible,
+.mini:focus-visible,
+.categorias button:focus-visible,
+.cerrar:focus-visible,
+.paises a:focus-visible,
+.volver:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta {
+    transition: none;
+  }
+
+  .tarjeta:hover {
+    transform: none;
+  }
+}
+
+/* En pantallas angostas la escala de Mohs se lee de arriba abajo */
+@media (max-width: 720px) {
+  .escalones {
+    grid-template-columns: 1fr;
+  }
+
+  .escalones li {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .numero {
+    flex: none;
+    place-items: center;
+    width: calc(20px + var(--nivel) * 6px);
+    height: 28px;
+    padding: 0;
+    border-radius: 2px 6px 6px 2px;
+  }
+
+  .referencia {
+    flex: none;
+    width: 76px;
+    text-align: left;
+    overflow-wrap: normal;
+  }
+
+  .de-la-coleccion {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .mini {
+    font-size: 0.75rem;
+  }
+
+  .explicacion {
+    padding: 22px 18px;
+  }
+
+  .cabecera-ficha {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ficha article {
+    padding: 20px;
+  }
+
+  .propiedades {
+    grid-template-columns: 1fr;
+  }
+}

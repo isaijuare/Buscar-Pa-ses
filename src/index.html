@@ -20,6 +20,10 @@
       document.documentElement.setAttribute('data-noche', noche ? 'si' : 'no');
       var modo = localStorage.getItem('buscador-paises:tema') || 'auto';
       document.documentElement.setAttribute('data-tema', modo === 'auto' ? (noche ? 'oscuro' : 'claro') : modo);
+      // El sidebar se dibuja directamente cerrado si así lo dejó el usuario
+      if (localStorage.getItem('buscador-paises:sidebar') === 'cerrado') {
+        document.documentElement.setAttribute('data-sidebar', 'cerrado');
+      }
     } catch (e) {}
   </script>
   <link rel="manifest" href="manifest.webmanifest">
@@ -28,6 +32,6 @@
 </head>
 <body>
   <app-root></app-root>
-  <noscript>Activa JavaScript para usar el Buscador de Países.</noscript>
+  <noscript>Activa JavaScript para usar Tu Clima.</noscript>
 </body>
 </html>

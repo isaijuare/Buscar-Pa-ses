@@ -1,0 +1,100 @@
+<section class="mapas">
+  <header class="tarjeta-noche entrada">
+    <div>
+      <h2>Mapas de países</h2>
+      <p>Elige un país para ver su mapa y descargarlo.</p>
+    </div>
+
+    <form class="buscador" (submit)="$event.preventDefault(); elegir(campo.value)">
+      <input
+        #campo
+        list="lista-paises"
+        placeholder="Escribe un país…"
+        aria-label="País"
+        [value]="datos()?.nombre ?? ''"
+        (change)="elegir(campo.value)"
+      />
+      <datalist id="lista-paises">
+        @for (o of opciones(); track o.codigo) {
+          <option [value]="o.nombre"></option>
+        }
+      </datalist>
+      <button type="button" class="btn-secundario" (click)="sorprendeme()" [disabled]="!opciones().length">
+        🎲 Sorpréndeme
+      </button>
+    </form>
+  </header>
+
+  @if (error()) {
+    <p class="tarjeta-noche mensaje error" role="alert">{{ error() }}</p>
+  }
+
+  <div class="contenido-mapa" [class.oculto]="!codigo()">
+    <!-- Mapa interactivo -->
+    <div class="tarjeta-noche marco-mapa">
+      <div #lienzo class="lienzo" role="application" [attr.aria-label]="'Mapa de ' + (datos()?.nombre ?? 'un país')"></div>
+      @if (cargando()) {
+        <p class="cargando" aria-live="polite">Cargando la frontera…</p>
+      }
+    </div>
+
+    <!-- Silueta, datos y descargas -->
+    <aside class="tarjeta-noche panel" [attr.aria-busy]="cargando()">
+      @if (datos(); as d) {
+        <div class="cabecera">
+          <img [src]="d.bandera" alt="" class="bandera" />
+          <div>
+            <h3>{{ d.nombre }}</h3>
+            <p class="region">{{ d.region }}</p>
+          </div>
+        </div>
+      }
+
+      <div class="silueta">
+        @if (vista(); as v) {
+          <svg [attr.viewBox]="'0 0 ' + v.ancho + ' ' + v.alto" role="img" [attr.aria-label]="'Silueta de ' + (datos()?.nombre ?? '')">
+            <path [attr.d]="v.d" fill-rule="evenodd" />
+          </svg>
+        } @else {
+          <span class="bloque-carga silueta-carga" aria-hidden="true"></span>
+        }
+      </div>
+
+      @if (datos(); as d) {
+        <dl class="datos">
+          <div><dt>Capital</dt><dd>{{ d.capital }}</dd></div>
+          <div><dt>Superficie</dt><dd>{{ d.area }}</dd></div>
+        </dl>
+      }
+
+      <p class="titulo-seccion">Descargar</p>
+      <div class="botones">
+        <button type="button" class="btn-principal" (click)="descargarPng()" [disabled]="!contorno() || descargandoPng()">
+          Imagen PNG
+        </button>
+        <button type="button" class="btn-secundario" (click)="descargarSvg()" [disabled]="!contorno()">SVG</button>
+        <button type="button" class="btn-secundario" (click)="descargarGeoJson()" [disabled]="!contorno()">GeoJSON</button>
+      </div>
+
+      <p class="titulo-seccion">Abrir en</p>
+      <div class="enlaces">
+        @if (enlaces().osm; as osm) {
+          <a [href]="osm" target="_blank" rel="noopener">OpenStreetMap ↗</a>
+        }
+        <a [href]="enlaces().google" target="_blank" rel="noopener">Google Maps ↗</a>
+        @if (codigo(); as c) {
+          <a [routerLink]="['/pais', c.toLowerCase()]">Ficha del país →</a>
+        }
+      </div>
+
+      <p class="credito">Frontera: © colaboradores de OpenStreetMap. Incluye el mar territorial.</p>
+    </aside>
+  </div>
+
+  @if (!codigo()) {
+    <div class="tarjeta-noche vacio">
+      <span aria-hidden="true">🗺️</span>
+      <p>Busca un país arriba o prueba con <strong>Sorpréndeme</strong>.</p>
+    </div>
+  }
+</section>

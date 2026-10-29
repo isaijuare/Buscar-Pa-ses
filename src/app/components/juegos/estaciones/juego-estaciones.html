@@ -1,0 +1,85 @@
+<section class="juego">
+  <a routerLink="/entretenimiento" class="volver">← Entretenimiento</a>
+  <h2 class="titulo">¿Qué estación es?</h2>
+
+  @if (error()) {
+    <p class="tarjeta-noche centrado">No se pudo cargar la lista de países.</p>
+  } @else if (!listo()) {
+    <p class="tarjeta-noche centrado">Cargando países…</p>
+  } @else if (!jugando()) {
+    <div class="tarjeta-noche portada">
+      <div class="iconos" aria-hidden="true">
+        @for (e of estaciones; track e.nombre) {
+          <span>{{ e.icono }}</span>
+        }
+      </div>
+      <p>
+        Te diremos un lugar del mundo y una fecha. ¿Adivinas en qué estación del año están?
+        Cuidado: <strong>en el hemisferio sur las estaciones van al revés</strong>.
+      </p>
+      <p class="record">
+        Récord: {{ record() != null ? record() + '/' + total : 'todavía ninguno' }}
+      </p>
+      <button type="button" class="btn-principal" (click)="empezar()">Jugar</button>
+    </div>
+    <app-tabla-ranking juego="estaciones" [formato]="formatoPuntaje" />
+  } @else if (terminado()) {
+    <div class="tarjeta-noche resultado">
+      <p class="puntaje">{{ aciertos() }}/{{ total }}</p>
+      <p>{{ mensajeFinal() }}</p>
+      @if (nuevoRecord()) {
+        <p class="nuevo-record">★ ¡Nuevo récord!</p>
+      }
+      <div class="botones">
+        <button type="button" class="btn-principal" (click)="empezar()">Jugar de nuevo</button>
+        <button type="button" class="btn-secundario" (click)="salir()">Ver ranking</button>
+      </div>
+    </div>
+  } @else if (actual(); as p) {
+    <div class="tarjeta-noche pregunta">
+      <div class="estado">
+        <span>Pregunta {{ indice() + 1 }} de {{ total }}</span>
+        <span>Aciertos: {{ aciertos() }}</span>
+      </div>
+      <div class="barra" aria-hidden="true"><span [style.width.%]="progreso()"></span></div>
+
+      <img [src]="p.lugar.pais.flag.url_svg" alt="" class="bandera" />
+      <p class="lugar">{{ p.lugar.ciudad }}, {{ nombre(p.lugar.pais) }}</p>
+      <p class="fecha">{{ dia(p.fecha) }}</p>
+      <p class="enunciado">¿En qué estación están?</p>
+
+      <div class="opciones">
+        @for (e of estaciones; track e.nombre) {
+          <button
+            type="button"
+            class="opcion"
+            [class.correcta]="respuesta() !== null && e.nombre === p.correcta"
+            [class.incorrecta]="respuesta() === e.nombre && e.nombre !== p.correcta"
+            [disabled]="respuesta() !== null"
+            (click)="responder(e.nombre)"
+          >
+            <span class="icono-opcion" aria-hidden="true">{{ e.icono }}</span>
+            {{ e.nombre }}
+          </button>
+        }
+      </div>
+
+      @if (respuesta() !== null) {
+        <div class="retro" aria-live="polite">
+          @if (respuesta() === p.correcta) {
+            <p class="bien">✓ ¡Correcto!</p>
+          } @else {
+            <p class="mal">✗ Era {{ p.correcta.toLowerCase() }} {{ icono(p.correcta) }}</p>
+          }
+          <p class="explicacion">
+            {{ nombre(p.lugar.pais) }} está en el hemisferio <strong>{{ p.hemisferio }}</strong>: allí
+            {{ p.correcta.toLowerCase() }} va del {{ dia(p.desde) }} al {{ dia(p.hasta) }}.
+          </p>
+          <button type="button" class="btn-principal" (click)="siguiente()">
+            {{ indice() + 1 === total ? 'Ver resultado' : 'Siguiente' }}
+          </button>
+        </div>
+      }
+    </div>
+  }
+</section>

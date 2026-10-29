@@ -1,0 +1,256 @@
+.mapas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- Encabezado y buscador ---------- */
+.entrada {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 22px 26px;
+}
+
+.entrada h2 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+}
+
+.entrada p {
+  margin: 0;
+  color: var(--texto-2);
+}
+
+.buscador {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  max-width: 440px;
+  min-width: min(100%, 280px);
+}
+
+.buscador input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  outline: none;
+}
+
+.buscador input:focus {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-fondo);
+}
+
+/* ---------- Mapa y panel ---------- */
+.contenido-mapa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Se oculta sin desmontarse: Leaflet necesita el contenedor desde el principio */
+.contenido-mapa.oculto {
+  display: none;
+}
+
+.marco-mapa {
+  position: relative;
+  padding: 8px;
+}
+
+.lienzo {
+  height: 520px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--superficie-2);
+  z-index: 0;
+}
+
+.cargando {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-size: 0.85rem;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bandera {
+  width: 56px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--borde);
+}
+
+.cabecera h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.region {
+  margin: 2px 0 0;
+  color: var(--texto-2);
+  font-size: 0.85rem;
+}
+
+.silueta {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+}
+
+.silueta svg {
+  width: 100%;
+  max-height: 240px;
+}
+
+.silueta path {
+  fill: var(--acento);
+  stroke: var(--acento-hover);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.silueta-carga {
+  width: 70%;
+  height: 140px;
+}
+
+.datos {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+}
+
+dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+
+dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.panel .titulo-seccion {
+  margin: 4px 0 0;
+}
+
+.botones,
+.enlaces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.enlaces a {
+  color: var(--acento-hover);
+  font-size: 0.9rem;
+}
+
+.credito {
+  margin: 4px 0 0;
+  color: var(--texto-2);
+  font-size: 0.72rem;
+}
+
+/* ---------- Botones ---------- */
+.btn-principal,
+.btn-secundario {
+  padding: 9px 14px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-principal {
+  border: none;
+  background: var(--acento);
+  color: var(--texto-acento);
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: var(--acento-hover);
+}
+
+.btn-secundario {
+  border: 1px solid var(--borde);
+  background: var(--superficie-3);
+  color: var(--texto);
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background: var(--gris-700);
+}
+
+.btn-principal:disabled,
+.btn-secundario:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-principal:focus-visible,
+.btn-secundario:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* ---------- Sin país elegido ---------- */
+.vacio {
+  padding: 40px;
+  text-align: center;
+  color: var(--texto-2);
+}
+
+.vacio span {
+  font-size: 3rem;
+}
+
+.vacio p {
+  margin: 8px 0 0;
+}
+
+@media (max-width: 1100px) {
+  .contenido-mapa {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lienzo {
+    height: 380px;
+  }
+}

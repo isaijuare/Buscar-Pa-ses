@@ -1,0 +1,62 @@
+<section class="juego">
+  <a routerLink="/entretenimiento" class="volver">← Entretenimiento</a>
+  <h2 class="titulo">Memoria de las estaciones</h2>
+
+  <div class="tarjeta-noche tablero-marco">
+    <div class="marcador">
+      <span>Movimientos: <strong>{{ movimientos() }}</strong></span>
+      <span>Pares: <strong>{{ encontradas() }}/{{ pares }}</strong></span>
+      <span>Tiempo: <strong>{{ tiempo() }}</strong></span>
+    </div>
+
+    <div class="tablero" role="group" aria-label="Cartas">
+      @for (c of cartas(); track c.id) {
+        <button
+          type="button"
+          class="carta"
+          [class.arriba]="c.boca !== 'abajo'"
+          [class.encontrada]="c.boca === 'encontrada'"
+          [attr.data-estacion]="c.estacion"
+          [attr.aria-label]="etiqueta(c)"
+          [disabled]="c.boca === 'encontrada'"
+          (click)="voltear(c)"
+        >
+          <span class="cara dorso" aria-hidden="true">🌤️</span>
+          <span class="cara frente" aria-hidden="true">
+            <span class="icono">{{ c.icono }}</span>
+            <span class="estacion">{{ c.estacion }}</span>
+          </span>
+        </button>
+      }
+    </div>
+
+    <p class="anuncio" aria-live="polite">
+      @if (terminado()) {
+        {{ mensajeFinal() }}
+      } @else if (ultimoPar(); as p) {
+        {{ p.icono }} {{ p.nombre }}: ¡un par de {{ p.estacion.toLowerCase() }}!
+      } @else {
+        Encuentra los pares. Cada estación tiene dos símbolos.
+      }
+    </p>
+
+    @if (terminado()) {
+      <div class="resultado-final">
+        <p class="puntaje">{{ movimientos() }} <small>movimientos</small></p>
+        <p>en {{ tiempo() }}</p>
+        @if (nuevoRecord()) {
+          <p class="nuevo-record">★ ¡Nuevo récord!</p>
+        }
+      </div>
+    }
+
+    <div class="botones">
+      <button type="button" class="btn-principal" (click)="reiniciar()">
+        {{ terminado() ? 'Jugar de nuevo' : 'Barajar de nuevo' }}
+      </button>
+    </div>
+    <p class="record">Tu récord: {{ record() != null ? record() + ' movimientos' : 'todavía ninguno' }}</p>
+  </div>
+
+  <app-tabla-ranking juego="memoria" [formato]="formatoPuntaje" />
+</section>

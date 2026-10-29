@@ -1,22 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { PaisDetalleModalComponent } from './modal';
 
-import { Modal } from './modal';
-
-describe('Modal', () => {
-  let component: Modal;
-  let fixture: ComponentFixture<Modal>;
+describe('PaisDetalleModalComponent', () => {
+  let fixture: ComponentFixture<PaisDetalleModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Modal],
+      imports: [PaisDetalleModalComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Modal);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(PaisDetalleModalComponent);
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('se crea', () => {
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

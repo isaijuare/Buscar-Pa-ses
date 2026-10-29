@@ -1,0 +1,94 @@
+.entretenimiento {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.entrada {
+  padding: 24px 28px;
+}
+
+.entrada h2 {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+}
+
+.entrada p {
+  margin: 0;
+  color: var(--texto-2);
+}
+
+.juegos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 16px;
+}
+
+.juego {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px;
+  color: var(--texto);
+  text-decoration: none;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+a.juego:hover {
+  transform: translateY(-3px);
+  border-color: var(--acento);
+}
+
+a.juego:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.icono {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.juego h3 {
+  margin: 4px 0 0;
+  font-size: 1.15rem;
+}
+
+.juego p {
+  flex: 1;
+  margin: 0;
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+
+.accion {
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.proximamente {
+  border-style: dashed;
+}
+
+.etiqueta {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--superficie-3);
+  color: var(--texto-2);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .juego {
+    transition: none;
+  }
+
+  a.juego:hover {
+    transform: none;
+  }
+}

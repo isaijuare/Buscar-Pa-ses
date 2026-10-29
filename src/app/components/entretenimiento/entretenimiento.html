@@ -1,0 +1,26 @@
+<section class="entretenimiento">
+  <header class="tarjeta-noche entrada">
+    <h2>Entretenimiento</h2>
+    <p>Aprende sobre el mundo y la naturaleza jugando.</p>
+  </header>
+
+  <div class="juegos">
+    @for (j of juegos; track j.titulo) {
+      @if (j.ruta) {
+        <a class="tarjeta-noche juego" [routerLink]="j.ruta">
+          <span class="icono" aria-hidden="true">{{ j.icono }}</span>
+          <h3>{{ j.titulo }}</h3>
+          <p>{{ j.texto }}</p>
+          <span class="accion">Jugar →</span>
+        </a>
+      } @else {
+        <div class="tarjeta-noche juego proximamente">
+          <span class="icono" aria-hidden="true">{{ j.icono }}</span>
+          <h3>{{ j.titulo }}</h3>
+          <p>{{ j.texto }}</p>
+          <span class="etiqueta">Próximamente</span>
+        </div>
+      }
+    }
+  </div>
+</section>

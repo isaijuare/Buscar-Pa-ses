@@ -5,11 +5,6 @@
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-.titulo {
-  margin: 0 0 8px;
-  font-size: 1.3rem;
-}
-
 .pestanas {
   display: flex;
   gap: 4px;

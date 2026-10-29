@@ -1,10 +1,13 @@
-import { Component, DestroyRef, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, PLATFORM_ID, computed, effect, inject, signal, untracked } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { CountryService } from '../../services/country';
+import { AuthService } from '../../services/auth';
 import { CountryApiResponse, nombreEnEspanol } from '../../models/country';
+import { ModoQuiz, RecordsQuiz } from '../../models/usuario';
 
-export type ModoQuiz = 'bandera' | 'capital';
+export type { ModoQuiz } from '../../models/usuario';
 
 interface Pregunta {
   pais: CountryApiResponse;
@@ -35,7 +38,13 @@ function mezclar<T>(lista: T[]): T[] {
 })
 export class QuizComponent {
   private enNavegador = isPlatformBrowser(inject(PLATFORM_ID));
+  private http = inject(HttpClient);
+  protected auth = inject(AuthService);
   readonly total = TOTAL_PREGUNTAS;
+  readonly modos: { id: ModoQuiz; nombre: string }[] = [
+    { id: 'bandera', nombre: 'Banderas' },
+    { id: 'capital', nombre: 'Capitales' }
+  ];
 
   private paises = signal<CountryApiResponse[]>([]);
   error = signal(false);
@@ -47,6 +56,8 @@ export class QuizComponent {
   aciertos = signal(0);
   record = signal<Record<ModoQuiz, number>>({ bandera: 0, capital: 0 });
   nuevoRecord = signal(false);
+  /** Mejores puntajes de todos los usuarios (null mientras carga o si no hay conexión) */
+  ranking = signal<RecordsQuiz['ranking'] | null>(null);
 
   actual = computed(() => this.preguntas()[this.indice()] ?? null);
   terminado = computed(() => this.preguntas().length > 0 && this.indice() >= this.preguntas().length);
@@ -78,6 +89,12 @@ export class QuizComponent {
       } catch {
         // Sin almacenamiento: el récord vale solo para esta visita
       }
+
+      // Se vuelve a pedir al iniciar o cerrar sesión: cambian los récords propios y el ranking
+      effect(() => {
+        this.auth.usuario();
+        untracked(() => this.cargarRecords());
+      });
     }
   }
 
@@ -130,6 +147,41 @@ export class QuizComponent {
     if (!modo || this.aciertos() <= this.record()[modo]) return;
     this.record.update((r) => ({ ...r, [modo]: this.aciertos() }));
     this.nuevoRecord.set(true);
+    this.guardarLocal();
+    this.subirRecord(modo, this.aciertos());
+  }
+
+  /** Trae el ranking y, con sesión, los récords de la cuenta (se queda el mayor de cada modo). */
+  private cargarRecords(): void {
+    this.http.get<RecordsQuiz>('/api/usuario/records').subscribe({
+      next: ({ propios, ranking }) => {
+        this.ranking.set(ranking);
+        if (!propios) return;
+        const local = this.record();
+        const cuenta = { bandera: propios.bandera ?? 0, capital: propios.capital ?? 0 };
+        this.record.set({
+          bandera: Math.max(local.bandera, cuenta.bandera),
+          capital: Math.max(local.capital, cuenta.capital)
+        });
+        this.guardarLocal();
+        // Récords logrados sin sesión: se suben a la cuenta
+        for (const m of ['bandera', 'capital'] as ModoQuiz[]) {
+          if (local[m] > cuenta[m]) this.subirRecord(m, local[m]);
+        }
+      },
+      error: () => this.ranking.set(null)
+    });
+  }
+
+  private subirRecord(modo: ModoQuiz, puntaje: number): void {
+    if (!this.auth.conectado()) return;
+    this.http.post<RecordsQuiz>('/api/usuario/records', { modo, puntaje }).subscribe({
+      next: ({ ranking }) => this.ranking.set(ranking),
+      error: () => {}
+    });
+  }
+
+  private guardarLocal(): void {
     try {
       localStorage.setItem(CLAVE_RECORD, JSON.stringify(this.record()));
     } catch {

@@ -1,0 +1,146 @@
+.iconos {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 16px;
+  font-size: 2.6rem;
+}
+
+/* Las cuatro estaciones se mecen una tras otra */
+.iconos span {
+  animation: mecer 3.2s ease-in-out infinite;
+}
+
+.iconos span:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.iconos span:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+.iconos span:nth-child(4) {
+  animation-delay: 1.2s;
+}
+
+@keyframes mecer {
+  50% {
+    transform: translateY(-6px) rotate(-6deg);
+  }
+}
+
+/* ---------- Pregunta ---------- */
+.bandera {
+  width: 96px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px var(--borde);
+}
+
+.lugar {
+  margin: 12px 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.fecha {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--acento-fondo);
+  color: var(--acento-hover);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.enunciado {
+  margin: 16px 0;
+  color: var(--texto-2);
+}
+
+.opciones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.opcion:hover:not(:disabled) {
+  background: var(--superficie-3);
+  transform: translateY(-2px);
+}
+
+.opcion:disabled {
+  cursor: default;
+}
+
+.opcion:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.opcion.correcta {
+  border-color: var(--exito);
+  background: var(--exito-fondo);
+}
+
+.opcion.incorrecta {
+  border-color: var(--peligro);
+  background: var(--peligro-fondo);
+}
+
+.icono-opcion {
+  font-size: 1.5rem;
+}
+
+.retro {
+  margin-top: 18px;
+}
+
+.bien,
+.mal {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.bien {
+  color: var(--exito);
+}
+
+.mal {
+  color: var(--peligro);
+}
+
+.explicacion {
+  margin: 8px auto 16px;
+  max-width: 48ch;
+  color: var(--texto-2);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconos span {
+    animation: none;
+  }
+
+  .opcion {
+    transition: none;
+  }
+}

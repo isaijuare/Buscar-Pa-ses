@@ -1,0 +1,108 @@
+@if (usuario(); as u) {
+  <section class="perfil">
+    <h2 class="titulo">Tu perfil</h2>
+
+    <!-- Foto y datos -->
+    <div class="tarjeta-noche cabecera">
+      <div class="foto" [class.cargando]="subiendoFoto()">
+        @if (u.foto) {
+          <img [src]="u.foto" alt="Tu foto de perfil" />
+        } @else {
+          <span class="iniciales" aria-hidden="true">{{ iniciales() }}</span>
+        }
+      </div>
+
+      <div class="datos">
+        <p class="nombre">{{ u.nombre }}</p>
+        <dl>
+          <div>
+            <dt>Correo</dt>
+            <dd>{{ u.email }}</dd>
+          </div>
+          @if (miembroDesde()) {
+            <div>
+              <dt>Miembro desde</dt>
+              <dd>{{ miembroDesde() }}</dd>
+            </div>
+          }
+        </dl>
+
+        <div class="acciones-foto">
+          <label class="btn-secundario" [class.deshabilitado]="subiendoFoto()">
+            <input type="file" accept="image/*" (change)="elegirFoto($event)" [disabled]="subiendoFoto()" />
+            {{ subiendoFoto() ? 'Guardando…' : u.foto ? 'Cambiar foto' : 'Subir foto' }}
+          </label>
+          @if (u.foto && !subiendoFoto()) {
+            <button type="button" class="btn-texto" (click)="quitarFoto()">Quitar foto</button>
+          }
+        </div>
+        @if (errorFoto()) {
+          <p class="mensaje error" role="alert">{{ errorFoto() }}</p>
+        }
+      </div>
+    </div>
+
+    <!-- Contraseña -->
+    <form class="tarjeta-noche formulario" (ngSubmit)="cambiarPassword()" #formulario="ngForm">
+      <h3 class="titulo-seccion">Cambiar contraseña</h3>
+
+      <label>
+        <span>Contraseña actual</span>
+        <input
+          name="actual"
+          [type]="verPasswords() ? 'text' : 'password'"
+          [(ngModel)]="actual"
+          required
+          autocomplete="current-password"
+        />
+      </label>
+      <label>
+        <span>Nueva contraseña</span>
+        <input
+          name="nueva"
+          [type]="verPasswords() ? 'text' : 'password'"
+          [(ngModel)]="nueva"
+          required
+          minlength="6"
+          autocomplete="new-password"
+        />
+        <small class="ayuda">Al menos 6 caracteres.</small>
+      </label>
+      <label>
+        <span>Confirma la nueva contraseña</span>
+        <input
+          name="confirmacion"
+          [type]="verPasswords() ? 'text' : 'password'"
+          [(ngModel)]="confirmacion"
+          required
+          autocomplete="new-password"
+        />
+      </label>
+
+      <label class="ver">
+        <input type="checkbox" [checked]="verPasswords()" (change)="verPasswords.set(!verPasswords())" />
+        Mostrar contraseñas
+      </label>
+
+      @if (errorPassword()) {
+        <p class="mensaje error" role="alert">{{ errorPassword() }}</p>
+      }
+      @if (passwordCambiada()) {
+        <p class="mensaje exito" role="status">Listo: tu contraseña cambió y se cerraron tus otras sesiones.</p>
+      }
+
+      <button type="submit" class="btn-principal" [disabled]="formulario.invalid || cambiando()">
+        {{ cambiando() ? 'Guardando…' : 'Cambiar contraseña' }}
+      </button>
+    </form>
+
+    <!-- Sesión -->
+    <div class="tarjeta-noche sesion">
+      <div>
+        <h3 class="titulo-seccion">Sesión</h3>
+        <p class="mensaje">Al salir, tus favoritos y récords quedan guardados en tu cuenta.</p>
+      </div>
+      <button type="button" class="btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+    </div>
+  </section>
+}

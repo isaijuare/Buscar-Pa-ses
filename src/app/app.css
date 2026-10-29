@@ -1,6 +1,10 @@
 :host {
   --ancho-sidebar: 200px;
   --ancho-sidebar-cerrado: 76px;
+  --alto-pie: 52px;
+  --alto-barra-superior: 50px;
+  /* Alto de la barra de navegación de abajo en celulares */
+  --alto-barra-movil: 68px;
   display: block;
 }
 
@@ -29,7 +33,7 @@
   transition: width 0.25s ease;
 }
 
-.sidebar.cerrado {
+:host-context([data-sidebar='cerrado']) .sidebar {
   width: var(--ancho-sidebar-cerrado);
 }
 
@@ -132,12 +136,19 @@
   fill: currentColor;
 }
 
+/* Foto de perfil en lugar del icono de la cuenta */
+.icono.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1.5px currentColor;
+}
+
 .texto {
   transition: opacity 0.2s ease;
 }
 
 /* Cerrado: solo iconos; el nombre sigue disponible para lectores de pantalla y en el title */
-.sidebar.cerrado .texto {
+:host-context([data-sidebar='cerrado']) .sidebar .texto {
   opacity: 0;
   pointer-events: none;
 }
@@ -145,11 +156,66 @@
 /* ---------- Contenido ---------- */
 .contenido {
   margin-left: var(--ancho-sidebar);
+  /* Para que el final de cada página no quede tapado por el footer */
+  padding-bottom: var(--alto-pie);
   transition: margin-left 0.25s ease;
 }
 
-.contenido.sidebar-cerrado {
+:host-context([data-sidebar='cerrado']) .contenido {
   margin-left: var(--ancho-sidebar-cerrado);
+}
+
+/* ---------- Barra superior ---------- */
+/* Fija arriba al bajar por la página, con el mismo cristal que el sidebar y el footer */
+.barra-superior {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  display: flex;
+  /* safe: si no caben, se puede deslizar desde el primero sin que se corten por la izquierda */
+  justify-content: safe center;
+  gap: 4px;
+  box-sizing: border-box;
+  min-height: var(--alto-barra-superior);
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 16px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 70%),
+    var(--fondo-sidebar);
+  border-bottom: 1px solid var(--borde-sidebar);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.barra-superior::-webkit-scrollbar {
+  display: none;
+}
+
+.barra-superior a {
+  flex: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.88rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.barra-superior a:hover {
+  background: var(--hover-sidebar);
+}
+
+.barra-superior a.activo {
+  background: var(--acento);
+  color: var(--texto-acento);
+  font-weight: 600;
+}
+
+.barra-superior a:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
 }
 
 .encabezado {
@@ -183,7 +249,21 @@
 /* La barra acompaña al usuario mientras baja por la página */
 .barra-lateral {
   position: sticky;
-  top: calc(16px + env(safe-area-inset-top, 0px));
+  top: calc(var(--alto-barra-superior) + 16px + env(safe-area-inset-top, 0px));
+}
+
+/* ---------- Footer ---------- */
+.pie-fijo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: var(--ancho-sidebar);
+  z-index: 90;
+  transition: left 0.25s ease;
+}
+
+:host-context([data-sidebar='cerrado']) .pie-fijo {
+  left: var(--ancho-sidebar-cerrado);
 }
 
 /* La barra de lugares pasa debajo del contenido */
@@ -202,14 +282,16 @@
 /* Celulares: el sidebar se convierte en una barra fija abajo, con el nombre bajo cada icono */
 @media (max-width: 640px) {
   :host {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    --alto-pie: 44px;
+    padding-bottom: calc(var(--alto-barra-movil) + var(--alto-pie) + env(safe-area-inset-bottom, 0px));
   }
 
   .sidebar,
-  .sidebar.cerrado {
+  :host-context([data-sidebar='cerrado']) .sidebar {
     top: auto;
     right: 0;
     width: auto;
+    height: calc(var(--alto-barra-movil) + env(safe-area-inset-bottom, 0px));
     padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
     border-right: none;
     border-top: 1px solid var(--borde-sidebar);
@@ -241,13 +323,21 @@
     text-align: center;
   }
 
-  .sidebar.cerrado .texto {
+  :host-context([data-sidebar='cerrado']) .sidebar .texto {
     opacity: 1;
   }
 
   .contenido,
-  .contenido.sidebar-cerrado {
+  :host-context([data-sidebar='cerrado']) .contenido {
     margin-left: 0;
+    padding-bottom: 0;
+  }
+
+  /* El footer va justo encima de la barra de navegación */
+  .pie-fijo,
+  :host-context([data-sidebar='cerrado']) .pie-fijo {
+    left: 0;
+    bottom: calc(var(--alto-barra-movil) + env(safe-area-inset-bottom, 0px));
   }
 
   .pantalla {

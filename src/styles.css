@@ -151,3 +151,39 @@ body {
 .mensaje.error {
   color: var(--peligro);
 }
+
+/* Placeholders de carga: bloques grises que laten mientras llegan los datos
+   (mismo efecto que los de la barra de lugares turísticos) */
+.bloque-carga {
+  display: block;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--superficie-3);
+  animation: latido-carga 1.4s ease-in-out infinite;
+}
+
+.bloque-carga + .bloque-carga {
+  margin-top: 10px;
+}
+
+@keyframes latido-carga {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloque-carga {
+    animation: none;
+  }
+}
+
+/* Solo para lectores de pantalla */
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

@@ -1,6 +1,6 @@
 <app-fondo-cielo />
 
-<aside class="sidebar" [class.cerrado]="!sidebarAbierto()">
+<aside class="sidebar">
   <button
     type="button"
     class="btn-retraer"
@@ -41,6 +41,13 @@
       </svg>
       <span class="texto">Quiz</span>
     </a>
+    <a routerLink="/mapas" routerLinkActive="activo" title="Mapas">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z" />
+        <path d="M9 4v14M15 6v14" />
+      </svg>
+      <span class="texto">Mapas</span>
+    </a>
 
     <button
       type="button"
@@ -68,21 +75,25 @@
     </button>
 
     <a
-      routerLink="/login"
+      [routerLink]="auth.conectado() ? '/perfil' : '/login'"
       routerLinkActive="activo"
       class="cuenta"
-      [title]="auth.usuario() ? 'Tu cuenta: ' + auth.usuario()!.email : 'Iniciar sesión o registrarse'"
+      [title]="auth.usuario() ? 'Tu perfil: ' + auth.usuario()!.email : 'Iniciar sesión o registrarse'"
     >
-      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="8" r="4" />
-        <path d="M4 21a8 8 0 0 1 16 0" />
-      </svg>
+      @if (auth.usuario()?.foto; as foto) {
+        <img class="icono avatar" [src]="foto" alt="" />
+      } @else {
+        <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21a8 8 0 0 1 16 0" />
+        </svg>
+      }
       <span class="texto">{{ auth.usuario()?.nombre ?? 'Iniciar sesión' }}</span>
     </a>
   </nav>
 
   @if (auth.conectado()) {
-    <button type="button" class="btn-salir" (click)="auth.cerrarSesion()" title="Cerrar sesión">
+    <button type="button" class="btn-salir" (click)="cerrarSesion()" title="Cerrar sesión">
       <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
         <path d="m16 17 5-5-5-5" />
@@ -93,7 +104,15 @@
   }
 </aside>
 
-<div class="contenido" [class.sidebar-cerrado]="!sidebarAbierto()">
+<div class="contenido">
+  <nav class="barra-superior" aria-label="Información">
+    <a routerLink="/nosotros" routerLinkActive="activo">Quiénes somos</a>
+    <a routerLink="/que-hacemos" routerLinkActive="activo">A qué nos dedicamos</a>
+    <a routerLink="/servicios" routerLinkActive="activo">Servicios</a>
+    <a routerLink="/entretenimiento" routerLinkActive="activo">Entretenimiento</a>
+    <a routerLink="/contacto" routerLinkActive="activo">Contacto</a>
+  </nav>
+
   <header class="encabezado">
     <h1 class="titulo-app"><a routerLink="/">Tu Clima</a></h1>
   </header>
@@ -108,3 +127,6 @@
     }
   </div>
 </div>
+
+<!-- Fuera del router-outlet: se queda fijo al cambiar de pantalla -->
+<app-pie class="pie-fijo" />

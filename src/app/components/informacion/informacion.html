@@ -1,0 +1,21 @@
+@let c = contenido();
+<article class="informacion">
+  <header class="tarjeta-noche entrada">
+    <h2>{{ c.titulo }}</h2>
+    <p>{{ c.entrada }}</p>
+  </header>
+
+  <div class="bloques">
+    @for (b of c.bloques; track b.titulo) {
+      <section class="tarjeta-noche bloque">
+        <span class="icono" aria-hidden="true">{{ b.icono }}</span>
+        <h3>{{ b.titulo }}</h3>
+        <p>{{ b.texto }}</p>
+      </section>
+    }
+  </div>
+
+  @if (c.cierre) {
+    <p class="cierre">{{ c.cierre }} <a routerLink="/contacto">Ir a contacto →</a></p>
+  }
+</article>

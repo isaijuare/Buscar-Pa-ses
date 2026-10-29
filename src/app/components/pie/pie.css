@@ -1,0 +1,159 @@
+:host {
+  display: block;
+}
+
+/* Mismo cristal azul viejo que el sidebar */
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--alto-pie, 52px);
+  box-sizing: border-box;
+  padding: 0 20px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 60%),
+    var(--fondo-sidebar);
+  border-top: 1px solid var(--borde-sidebar);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  color: #fff;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.85rem;
+}
+
+/* ---------- Clima ---------- */
+.clima {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* El icono flota despacio, como una nube */
+.icono-clima {
+  font-size: 1.4rem;
+  line-height: 1;
+  animation: flotar 4s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.temperatura {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.detalle {
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.lugar {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Créditos ---------- */
+.creditos {
+  margin: 0;
+  color: rgb(255 255 255 / 0.7);
+  white-space: nowrap;
+}
+
+.creditos a {
+  color: var(--acento-hover);
+}
+
+/* ---------- Redes ---------- */
+.redes {
+  display: flex;
+  gap: 4px;
+}
+
+.redes a {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.redes a:hover {
+  background: var(--acento);
+  color: var(--texto-acento);
+  transform: translateY(-2px);
+}
+
+.redes a:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.redes svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.redes .relleno {
+  fill: currentColor;
+  stroke: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icono-clima {
+    animation: none;
+  }
+}
+
+/* Pantallas medianas: sin la fuente de datos */
+@media (max-width: 1000px) {
+  .fuente {
+    display: none;
+  }
+}
+
+/* Celulares: solo el clima y las redes, más compacto */
+@media (max-width: 640px) {
+  .pie {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .creditos,
+  .estado,
+  .separador {
+    display: none;
+  }
+
+  .lugar {
+    max-width: 30vw;
+  }
+
+  .redes a {
+    width: 30px;
+    height: 30px;
+  }
+
+  .redes svg {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -155,7 +155,7 @@ export class PaisDetalleComponent {
       error: (e: { status?: number }) => {
         this.cargando.set(false);
         this.error.set(e.status === 404 ? 'No encontramos ese país.' : 'No se pudieron cargar los datos del país.');
-        this.titulo.setTitle('País no encontrado · Buscador de Países');
+        this.titulo.setTitle('País no encontrado · Tu Clima');
       }
     });
   }
@@ -178,7 +178,7 @@ export class PaisDetalleComponent {
 
   private actualizarTitulo(pais: CountryApiResponse): void {
     const nombre = nombreEnEspanol(pais);
-    this.titulo.setTitle(`${nombre} · Buscador de Países`);
+    this.titulo.setTitle(`${nombre} · Tu Clima`);
     this.meta.updateTag({
       name: 'description',
       content: `${nombre}: capital, población, clima, Luna, lugares turísticos, hora local, moneda y feriados.`

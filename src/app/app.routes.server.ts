@@ -10,5 +10,19 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'quiz', renderMode: RenderMode.Client },
   // La sesión se guarda en el navegador: el login se arma ahí
   { path: 'login', renderMode: RenderMode.Client },
+  { path: 'perfil', renderMode: RenderMode.Client },
+  // Páginas de la barra superior: su contenido no cambia, se generan al compilar
+  { path: 'nosotros', renderMode: RenderMode.Prerender },
+  { path: 'que-hacemos', renderMode: RenderMode.Prerender },
+  { path: 'servicios', renderMode: RenderMode.Prerender },
+  { path: 'entretenimiento', renderMode: RenderMode.Prerender },
+  { path: 'contacto', renderMode: RenderMode.Prerender },
+  // Los minerales son datos fijos: se generan al compilar (las fotos llegan después, desde Wikipedia)
+  { path: 'minerales', renderMode: RenderMode.Prerender },
+  // Juegos y mapas se arman en el navegador (azar, récords guardados y Leaflet)
+  { path: 'juegos/estaciones', renderMode: RenderMode.Client },
+  { path: 'juegos/memoria', renderMode: RenderMode.Client },
+  { path: 'mapas', renderMode: RenderMode.Client },
+  { path: 'mapas/:codigo', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Server }
 ];

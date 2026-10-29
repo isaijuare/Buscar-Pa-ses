@@ -18,6 +18,37 @@
         <span class="record">Récord: {{ record().capital }}/{{ total }}</span>
       </button>
     </div>
+
+    <section class="tarjeta-noche ranking" aria-labelledby="titulo-ranking">
+      <h3 id="titulo-ranking" class="titulo-seccion">Mejores puntajes</h3>
+      @if (ranking(); as r) {
+        <div class="tablas">
+          @for (m of modos; track m.id) {
+            <div>
+              <p class="nombre-tabla">{{ m.nombre }}</p>
+              @if (r[m.id].length) {
+                <ol class="puestos">
+                  @for (p of r[m.id]; track $index) {
+                    <li [class.propio]="p.propio">
+                      <span class="lugar">{{ $index + 1 }}</span>
+                      <span class="jugador">{{ p.nombre }}@if (p.propio) { <small>(tú)</small> }</span>
+                      <span class="puntos">{{ p.puntaje }}/{{ total }}</span>
+                    </li>
+                  }
+                </ol>
+              } @else {
+                <p class="mensaje">Nadie ha jugado todavía. ¡Sé el primero!</p>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="mensaje">No se pudo cargar el ranking.</p>
+      }
+      @if (!auth.conectado()) {
+        <p class="aviso-sesion"><a routerLink="/login">Inicia sesión</a> para guardar tus récords y aparecer aquí.</p>
+      }
+    </section>
   } @else if (terminado()) {
     <div class="tarjeta-noche resultado">
       <p class="puntaje">{{ aciertos() }}/{{ total }}</p>

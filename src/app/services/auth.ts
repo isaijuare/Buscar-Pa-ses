@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { RespuestaAuth, Usuario } from '../models/usuario';
 
 const CLAVE = 'buscador-paises:sesion';
@@ -16,10 +16,13 @@ export class AuthService {
   token = signal<string | null>(null);
   usuario = signal<Usuario | null>(null);
   conectado = computed(() => this.usuario() !== null);
+  private cargada = false;
 
   /** Recupera la sesión guardada. Llamar solo en el navegador. */
   cargar(): void {
-    if (!this.enNavegador) return;
+    // Se llama desde la app y desde las guardas de ruta: basta con leer la sesión una vez
+    if (!this.enNavegador || this.cargada) return;
+    this.cargada = true;
     try {
       const guardada = localStorage.getItem(CLAVE);
       if (!guardada) return;
@@ -53,6 +56,29 @@ export class AuthService {
     return this.http
       .post<RespuestaAuth>(`${this.baseUrl}/login`, { email, password })
       .pipe(tap((r) => this.guardar(r)), catchError(this.mensajeError));
+  }
+
+  /** Cambia la contraseña. El servidor cierra las demás sesiones y devuelve un token nuevo para esta. */
+  cambiarPassword(actual: string, nueva: string): Observable<void> {
+    return this.http.post<RespuestaAuth>(`${this.baseUrl}/password`, { actual, nueva }).pipe(
+      tap((r) => this.guardar(r)),
+      map(() => undefined),
+      catchError(this.mensajeError)
+    );
+  }
+
+  /** Sube la foto de perfil (data URL ya reducida) o la quita si recibe null. */
+  cambiarFoto(foto: string | null): Observable<Usuario> {
+    const peticion = foto
+      ? this.http.put<Usuario>(`${this.baseUrl}/foto`, { foto })
+      : this.http.delete<Usuario>(`${this.baseUrl}/foto`);
+    return peticion.pipe(
+      tap((usuario) => {
+        const token = this.token();
+        if (token) this.guardar({ token, usuario });
+      }),
+      catchError(this.mensajeError)
+    );
   }
 
   cerrarSesion(): void {

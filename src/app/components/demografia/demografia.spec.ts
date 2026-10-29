@@ -1,22 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { DemografiaComponent } from './demografia';
 
-import { Demografia } from './demografia';
-
-describe('Demografia', () => {
-  let component: Demografia;
-  let fixture: ComponentFixture<Demografia>;
+describe('DemografiaComponent', () => {
+  let fixture: ComponentFixture<DemografiaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Demografia],
+      imports: [DemografiaComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Demografia);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(DemografiaComponent);
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('se crea', () => {
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });

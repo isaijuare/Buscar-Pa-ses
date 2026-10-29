@@ -95,3 +95,30 @@
   object-fit: cover;
   border-radius: 2px;
 }
+
+/* Tarjetas de carga: mismo tamaño que las de país para que nada salte al llegar los resultados */
+.tarjeta-carga {
+  width: 220px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  border: 1px solid var(--borde-tarjeta-pais);
+  border-radius: 12px;
+  background: var(--fondo-tarjeta-pais);
+}
+
+.tarjeta-carga .bloque-carga {
+  margin-inline: auto;
+  background: var(--hover-tarjeta-pais);
+}
+
+.tarjeta-carga .bandera-carga {
+  width: 96px;
+  height: 64px;
+  margin-bottom: 14px;
+}
+
+.tarjeta-carga .bloque-carga.boton-carga {
+  height: 32px;
+  margin-top: 8px;
+}

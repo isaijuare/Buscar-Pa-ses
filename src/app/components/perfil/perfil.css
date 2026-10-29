@@ -1,0 +1,266 @@
+.perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 640px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------- Foto y datos ---------- */
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.foto {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border: 3px solid var(--acento);
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--acento-fondo);
+  transition: opacity 0.2s ease;
+}
+
+.foto.cargando {
+  opacity: 0.5;
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.iniciales {
+  color: var(--acento-hover);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.datos {
+  flex: 1;
+  min-width: 0;
+}
+
+.nombre {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0;
+}
+
+dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-2);
+}
+
+dd {
+  margin: 2px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.acciones-foto {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* El input de archivo va oculto dentro de la etiqueta, que hace de botón */
+.acciones-foto input[type='file'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.acciones-foto label:focus-within {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+/* ---------- Formulario ---------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+}
+
+.formulario .titulo-seccion {
+  margin-bottom: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--texto-2);
+}
+
+input:not([type='checkbox']):not([type='file']) {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-fondo);
+}
+
+label.ver {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+label.ver input {
+  accent-color: var(--acento);
+}
+
+.ayuda {
+  font-size: 0.75rem;
+}
+
+.mensaje.exito {
+  color: var(--exito);
+}
+
+/* ---------- Botones ---------- */
+.btn-principal,
+.btn-secundario,
+.btn-salir {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-principal {
+  align-self: flex-start;
+  border: none;
+  background: var(--acento);
+  color: var(--texto-acento);
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: var(--acento-hover);
+}
+
+.btn-principal:disabled,
+.btn-secundario.deshabilitado {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secundario {
+  position: relative;
+  display: inline-block;
+  border: 1px solid var(--borde);
+  background: var(--superficie-3);
+  color: var(--texto);
+}
+
+.btn-secundario:hover:not(.deshabilitado) {
+  background: var(--gris-700);
+}
+
+.btn-texto {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: var(--texto-2);
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.btn-texto:hover {
+  color: var(--peligro);
+}
+
+/* ---------- Sesión ---------- */
+.sesion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.sesion .titulo-seccion {
+  margin-bottom: 6px;
+}
+
+.btn-salir {
+  flex: none;
+  border: 1px solid var(--peligro);
+  background: var(--peligro-fondo);
+  color: var(--peligro);
+}
+
+.btn-salir:hover {
+  background: var(--peligro);
+  color: var(--gris-950);
+}
+
+.btn-principal:focus-visible,
+.btn-salir:focus-visible,
+.btn-texto:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .cabecera,
+  .sesion {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  dl,
+  .acciones-foto {
+    justify-content: center;
+  }
+
+  .btn-principal {
+    align-self: stretch;
+  }
+}

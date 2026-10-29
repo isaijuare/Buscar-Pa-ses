@@ -1,79 +1,73 @@
 <section class="login tarjeta-noche">
-  @if (auth.usuario(); as usuario) {
-    <h2 class="titulo">Hola, {{ usuario.nombre }}</h2>
-    <p class="mensaje">Iniciaste sesión como <strong>{{ usuario.email }}</strong>.</p>
-    <button type="button" class="btn-principal" (click)="salir()">Cerrar sesión</button>
-  } @else {
-    <div class="pestanas" role="tablist" aria-label="Acceso">
-      <button
-        type="button"
-        role="tab"
-        [class.activa]="pestana() === 'entrar'"
-        [attr.aria-selected]="pestana() === 'entrar'"
-        (click)="cambiarPestana('entrar')"
-      >
-        Iniciar sesión
-      </button>
-      <button
-        type="button"
-        role="tab"
-        [class.activa]="pestana() === 'registro'"
-        [attr.aria-selected]="pestana() === 'registro'"
-        (click)="cambiarPestana('registro')"
-      >
-        Registrarse
-      </button>
-    </div>
+  <div class="pestanas" role="tablist" aria-label="Acceso">
+    <button
+      type="button"
+      role="tab"
+      [class.activa]="pestana() === 'entrar'"
+      [attr.aria-selected]="pestana() === 'entrar'"
+      (click)="cambiarPestana('entrar')"
+    >
+      Iniciar sesión
+    </button>
+    <button
+      type="button"
+      role="tab"
+      [class.activa]="pestana() === 'registro'"
+      [attr.aria-selected]="pestana() === 'registro'"
+      (click)="cambiarPestana('registro')"
+    >
+      Registrarse
+    </button>
+  </div>
 
-    <form class="formulario" (ngSubmit)="enviar()" #formulario="ngForm">
+  <form class="formulario" (ngSubmit)="enviar()" #formulario="ngForm">
+    @if (pestana() === 'registro') {
+      <label>
+        <span>Nombre</span>
+        <input name="nombre" [(ngModel)]="nombre" required autocomplete="name" />
+      </label>
+    }
+
+    <label>
+      <span>Correo</span>
+      <input name="email" type="email" [(ngModel)]="email" required email autocomplete="email" />
+    </label>
+
+    <label>
+      <span>Contraseña</span>
+      <div class="campo-password">
+        <input
+          name="password"
+          [type]="verPassword() ? 'text' : 'password'"
+          [(ngModel)]="password"
+          required
+          [minlength]="pestana() === 'registro' ? 6 : 1"
+          [autocomplete]="pestana() === 'registro' ? 'new-password' : 'current-password'"
+        />
+        <button
+          type="button"
+          class="btn-ver"
+          (click)="verPassword.set(!verPassword())"
+          [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        >
+          {{ verPassword() ? 'Ocultar' : 'Ver' }}
+        </button>
+      </div>
       @if (pestana() === 'registro') {
-        <label>
-          <span>Nombre</span>
-          <input name="nombre" [(ngModel)]="nombre" required autocomplete="name" />
-        </label>
+        <small class="ayuda">Al menos 6 caracteres.</small>
       }
+    </label>
 
-      <label>
-        <span>Correo</span>
-        <input name="email" type="email" [(ngModel)]="email" required email autocomplete="email" />
-      </label>
+    @if (error()) {
+      <p class="mensaje error" role="alert">{{ error() }}</p>
+    }
 
-      <label>
-        <span>Contraseña</span>
-        <div class="campo-password">
-          <input
-            name="password"
-            [type]="verPassword() ? 'text' : 'password'"
-            [(ngModel)]="password"
-            required
-            [minlength]="pestana() === 'registro' ? 6 : 1"
-            [autocomplete]="pestana() === 'registro' ? 'new-password' : 'current-password'"
-          />
-          <button
-            type="button"
-            class="btn-ver"
-            (click)="verPassword.set(!verPassword())"
-            [attr.aria-label]="verPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-          >
-            {{ verPassword() ? 'Ocultar' : 'Ver' }}
-          </button>
-        </div>
-        @if (pestana() === 'registro') {
-          <small class="ayuda">Al menos 6 caracteres.</small>
-        }
-      </label>
-
-      @if (error()) {
-        <p class="mensaje error" role="alert">{{ error() }}</p>
+    <button type="submit" class="btn-principal" [disabled]="formulario.invalid || enviando()">
+      @if (enviando()) {
+        Un momento…
+      } @else {
+        {{ pestana() === 'registro' ? 'Crear cuenta' : 'Entrar' }}
       }
-
-      <button type="submit" class="btn-principal" [disabled]="formulario.invalid || enviando()">
-        @if (enviando()) {
-          Un momento…
-        } @else {
-          {{ pestana() === 'registro' ? 'Crear cuenta' : 'Entrar' }}
-        }
-      </button>
-    </form>
-  }
+    </button>
+  </form>
 </section>

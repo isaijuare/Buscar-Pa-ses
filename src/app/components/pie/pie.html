@@ -1,0 +1,53 @@
+<footer class="pie">
+  <!-- El clima de ahora, en vivo -->
+  <div class="clima" aria-live="off">
+    @if (clima(); as c) {
+      <span class="icono-clima" aria-hidden="true">{{ c.icono }}</span>
+      <span class="temperatura">{{ c.temperatura }}°</span>
+      <span class="detalle">
+        <span class="estado">{{ c.texto }}</span>
+        @if (c.lugar) {
+          <span class="lugar"><span class="separador">· </span>{{ c.lugar }}</span>
+        }
+      </span>
+    } @else {
+      <span class="icono-clima" aria-hidden="true">🌤️</span>
+      <span class="detalle"><span class="estado">Mirando el cielo…</span></span>
+    }
+  </div>
+
+  <p class="creditos">
+    © {{ anio }} Tu Clima
+    <span class="fuente">· Datos del clima: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></span>
+  </p>
+
+  <nav class="redes" aria-label="Redes sociales">
+    @for (r of redes; track r.red) {
+      <a [href]="r.url" target="_blank" rel="noopener" [attr.aria-label]="r.nombre + ' (se abre en otra pestaña)'" [title]="r.nombre">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          @switch (r.red) {
+            @case ('facebook') {
+              <path class="relleno" d="M14 8.5V6.8c0-.8.2-1.3 1.4-1.3H17V2.3A21 21 0 0 0 14.6 2C12.2 2 10.5 3.5 10.5 6.2v2.3H8V12h2.5v10H14V12h2.7l.4-3.5Z" />
+            }
+            @case ('instagram') {
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.3" cy="6.7" r="1" class="relleno" />
+            }
+            @case ('x') {
+              <path d="M4 4l16 16M20 4 4 20" />
+            }
+            @case ('youtube') {
+              <rect x="2" y="5" width="20" height="14" rx="4" />
+              <path class="relleno" d="M10 9v6l5-3-5-3Z" />
+            }
+            @case ('tiktok') {
+              <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5" />
+              <path d="M14 3c.4 2.6 2.2 4.4 5 4.6" />
+            }
+          }
+        </svg>
+      </a>
+    }
+  </nav>
+</footer>

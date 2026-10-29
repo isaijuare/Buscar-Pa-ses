@@ -205,3 +205,79 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ---------- Ranking ---------- */
+.ranking {
+  margin-top: 16px;
+}
+
+.tablas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 20px;
+}
+
+.nombre-tabla {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.puestos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.puestos li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+}
+
+.puestos li:nth-child(odd) {
+  background: var(--superficie-2);
+}
+
+.puestos li.propio {
+  background: var(--acento-fondo);
+}
+
+.lugar {
+  width: 1.4em;
+  color: var(--texto-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.puestos li:first-child .lugar {
+  color: var(--acento);
+  font-weight: 700;
+}
+
+.jugador {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jugador small {
+  color: var(--texto-2);
+}
+
+.puntos {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.aviso-sesion {
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+  color: var(--texto-2);
+}
+
+.aviso-sesion a {
+  color: var(--acento);
+}

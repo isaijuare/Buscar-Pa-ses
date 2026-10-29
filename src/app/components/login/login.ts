@@ -13,7 +13,7 @@ type Pestana = 'entrar' | 'registro';
   styleUrl: './login.css'
 })
 export class LoginComponent {
-  protected auth = inject(AuthService);
+  private auth = inject(AuthService);
   private router = inject(Router);
 
   pestana = signal<Pestana>('entrar');
@@ -51,9 +51,5 @@ export class LoginComponent {
         this.error.set(e.message);
       }
     });
-  }
-
-  salir(): void {
-    this.auth.cerrarSesion();
   }
 }

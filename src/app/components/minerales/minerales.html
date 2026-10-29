@@ -1,0 +1,171 @@
+<section class="minerales">
+  <a routerLink="/entretenimiento" class="volver">← Entretenimiento</a>
+
+  <!-- ¿Qué son los minerales? -->
+  <header class="tarjeta-noche explicacion">
+    <span class="etiqueta-seccion">Piedras y minerales</span>
+    <h2>¿Qué son los minerales?</h2>
+    <p class="entrada">
+      Los minerales son los ladrillos con los que está hecha la Tierra. Un mineral es una sustancia sólida que se forma
+      sola en la naturaleza, con una composición química definida y con sus átomos ordenados en un patrón que se repite:
+      un <strong>cristal</strong>. Hoy se conocen más de 6.000 minerales distintos, aunque unos pocos, como el cuarzo y
+      los feldespatos, forman casi toda la corteza terrestre.
+    </p>
+
+    <ul class="condiciones" aria-label="Qué necesita algo para ser un mineral">
+      <li><span aria-hidden="true">🌋</span><strong>Natural</strong>Se forma solo, sin intervención humana.</li>
+      <li><span aria-hidden="true">🧊</span><strong>Sólido</strong>A temperatura ambiente no es líquido ni gas.</li>
+      <li><span aria-hidden="true">⚗️</span><strong>Inorgánico</strong>Casi siempre, no lo fabrica un ser vivo.</li>
+      <li><span aria-hidden="true">🧪</span><strong>Fórmula definida</strong>Como el cuarzo, siempre SiO₂.</li>
+      <li><span aria-hidden="true">💎</span><strong>Cristalino</strong>Sus átomos siguen un orden que se repite.</li>
+    </ul>
+
+    <div class="aparte">
+      <div>
+        <h3>¿Mineral o roca?</h3>
+        <p>
+          Una roca es una mezcla de minerales. El granito, por ejemplo, está hecho de cuarzo, feldespato y mica: si lo
+          miras de cerca ves los granos de cada uno.
+        </p>
+      </div>
+      <div>
+        <h3>¿Cómo se reconocen?</h3>
+        <p>
+          Por su <strong>dureza</strong> (qué los raya), su <strong>brillo</strong>, su <strong>color</strong>, la
+          <strong>raya</strong> (el color de su polvo), su <strong>densidad</strong> y la forma de sus cristales.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Escala de Mohs -->
+  <section class="tarjeta-noche mohs" aria-labelledby="titulo-mohs">
+    <h3 id="titulo-mohs" class="titulo-seccion">Escala de dureza de Mohs</h3>
+    <p class="mensaje">
+      Ordena los minerales del 1 al 10 según cuál raya a cuál: cada uno raya a los de número menor. Toca un mineral para
+      ver su ficha.
+    </p>
+    <ol class="escalones">
+      @for (referencia of escala; track $index) {
+        <li [style.--nivel]="$index + 1">
+          <span class="numero">{{ $index + 1 }}</span>
+          <span class="referencia">{{ referencia }}</span>
+          <span class="de-la-coleccion">
+            @for (m of enEscala()[$index]; track m.id) {
+              <button type="button" class="mini" [style.--tono]="m.tono" (click)="abrir(m)">{{ m.nombre }}</button>
+            }
+          </span>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <!-- Filtros -->
+  <div class="tarjeta-noche filtros">
+    <div class="categorias" role="group" aria-label="Tipo de mineral">
+      @for (c of categorias; track c) {
+        <button type="button" [class.activa]="categoria() === c" [attr.aria-pressed]="categoria() === c" (click)="categoria.set(c)">
+          {{ c === 'Todas' ? 'Todos' : c === 'Gema' ? 'Gemas' : c === 'Metálico' ? 'Metálicos' : 'Industriales' }}
+        </button>
+      }
+    </div>
+    <input
+      type="search"
+      placeholder="Buscar por nombre, fórmula o color…"
+      aria-label="Buscar mineral"
+      [value]="busqueda()"
+      (input)="busqueda.set($any($event.target).value)"
+    />
+    <label class="orden">
+      Ordenar por
+      <select [value]="orden()" (change)="orden.set($any($event.target).value)">
+        <option value="nombre">Nombre</option>
+        <option value="dureza">Dureza</option>
+        <option value="densidad">Densidad</option>
+      </select>
+    </label>
+  </div>
+
+  <p class="conteo" aria-live="polite">{{ visibles().length }} de {{ total }} minerales</p>
+
+  <!-- Tarjetas -->
+  <div class="tarjetas">
+    @for (m of visibles(); track m.id) {
+      <button type="button" class="tarjeta-noche tarjeta" [style.--tono]="m.tono" (click)="abrir(m)">
+        <span class="foto">
+          @if (fotos()[m.id]; as foto) {
+            <img [src]="foto" [alt]="m.nombre" loading="lazy" />
+          } @else {
+            <span class="gema" aria-hidden="true"></span>
+          }
+          <span class="categoria">{{ m.categoria }}</span>
+        </span>
+        <span class="cuerpo">
+          <span class="nombre">{{ m.nombre }}</span>
+          <span class="formula">{{ m.formula }}</span>
+          <span class="dureza">
+            <span class="barra" aria-hidden="true"><span [style.width.%]="porcentajeDureza(m)"></span></span>
+            Dureza {{ dureza(m.dureza) }}
+          </span>
+          <span class="donde">📍 {{ lugares(m) }}</span>
+        </span>
+      </button>
+    } @empty {
+      <p class="tarjeta-noche mensaje vacio">Ningún mineral coincide con la búsqueda.</p>
+    }
+  </div>
+
+  <p class="credito">Fotos: Wikipedia / Wikimedia Commons.</p>
+</section>
+
+<!-- Ficha completa -->
+<dialog #dialogo class="ficha" (close)="cerrar()" (click)="clicEnDialogo($event)" aria-labelledby="nombre-ficha">
+  @if (seleccionado(); as m) {
+    <article [style.--tono]="m.tono">
+      <button type="button" class="cerrar" (click)="cerrar()" aria-label="Cerrar">✕</button>
+
+      <div class="cabecera-ficha">
+        <span class="foto grande">
+          @if (fotos()[m.id]; as foto) {
+            <img [src]="foto" [alt]="m.nombre" />
+          } @else {
+            <span class="gema" aria-hidden="true"></span>
+          }
+        </span>
+        <div>
+          <span class="categoria-texto">{{ m.categoria }} · {{ m.clase }}</span>
+          <h2 id="nombre-ficha">{{ m.nombre }}</h2>
+          <p class="formula grande">{{ m.formula }}</p>
+        </div>
+      </div>
+
+      <h3>Propiedades</h3>
+      <dl class="propiedades">
+        <div><dt>Dureza (Mohs)</dt><dd>{{ dureza(m.dureza) }}</dd></div>
+        <div><dt>Densidad</dt><dd>{{ m.densidad }} g/cm³</dd></div>
+        <div><dt>Brillo</dt><dd>{{ m.brillo }}</dd></div>
+        <div><dt>Sistema cristalino</dt><dd>{{ m.sistema }}</dd></div>
+        <div class="ancho"><dt>Color</dt><dd>{{ m.color }}</dd></div>
+        <div class="ancho"><dt>Raya</dt><dd>{{ m.raya }}</dd></div>
+      </dl>
+
+      <h3>¿Cómo se forma?</h3>
+      <p>{{ m.formacion }}</p>
+
+      <h3>¿De dónde es?</h3>
+      <p>{{ m.origen }}</p>
+      <div class="paises">
+        @for (p of m.paises; track p.codigo) {
+          <a [routerLink]="['/pais', p.codigo.toLowerCase()]" (click)="cerrar()">{{ p.nombre }} →</a>
+        }
+      </div>
+
+      <div class="dato">
+        <strong>¿Sabías que…?</strong>
+        <p>{{ m.dato }}</p>
+      </div>
+
+      <a class="wikipedia" [href]="enlaceWikipedia(m)" target="_blank" rel="noopener">Leer más en Wikipedia ↗</a>
+    </article>
+  }
+</dialog>

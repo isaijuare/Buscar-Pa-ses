@@ -1,22 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
+import { CountryListComponent } from './country-list';
 
-import { CountryList } from './country-list';
-
-describe('CountryList', () => {
-  let component: CountryList;
-  let fixture: ComponentFixture<CountryList>;
+describe('CountryListComponent', () => {
+  let fixture: ComponentFixture<CountryListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CountryList],
+      imports: [CountryListComponent],
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CountryList);
-    component = fixture.componentInstance;
+    fixture = TestBed.createComponent(CountryListComponent);
     await fixture.whenStable();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('se crea', () => {
+    expect(fixture.componentInstance).toBeTruthy();
   });
 });
