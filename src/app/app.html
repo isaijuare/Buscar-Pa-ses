@@ -1,12 +1,47 @@
 <app-fondo-cielo />
 
-<header class="encabezado">
-  <h1 class="titulo-app"><a routerLink="/">Buscador de Países</a></h1>
+<aside class="sidebar" [class.cerrado]="!sidebarAbierto()">
+  <button
+    type="button"
+    class="btn-retraer"
+    (click)="alternarSidebar()"
+    [attr.aria-expanded]="sidebarAbierto()"
+    [attr.aria-label]="sidebarAbierto() ? 'Cerrar menú' : 'Abrir menú'"
+    [title]="sidebarAbierto() ? 'Cerrar menú' : 'Abrir menú'"
+  >
+    <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+    <span class="texto">Menú</span>
+  </button>
 
   <nav class="navegacion" aria-label="Secciones">
-    <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
-    <a routerLink="/comparar" routerLinkActive="activo">Comparar</a>
-    <a routerLink="/quiz" routerLinkActive="activo">Quiz</a>
+    <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }" title="Inicio">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 10.5 12 3l9 7.5" />
+        <path d="M5 9v11h5v-6h4v6h5V9" />
+      </svg>
+      <span class="texto">Inicio</span>
+    </a>
+    <a routerLink="/comparar" routerLinkActive="activo" title="Comparar">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3v18" />
+        <path d="M7 21h10" />
+        <path d="M4 7h16" />
+        <path d="m4 7-3 7a3 3 0 0 0 6 0L4 7" />
+        <path d="m20 7-3 7a3 3 0 0 0 6 0l-3-7" />
+      </svg>
+      <span class="texto">Comparar</span>
+    </a>
+    <a routerLink="/quiz" routerLinkActive="activo" title="Quiz">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6" />
+        <path d="M12 17h.01" />
+      </svg>
+      <span class="texto">Quiz</span>
+    </a>
+
     <button
       type="button"
       class="btn-tema"
@@ -14,17 +49,62 @@
       [attr.aria-label]="'Tema: ' + textoTema().texto + '. Cambiar a ' + textoTema().siguiente"
       [title]="'Cambiar a ' + textoTema().siguiente"
     >
-      {{ textoTema().icono }} {{ textoTema().texto }}
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        @switch (tema.modo()) {
+          @case ('claro') {
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          }
+          @case ('oscuro') {
+            <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" />
+          }
+          @default {
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 3a9 9 0 0 1 0 18Z" class="relleno" />
+          }
+        }
+      </svg>
+      <span class="texto">{{ textoTema().texto }}</span>
     </button>
+
+    <a
+      routerLink="/login"
+      routerLinkActive="activo"
+      class="cuenta"
+      [title]="auth.usuario() ? 'Tu cuenta: ' + auth.usuario()!.email : 'Iniciar sesión o registrarse'"
+    >
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21a8 8 0 0 1 16 0" />
+      </svg>
+      <span class="texto">{{ auth.usuario()?.nombre ?? 'Iniciar sesión' }}</span>
+    </a>
   </nav>
-</header>
 
-<div class="pantalla" [class.sin-barra]="!mostrarBarra()">
-  <main class="principal">
-    <router-outlet />
-  </main>
-
-  @if (mostrarBarra()) {
-    <app-lugares-turisticos class="barra-lateral" />
+  @if (auth.conectado()) {
+    <button type="button" class="btn-salir" (click)="auth.cerrarSesion()" title="Cerrar sesión">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <path d="m16 17 5-5-5-5" />
+        <path d="M21 12H9" />
+      </svg>
+      <span class="texto">Cerrar sesión</span>
+    </button>
   }
+</aside>
+
+<div class="contenido" [class.sidebar-cerrado]="!sidebarAbierto()">
+  <header class="encabezado">
+    <h1 class="titulo-app"><a routerLink="/">Tu Clima</a></h1>
+  </header>
+
+  <div class="pantalla" [class.sin-barra]="!mostrarBarra()">
+    <main class="principal">
+      <router-outlet />
+    </main>
+
+    @if (mostrarBarra()) {
+      <app-lugares-turisticos class="barra-lateral" />
+    }
+  </div>
 </div>

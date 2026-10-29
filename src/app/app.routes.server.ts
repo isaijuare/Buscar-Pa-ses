@@ -8,5 +8,7 @@ export const serverRoutes: ServerRoute[] = [
   // Comparador y quiz dependen de lo que elija el usuario: se arman en el navegador
   { path: 'comparar', renderMode: RenderMode.Client },
   { path: 'quiz', renderMode: RenderMode.Client },
+  // La sesión se guarda en el navegador: el login se arma ahí
+  { path: 'login', renderMode: RenderMode.Client },
   { path: '**', renderMode: RenderMode.Server }
 ];

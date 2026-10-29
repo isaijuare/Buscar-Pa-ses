@@ -20,14 +20,14 @@
 }
 
 .cabecera .titulo-seccion {
-  color: #fff;
+  color: var(--texto);
   opacity: 0.9;
 }
 
 .cabecera h2 {
   margin: 4px 0 2px;
   font-size: 1.3rem;
-  color: #fff;
+  color: var(--texto);
 }
 
 .fuente {
@@ -37,16 +37,16 @@
 
 .btn-gps {
   padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(20, 38, 74, 0.55);
-  color: #fff;
+  background: var(--superficie);
+  color: var(--texto);
   font-size: 0.82rem;
   cursor: pointer;
 }
 
 .btn-gps:hover:not(:disabled) {
-  background: rgba(20, 38, 74, 0.8);
+  background: var(--superficie-3);
 }
 
 .btn-gps:disabled {
@@ -57,7 +57,7 @@
 .aviso {
   margin: 0;
   font-size: 0.8rem;
-  color: #fff;
+  color: var(--texto);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -69,7 +69,7 @@
 
 .cargando {
   text-align: center;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .acciones {
@@ -89,5 +89,5 @@
 .pista {
   margin: 0 0 10px;
   font-size: 0.78rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }

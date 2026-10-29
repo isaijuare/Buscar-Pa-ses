@@ -23,16 +23,16 @@
   display: block;
   margin: 16px auto 0;
   padding: 7px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(20, 38, 74, 0.55);
-  color: #fff;
+  background: var(--superficie);
+  color: var(--texto);
   font-size: 0.85rem;
   cursor: pointer;
 }
 
 .btn-mas:hover {
-  background: rgba(20, 38, 74, 0.8);
+  background: var(--superficie-3);
 }
 
 .guardados {
@@ -57,10 +57,10 @@
 
 .btn-borrar {
   padding: 1px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--borde);
   border-radius: 999px;
   background: transparent;
-  color: #fff;
+  color: var(--texto);
   font-size: 0.68rem;
   letter-spacing: normal;
   text-transform: none;
@@ -79,14 +79,14 @@
   gap: 6px;
   padding: 4px 12px 4px 6px;
   border-radius: 999px;
-  background: rgba(20, 38, 74, 0.6);
-  color: #fff;
+  background: var(--superficie);
+  color: var(--texto);
   font-size: 0.82rem;
   text-decoration: none;
 }
 
 .chip:hover {
-  background: rgba(20, 38, 74, 0.85);
+  background: var(--superficie-3);
 }
 
 .chip img {

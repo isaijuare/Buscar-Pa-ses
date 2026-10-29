@@ -23,7 +23,7 @@
 .consejo {
   margin: 4px 0 0;
   font-size: 0.8rem;
-  color: #cfe0fb;
+  color: var(--texto);
   line-height: 1.35;
 }
 
@@ -50,7 +50,7 @@
   margin-left: -2px;
   border-radius: 2px;
   background: #fff;
-  box-shadow: 0 0 0 2px #14264a;
+  box-shadow: 0 0 0 2px var(--superficie);
 }
 
 .escala-texto {
@@ -58,7 +58,7 @@
   justify-content: space-between;
   margin: 6px 0 0;
   font-size: 0.68rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .contaminantes {
@@ -67,13 +67,13 @@
   gap: 8px;
   margin: 14px 0 0;
   padding: 12px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
 }
 
 .contaminantes dt {
   font-size: 0.68rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .contaminantes dd {
@@ -102,7 +102,7 @@
 }
 
 .polen li span:last-child {
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .mensaje {

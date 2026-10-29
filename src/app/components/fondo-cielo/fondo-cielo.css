@@ -160,15 +160,15 @@
 /* ---------- Etiqueta ---------- */
 .etiqueta {
   position: absolute;
-  left: 12px;
-  /* Arriba a la izquierda, junto al título: ahí no la tapan las tarjetas */
+  right: 12px;
+  /* Arriba a la derecha, junto al título: ahí no la tapan el sidebar ni las tarjetas */
   top: calc(10px + env(safe-area-inset-top, 0px));
   z-index: 0;
   margin: 0;
   padding: 3px 10px;
   border-radius: 999px;
-  background: rgba(10, 20, 40, 0.45);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--superficie);
+  color: var(--texto-2);
   font: 0.72rem system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   pointer-events: none;
 }

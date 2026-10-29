@@ -7,7 +7,6 @@
   max-width: 100%;
   box-sizing: border-box;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .btn-favorito {
@@ -26,11 +25,11 @@
 }
 
 .btn-favorito:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--hover-tarjeta-pais);
 }
 
 .btn-favorito.activo {
-  color: #e0a800;
+  color: var(--aviso);
 }
 
 .bandera {
@@ -63,8 +62,8 @@ h3 {
   padding: 8px;
   border: none;
   border-radius: 6px;
-  background-color: #18d1a9;
-  color: white;
+  background-color: var(--gris-800);
+  color: var(--gris-100);
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;
@@ -72,24 +71,27 @@ h3 {
 }
 
 .btn-ficha {
-  background-color: #f2b705;
-  color: #14264a;
+  background-color: var(--acento);
+  color: var(--texto-acento);
   font-weight: 600;
 }
 
-.btn-ficha:hover {
-  background-color: #ffc928;
+.botones button:hover:not(:disabled) {
+  background-color: var(--gris-700);
 }
 
-/* Mismo tono que la barra de lugares turísticos, para relacionarlos */
+.btn-ficha:hover {
+  background-color: var(--acento-hover);
+}
+
+/* Turquesa apagado: abre la barra de lugares turísticos */
 .botones .btn-lugares {
-  background-color: #1d3566;
-  /* El borde lo distingue del fondo en el tema oscuro */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  background-color: var(--acento-fondo);
+  color: var(--acento-hover);
 }
 
 .botones .btn-lugares:hover:not(:disabled) {
-  background-color: #2a4a86;
+  background-color: #1a635d;
 }
 
 .botones button:disabled {
@@ -99,7 +101,6 @@ h3 {
 
 :host > div {
   background: var(--fondo-tarjeta-pais);
-  backdrop-filter: blur(6px);
   border-radius: 12px;
   color: var(--texto-tarjeta-pais);
 }

@@ -7,8 +7,8 @@
   margin: 0 0 12px;
   padding: 6px 10px;
   border-radius: 8px;
-  background: rgba(255, 209, 102, 0.15);
-  color: #ffe9a8;
+  background: var(--acento-fondo);
+  color: var(--acento);
   font-size: 0.82rem;
   font-weight: 600;
 }
@@ -19,14 +19,14 @@
   gap: 8px;
   margin: 0;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid var(--borde);
 }
 
 .resumen dt {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .resumen dd {
@@ -59,16 +59,16 @@
 }
 
 .dorada {
-  background: linear-gradient(90deg, rgba(255, 170, 60, 0.28), rgba(255, 209, 102, 0.08));
+  background: #3d3218;
 }
 
 .azul {
-  background: linear-gradient(90deg, rgba(70, 120, 255, 0.3), rgba(70, 120, 255, 0.08));
+  background: #1e2a45;
 }
 
 .nota {
   margin: 12px 0 0;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }

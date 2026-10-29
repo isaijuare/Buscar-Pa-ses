@@ -19,7 +19,7 @@
 
 .pista {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: var(--superficie-3);
   stroke-width: 9;
 }
 
@@ -30,7 +30,7 @@
 }
 
 .mes {
-  fill: #a9c4ee;
+  fill: var(--texto-2);
   font-size: 7px;
   text-anchor: middle;
   dominant-baseline: central;
@@ -38,7 +38,7 @@
 
 .hoy {
   fill: #fff;
-  stroke: #14264a;
+  stroke: var(--superficie);
   stroke-width: 2.5;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .centro-sub {
-  fill: #a9c4ee;
+  fill: var(--texto-2);
   font-size: 6px;
   text-anchor: middle;
 }
@@ -69,13 +69,13 @@
 .detalle {
   margin: 4px 0;
   font-size: 0.8rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .barra {
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--superficie-3);
   overflow: hidden;
 }
 
@@ -91,15 +91,15 @@
   gap: 8px;
   margin: 16px 0 0;
   padding: 12px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
+  border-bottom: 1px solid var(--borde);
 }
 
 .sol dt {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .sol dd {
@@ -111,7 +111,7 @@
 .sol dd.sub {
   font-weight: 400;
   font-size: 0.75rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .eventos {
@@ -150,12 +150,12 @@
 .evento-fecha,
 .evento-estacion {
   font-size: 0.74rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .evento-falta {
   font-size: 0.75rem;
-  color: #ffe9a8;
+  color: var(--acento);
   white-space: nowrap;
 }
 
@@ -163,10 +163,10 @@
   margin: 14px 0 0;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--superficie-2);
   font-size: 0.78rem;
   line-height: 1.4;
-  color: #cfe0fb;
+  color: var(--texto);
 }
 
 /* Tarjeta angosta: la rueda va arriba y "en X días" debajo de cada evento */

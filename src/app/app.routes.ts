@@ -21,5 +21,11 @@ export const routes: Routes = [
     title: 'Quiz de banderas y capitales · Buscador de Países',
     data: { barraLateral: false }
   },
+  {
+    path: 'login',
+    loadComponent: () => import('./components/login/login').then((m) => m.LoginComponent),
+    title: 'Iniciar sesión · Tu Clima',
+    data: { barraLateral: false }
+  },
   { path: '**', redirectTo: '' }
 ];

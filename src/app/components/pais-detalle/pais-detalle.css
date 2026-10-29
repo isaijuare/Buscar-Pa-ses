@@ -7,7 +7,7 @@
 .enlace {
   display: inline-block;
   margin-bottom: 14px;
-  color: #fff;
+  color: var(--texto);
   font-size: 0.9rem;
   text-decoration: none;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
@@ -21,7 +21,7 @@
 .mensaje-carga {
   margin-top: 16px;
   text-align: center;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .cabecera {
@@ -36,7 +36,7 @@
   height: 64px;
   object-fit: cover;
   border-radius: 8px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 0 1px var(--borde);
 }
 
 .titulos {
@@ -51,7 +51,7 @@
 
 .oficial {
   margin: 4px 0 0;
-  color: #a9c4ee;
+  color: var(--texto-2);
   font-size: 0.9rem;
 }
 
@@ -63,10 +63,10 @@
 
 .btn-accion {
   padding: 6px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--superficie-2);
+  color: var(--texto);
   font: inherit;
   font-size: 0.82rem;
   text-decoration: none;
@@ -74,12 +74,12 @@
 }
 
 .btn-accion:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--superficie-3);
 }
 
 .btn-accion.activo {
-  border-color: #ffe9a8;
-  color: #ffe9a8;
+  border-color: var(--acento);
+  color: var(--acento);
 }
 
 .datos {
@@ -88,14 +88,14 @@
   gap: 14px 20px;
   margin: 20px 0 0;
   padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
 }
 
 .datos dt {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .datos dd {
@@ -107,7 +107,7 @@
 .vecinos {
   margin-top: 18px;
   padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
 }
 
 .vecinos .titulo-seccion {
@@ -126,14 +126,14 @@
   gap: 6px;
   padding: 4px 12px 4px 6px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  background: var(--superficie-2);
+  color: var(--texto);
   font-size: 0.82rem;
   text-decoration: none;
 }
 
 .chip:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--superficie-3);
 }
 
 .chip img {
@@ -149,17 +149,17 @@
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--texto);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
 .btn-capital {
   margin-top: 24px;
   padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(20, 38, 74, 0.55);
-  color: #fff;
+  background: var(--superficie);
+  color: var(--texto);
   font-size: 0.82rem;
   cursor: pointer;
 }

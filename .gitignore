@@ -49,3 +49,6 @@ Thumbs.db
 
 # Variables de entorno del servidor (API keys)
 .env
+
+# Usuarios registrados (contraseñas cifradas): se crean al usar el login
+/datos

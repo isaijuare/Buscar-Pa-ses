@@ -6,7 +6,7 @@
 section + section {
   margin-top: 14px;
   padding-top: 12px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
 }
 
 .subtitulo {
@@ -37,7 +37,7 @@ section + section {
 .simbolo {
   font-size: 1.1rem;
   text-align: center;
-  color: #ffe9a8;
+  color: var(--acento);
 }
 
 .lista li > div {
@@ -52,13 +52,13 @@ section + section {
 
 .detalle {
   font-size: 0.74rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
   line-height: 1.35;
 }
 
 .etiqueta {
   font-size: 0.72rem;
-  color: #ffe9a8;
+  color: var(--acento);
   text-align: right;
   white-space: nowrap;
 }
@@ -67,7 +67,7 @@ section + section {
 .nota {
   margin: 0;
   font-size: 0.78rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .nota {

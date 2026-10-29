@@ -7,7 +7,7 @@
 .btn-volver {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--texto);
   font-size: 0.95rem;
   cursor: pointer;
   padding: 8px 0;
@@ -16,11 +16,11 @@
 
 .titulo {
   margin: 0 0 12px;
-  color: #fff;
+  color: var(--texto);
   font-size: 1.3rem;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
 .error {
-  color: #ffb4a8;
+  color: var(--peligro);
 }

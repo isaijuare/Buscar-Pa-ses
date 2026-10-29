@@ -1,0 +1,130 @@
+.login {
+  max-width: 400px;
+  margin: 24px auto 0;
+  padding: 24px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+}
+
+.pestanas {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  background: var(--superficie-2);
+}
+
+.pestanas button {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  border-radius: 9px;
+  background: none;
+  color: var(--texto-2);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.pestanas button.activa {
+  background: var(--acento);
+  color: var(--texto-acento);
+  font-weight: 600;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--acento);
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px var(--acento-fondo);
+}
+
+.campo-password {
+  position: relative;
+}
+
+.campo-password input {
+  padding-right: 72px;
+}
+
+.btn-ver {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  padding: 5px 10px;
+  border: none;
+  border-radius: 7px;
+  background: var(--acento-fondo);
+  color: var(--acento);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.ayuda {
+  color: var(--texto-2);
+  font-size: 0.75rem;
+}
+
+.btn-principal {
+  margin-top: 6px;
+  padding: 11px;
+  border: none;
+  border-radius: 10px;
+  background: var(--acento);
+  color: var(--texto-acento);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-principal:hover:not(:disabled) {
+  background: var(--acento-hover);
+}
+
+.btn-principal:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-principal:focus-visible,
+.pestanas button:focus-visible,
+.btn-ver:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.mensaje {
+  margin: 0 0 16px;
+}

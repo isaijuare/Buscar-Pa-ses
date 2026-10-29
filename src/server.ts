@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { join } from 'node:path';
 import type { CountryApiResponse } from './app/models/country';
+import { rutasAuth } from './servidor/auth';
 
 // La API key vive solo en el servidor: se lee del archivo .env (o de las variables del sistema)
 try {
@@ -96,6 +97,9 @@ function recortarPais(p: PaisRestCountries): CountryApiResponse {
     coordinates: p.coordinates
   };
 }
+
+// Registro e inicio de sesión (JWT)
+app.use('/api/auth', express.json(), rutasAuth);
 
 app.get('/api/paises', async (_req, res) => {
   try {

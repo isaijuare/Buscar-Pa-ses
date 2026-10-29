@@ -10,7 +10,7 @@
 
 .centrado {
   text-align: center;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .modos {
@@ -45,7 +45,7 @@
 
 .record {
   font-size: 0.8rem;
-  color: #ffe9a8;
+  color: var(--acento);
 }
 
 .pregunta {
@@ -56,21 +56,21 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.8rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .barra {
   height: 6px;
   margin: 8px 0 20px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--superficie-3);
   overflow: hidden;
 }
 
 .barra span {
   display: block;
   height: 100%;
-  background: #ffd166;
+  background: var(--acento);
   transition: width 0.3s ease;
 }
 
@@ -79,7 +79,7 @@
   aspect-ratio: 3 / 2;
   object-fit: contain;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--superficie-2);
 }
 
 .bandera-chica {
@@ -102,17 +102,17 @@
 
 .opcion {
   padding: 12px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid var(--borde);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
-  color: #fff;
+  background: var(--superficie-2);
+  color: var(--texto);
   font: inherit;
   font-size: 0.95rem;
   cursor: pointer;
 }
 
 .opcion:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--superficie-3);
 }
 
 .opcion:disabled {
@@ -120,13 +120,13 @@
 }
 
 .opcion.correcta {
-  border-color: #3ccf6e;
-  background: rgba(60, 207, 110, 0.25);
+  border-color: var(--exito);
+  background: var(--exito-fondo);
 }
 
 .opcion.incorrecta {
-  border-color: #ff5a5f;
-  background: rgba(255, 90, 95, 0.25);
+  border-color: var(--peligro);
+  background: var(--peligro-fondo);
 }
 
 .retro {
@@ -143,16 +143,16 @@
 }
 
 .bien {
-  color: #3ccf6e;
+  color: var(--exito);
 }
 
 .mal {
-  color: #ff8a8d;
+  color: var(--peligro);
 }
 
 .aprender {
   font-size: 0.8rem;
-  color: #8fd3ff;
+  color: var(--acento-hover);
 }
 
 .btn-principal,
@@ -166,14 +166,14 @@
 
 .btn-principal {
   border: none;
-  background: #ffd166;
-  color: #14264a;
+  background: var(--acento);
+  color: var(--texto-acento);
 }
 
 .btn-secundario {
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--borde);
   background: transparent;
-  color: #fff;
+  color: var(--texto);
 }
 
 .resultado {
@@ -184,11 +184,11 @@
   margin: 0;
   font-size: 3rem;
   font-weight: 700;
-  color: #ffd166;
+  color: var(--acento);
 }
 
 .nuevo-record {
-  color: #ffe9a8;
+  color: var(--acento);
   font-weight: 700;
 }
 

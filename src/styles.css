@@ -1,43 +1,85 @@
+/* Paleta de la app: gris oscuro con acento turquesa, en colores sólidos (sin degradados ni transparencias).
+   El cielo de fondo (fondo-cielo) tiene sus propios colores y no usa esta paleta. */
+:root {
+  --gris-950: #111418;
+  --gris-900: #1a1d21;
+  --gris-850: #22262b;
+  --gris-800: #2b3036;
+  --gris-700: #3a4048;
+  --gris-500: #6b7480;
+  --gris-300: #a3abb5;
+  --gris-100: #e6e8eb;
+  --turquesa: #2dd4bf;
+  --turquesa-claro: #5eead4;
+  --turquesa-oscuro: #134e4a;
+  --texto-sobre-turquesa: #0b1f1d;
+  --exito: #22c55e;
+  --exito-fondo: #173b28;
+  --peligro: #f87171;
+  --peligro-fondo: #4a1f22;
+  --aviso: #fbbf24;
+
+  /* Roles: los componentes usan estos nombres, no los colores directos */
+  --superficie: var(--gris-900);
+  --superficie-2: var(--gris-850);
+  --superficie-3: var(--gris-800);
+  --borde: var(--gris-700);
+  --texto: var(--gris-100);
+  --texto-2: var(--gris-300);
+  --acento: var(--turquesa);
+  --acento-hover: var(--turquesa-claro);
+  --acento-fondo: var(--turquesa-oscuro);
+  --texto-acento: var(--texto-sobre-turquesa);
+}
+
 /* Tema claro (por defecto). El tema oscuro redefine estas variables más abajo. */
 :root {
   color-scheme: light;
   /* Solo se ve un instante, antes de que se dibuje el cielo real (fondo-cielo) */
-  --fondo-pagina: linear-gradient(180deg, #2a72d4 0%, #78b6ec 60%, #cfe8fb 100%);
-  --borde-nav: rgba(255, 255, 255, 0.55);
-  --fondo-nav: rgba(20, 38, 74, 0.3);
-  --fondo-nav-hover: rgba(20, 38, 74, 0.5);
-  --fondo-tarjeta-pais: rgba(255, 255, 255, 0.88);
-  --texto-tarjeta-pais: #222;
-  --borde-tarjeta-pais: #1900f887;
-  --texto-suave: #556;
-  --fondo-buscador: #fff;
-  --texto-buscador: #222;
-  --fondo-demografia: #9dd2e7;
-  --texto-demografia: #222;
-  --texto-demografia-suave: #0b0202;
+  --fondo-pagina: var(--gris-950);
+  --borde-nav: var(--borde);
+  /* Sidebar: azul viejo translúcido, como cristal esmerilado sobre el cielo */
+  --azul-viejo: 74 99 128;
+  --fondo-sidebar: rgb(var(--azul-viejo) / 0.42);
+  --borde-sidebar: rgb(255 255 255 / 0.18);
+  --hover-sidebar: rgb(255 255 255 / 0.12);
+  --fondo-nav: var(--superficie);
+  --fondo-nav-hover: var(--superficie-3);
+  --fondo-tarjeta-pais: #f4f5f7;
+  --texto-tarjeta-pais: #1a1d21;
+  --borde-tarjeta-pais: #d5d9de;
+  --texto-suave: #5b636e;
+  --fondo-buscador: #ffffff;
+  --texto-buscador: #1a1d21;
+  --fondo-demografia: #f4f5f7;
+  --texto-demografia: #1a1d21;
+  --texto-demografia-suave: #5b636e;
+  /* Texto de acento y error sobre las tarjetas claras: tonos más oscuros para que se lean */
+  --acento-texto: #0f766e;
+  --peligro-texto: #b91c1c;
+  --hover-tarjeta-pais: #e6e8eb;
 }
 
 :root[data-tema='oscuro'] {
   color-scheme: dark;
-  --fondo-pagina: linear-gradient(180deg, #050a1c 0%, #0b1631 55%, #14244a 100%);
-  --borde-nav: rgba(255, 255, 255, 0.25);
-  --fondo-nav: rgba(255, 255, 255, 0.06);
-  --fondo-nav-hover: rgba(255, 255, 255, 0.14);
-  --fondo-tarjeta-pais: rgba(22, 36, 68, 0.92);
-  --texto-tarjeta-pais: #eef4ff;
-  --borde-tarjeta-pais: rgba(255, 255, 255, 0.14);
-  --texto-suave: #a9c4ee;
-  --fondo-buscador: #16243f;
-  --texto-buscador: #eef4ff;
-  --fondo-demografia: #16243f;
-  --texto-demografia: #eef4ff;
-  --texto-demografia-suave: #a9c4ee;
+  --fondo-tarjeta-pais: var(--superficie);
+  --texto-tarjeta-pais: var(--texto);
+  --borde-tarjeta-pais: var(--borde);
+  --texto-suave: var(--texto-2);
+  --fondo-buscador: var(--superficie);
+  --texto-buscador: var(--texto);
+  --fondo-demografia: var(--superficie);
+  --texto-demografia: var(--texto);
+  --texto-demografia-suave: var(--texto-2);
+  --acento-texto: var(--acento);
+  --peligro-texto: var(--peligro);
+  --hover-tarjeta-pais: var(--superficie-3);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--fondo-pagina) fixed;
+  background: var(--fondo-pagina);
   overflow-x: hidden;
 }
 
@@ -79,19 +121,16 @@ body {
   width: 90px;
   height: 2px;
   margin: 14px auto 0;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  background: var(--acento);
 }
 
-/* Tarjetas oscuras del panel de clima, Luna y estaciones */
+/* Tarjetas del panel de clima, Luna, estaciones y demás: color sólido */
 .tarjeta-noche {
-  /* Vidrio esmerilado: deja ver a través el Sol, la Luna y los colores del cielo de fondo */
-  background: linear-gradient(160deg, rgba(18, 34, 68, 0.84), rgba(34, 66, 118, 0.76));
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
   border-radius: 16px;
   padding: 18px;
-  color: #eef4ff;
-  box-shadow: 0 8px 24px rgba(10, 25, 60, 0.25);
-  backdrop-filter: blur(12px) saturate(1.2);
+  color: var(--texto);
 }
 
 .titulo-seccion {
@@ -101,14 +140,14 @@ body {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #9fc3ff;
+  color: var(--acento);
 }
 
 .mensaje {
   margin: 0;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .mensaje.error {
-  color: #ffb4a8;
+  color: var(--peligro);
 }

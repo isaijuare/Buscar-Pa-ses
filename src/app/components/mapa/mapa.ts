@@ -27,7 +27,7 @@ export interface MarcadorMapa {
       height: var(--alto-mapa, 300px);
       border-radius: 12px;
       overflow: hidden;
-      background: #1a2f57;
+      background: #22262b;
       z-index: 0;
     }
     .cargando {
@@ -37,7 +37,7 @@ export interface MarcadorMapa {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #a9c4ee;
+      color: #a3abb5;
     }
   `
 })
@@ -122,10 +122,10 @@ export class MapaComponent {
         }
         this.L.circleMarker([m.lat, m.lon], {
           radius: 6,
-          color: '#14264a',
+          color: '#111418',
           weight: 2,
-          fillColor: '#ffd166',
-          fillOpacity: 0.95,
+          fillColor: '#2dd4bf',
+          fillOpacity: 1,
           // Abrir un marcador no debe contar como clic en el mapa
           bubblingMouseEvents: false
         })

@@ -14,7 +14,7 @@
 
 .cabecera {
   padding: 0 18px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid var(--borde);
 }
 
 .cabecera .titulo-seccion {
@@ -24,7 +24,7 @@
 .zona {
   margin: 0;
   font-size: 0.82rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .zona-pais {
@@ -38,26 +38,26 @@
   height: 19px;
   object-fit: cover;
   border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  box-shadow: 0 0 0 1px var(--borde);
 }
 
 .zona strong {
-  color: #fff;
+  color: var(--texto);
 }
 
 .btn-volver {
   margin-top: 8px;
   padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #dbe7fb;
+  background: var(--superficie-2);
+  color: var(--texto);
   font-size: 0.75rem;
   cursor: pointer;
 }
 
 .btn-volver:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: var(--superficie-3);
 }
 
 .filtros {
@@ -69,22 +69,22 @@
 
 .filtros button {
   padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--borde);
   border-radius: 999px;
   background: transparent;
-  color: #dbe7fb;
+  color: var(--texto);
   font-size: 0.74rem;
   cursor: pointer;
 }
 
 .filtros button:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--superficie-2);
 }
 
 .filtros button.activo {
-  background: #ffe9a8;
-  border-color: #ffe9a8;
-  color: #14264a;
+  background: var(--acento);
+  border-color: var(--acento);
+  color: var(--texto-acento);
   font-weight: 600;
 }
 
@@ -97,20 +97,20 @@
   gap: 14px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: var(--borde) transparent;
 }
 
 .lugar {
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--superficie-2);
   flex-shrink: 0;
 }
 
 .foto {
   position: relative;
   aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, #2b4a80, #1a2f57);
+  background: var(--superficie-3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,7 +134,7 @@
   bottom: 8px;
   padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(10, 20, 40, 0.75);
+  background: var(--gris-950);
   font-size: 0.72rem;
   font-weight: 600;
 }
@@ -155,18 +155,18 @@
   gap: 8px;
   margin: 4px 0 0;
   font-size: 0.72rem;
-  color: #a9c4ee;
+  color: var(--texto-2);
 }
 
 .patrimonio {
-  color: #ffe9a8;
+  color: var(--acento);
 }
 
 .descripcion {
   margin: 6px 0 0;
   font-size: 0.78rem;
   line-height: 1.35;
-  color: #cfe0fb;
+  color: var(--texto);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -181,7 +181,7 @@
 
 .enlaces a {
   font-size: 0.76rem;
-  color: #8fd3ff;
+  color: var(--acento-hover);
   text-decoration: none;
 }
 
@@ -196,15 +196,15 @@
 .fuente {
   margin: 0;
   padding: 8px 18px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--borde);
   font-size: 0.68rem;
-  color: #7f9cc9;
+  color: var(--gris-500);
 }
 
 /* Tarjetas de carga */
 .esqueleto .foto,
 .esqueleto .linea {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--superficie-2);
   animation: parpadeo 1.4s ease-in-out infinite;
 }
 
